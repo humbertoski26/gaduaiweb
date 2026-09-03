@@ -206,8 +206,10 @@
   /* ---------- MODAL CONTACTO ---------- */
   .modal-overlay{
     position:fixed; inset:0; background:rgba(23,26,46,0.55);
-    display:flex; align-items:center; justify-content:center; padding:20px; z-index:100;
+    align-items:center; justify-content:center; padding:20px; z-index:100;
   }
+  .modal-overlay[hidden]{display:none;}
+  .modal-overlay:not([hidden]){display:flex;}
   .modal-box{
     background:var(--bg); border-radius:6px; padding:32px; max-width:440px; width:100%;
     position:relative;
@@ -385,6 +387,7 @@
   <div class="wrap">
     <h2>Conversemos sobre su red</h2>
     <p>Si dirige un colegio o una red de establecimientos y quiere ver GADUAI en funcionamiento, escríbanos.</p>
+    <p style="margin-top:8px;"><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a></p>
     <div class="cta-row">
       <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto()" type="button">Escríbanos</button>
       <a class="btn btn-outline" href="#top">Volver arriba</a>
