@@ -50,14 +50,14 @@
   }
   nav .wrap{
     display:flex; align-items:center; justify-content:space-between;
-    height:120px;
+    height:144px;
   }
   .wordmark{
     display:flex; align-items:center;
     text-decoration:none;
   }
-  .wordmark img{height:88px; width:auto; display:block;}
-  @media (max-width:640px){ .wordmark img{height:60px;} }
+  .wordmark img{height:112px; width:auto; display:block;}
+  @media (max-width:640px){ .wordmark img{height:72px;} }
   .navlinks{display:flex; gap:32px; align-items:center;}
   .navlinks a{
     font-size:0.94rem; text-decoration:none; color:var(--ink);
@@ -103,10 +103,13 @@
   .hero-label{
     font-size:1.2rem; margin-top:18px; color:var(--ink); max-width:36ch;
     border:1px solid var(--line); border-radius:6px; padding:18px 20px;
+    text-align:justify;
   }
   .hero-source{
     font-size:0.85rem; color:var(--muted); margin-top:14px;
+    text-align:justify;
   }
+  .hero-eyebrow-line{color:var(--navy); font-weight:700; font-size:1.05rem; margin-bottom:14px;}
   .hero-cta{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
 
   .network-svg{width:100%; height:auto;}
@@ -115,7 +118,7 @@
   section{padding:88px 0; border-bottom:1px solid var(--line);}
   .section-head{max-width:640px; margin-bottom:56px;}
   .section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
-  .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px;}
+  .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px; text-align:justify;}
 
   /* ---------- PROBLEMA (dossier list) ---------- */
   .problem-list{border-top:1px solid var(--line);}
@@ -127,13 +130,13 @@
     font-family:'Lora',serif; color:var(--accent); font-size:1.3rem; font-weight:600;
   }
   .problem-item h3{font-size:1.15rem; margin-bottom:6px; color:var(--ink);}
-  .problem-item p{color:var(--muted); margin:0; max-width:60ch;}
+  .problem-item p{color:var(--muted); margin:0; max-width:60ch; text-align:justify;}
 
   .stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:700px){ .stats-grid{grid-template-columns:1fr;} }
   .stat-card{background:#fff; border:1px solid var(--line); border-radius:8px; padding:24px;}
   .stat-num{font-family:'Lora',serif; font-weight:600; font-size:2.4rem; color:var(--navy); line-height:1;}
-  .stat-card p{color:var(--ink); font-size:0.95rem; margin:10px 0 8px;}
+  .stat-card p{color:var(--ink); font-size:0.95rem; margin:10px 0 8px; text-align:justify;}
   .stat-source{color:var(--muted); font-size:0.8rem;}
 
   .causes-list{list-style:none; margin:20px 0 0; padding:0;}
@@ -164,7 +167,7 @@
     .module-row .module-desc{grid-column:2/3; margin-top:4px;} }
   .module-n{font-family:'Lora',serif; color:var(--muted); font-size:0.95rem;}
   .module-name{font-weight:600; color:var(--ink);}
-  .module-desc{color:var(--muted); font-size:0.95rem;}
+  .module-desc{color:var(--muted); font-size:0.95rem; text-align:justify;}
 
   /* ---------- POR QUE AHORA ---------- */
   .now-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
@@ -172,7 +175,7 @@
   .big-figure{font-family:'Lora',serif; font-size:4.2rem; color:var(--navy); font-weight:600; line-height:1;}
   .big-figure + p{color:var(--muted); margin-top:12px; max-width:40ch;}
   .now-list{list-style:none; margin:0; padding:0;}
-  .now-list li{padding:16px 0; border-top:1px solid var(--line); color:var(--muted);}
+  .now-list li{padding:16px 0; border-top:1px solid var(--line); color:var(--muted); text-align:justify;}
   .now-list li:last-child{border-bottom:1px solid var(--line);}
   .now-list strong{color:var(--ink); display:block; margin-bottom:4px;}
 
@@ -199,7 +202,7 @@
     background:var(--navy); color:#fff; border-bottom:none;
   }
   .cta-section h2{color:#fff;}
-  .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch;}
+  .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch; text-align:justify;}
   .cta-row{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
   .cta-section .btn-outline{color:#fff; border-color:#fff;}
   .cta-section .btn-outline:hover{background:#fff; color:var(--navy);}
@@ -253,6 +256,7 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
+      <p class="hero-eyebrow-line">Sistema de Inteligencia Organizacional - Educación</p>
       <div class="hero-stat"><span id="statNum">80</span>,6<sup>%</sup></div>
       <p class="hero-label">de los directores de colegios en Chile declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
       <p class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</p>
