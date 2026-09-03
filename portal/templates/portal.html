@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ colegio.nombre }} · Portal GADUAI{% endblock %}
+{% block body %}
+<div class="topbar">
+  <strong>{{ colegio.nombre }}</strong>
+  <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+</div>
+<div class="wrap">
+  <h1>Sus productos</h1>
+  <p class="sub">Seleccione un producto habilitado para su colegio.</p>
+  <div style="display:grid;gap:16px;">
+    {% for p in productos %}
+    <div class="card" style="opacity:{{ '1' if p.habilitado and p.url else '0.4' }};">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <strong>{{ p.nombre }}</strong>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:4px;">{{ p.descripcion }}</div>
+        </div>
+        {% if p.habilitado and p.url %}
+          <a class="btn" href="{{ p.url }}" target="_blank" rel="noopener">Entrar</a>
+        {% else %}
+          <span class="badge badge-off">No habilitado</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
