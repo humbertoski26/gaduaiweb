@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GADUAI — Inteligencia organizacional para redes de educación pública</title>
 <meta name="description" content="GADUAI es el segundo cerebro de los directores de redes educativas: libera tiempo administrativo y habilita decisiones predictivas y generativas.">
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -127,13 +128,26 @@
   .problem-item h3{font-size:1.15rem; margin-bottom:6px; color:var(--ink);}
   .problem-item p{color:var(--muted); margin:0; max-width:60ch;}
 
+  .stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media (max-width:700px){ .stats-grid{grid-template-columns:1fr;} }
+  .stat-card{background:#fff; border:1px solid var(--line); border-radius:8px; padding:24px;}
+  .stat-num{font-family:'Lora',serif; font-weight:600; font-size:2.4rem; color:var(--navy); line-height:1;}
+  .stat-card p{color:var(--ink); font-size:0.95rem; margin:10px 0 8px;}
+  .stat-source{color:var(--muted); font-size:0.8rem;}
+
+  .causes-list{list-style:none; margin:20px 0 0; padding:0;}
+  .causes-list li{display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-top:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.95rem;}
+  .causes-list li span{color:#7DE0FF; font-weight:600; white-space:nowrap;}
+
+  .sources-list{color:var(--muted); font-size:0.78rem; line-height:1.8; margin-top:40px; padding-top:20px; border-top:1px solid var(--line);}
+
   /* ---------- SOLUCION ---------- */
   .brain-block{
     background:var(--navy); color:#fff; border-radius:4px;
     padding:48px; margin-bottom:56px;
   }
   .brain-block h3{color:#fff; font-size:1.6rem; margin-bottom:16px;}
-  .brain-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch;}
+  .brain-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch; text-align:justify;}
   .decision-pair{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:28px;}
   @media (max-width:700px){ .decision-pair{grid-template-columns:1fr;} }
   .decision-pair div{border-left:2px solid var(--accent); padding-left:18px;}
@@ -217,9 +231,9 @@
   <div class="wrap hero-grid">
     <div>
       <p class="eyebrow">Sistema de inteligencia organizacional para redes de educación pública</p>
-      <div class="hero-stat"><span id="statNum">31</span>–68<sup>%</sup></div>
-      <p class="hero-label">del tiempo de un director de colegio en Chile se pierde en tareas administrativas, no en liderazgo pedagógico.</p>
-      <p class="hero-source">Weinstein et al. (2016); Educación 2020 (2018); encuesta citada por Educarchile.</p>
+      <div class="hero-stat"><span id="statNum">80</span>,6<sup>%</sup></div>
+      <p class="hero-label">de los directores de colegios en Chile declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
+      <p class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</p>
       <div class="hero-cta">
         <a class="btn" href="#contacto">Solicitar una demostración</a>
         <a class="btn btn-outline" href="#solucion">Ver cómo funciona</a>
@@ -250,8 +264,48 @@
 <section id="problema">
   <div class="wrap">
     <div class="section-head">
-      <h2>Gestionar una red de colegios hoy es gestionar a ciegas</h2>
-      <p>No es un problema de gestión individual. Es estructural — y se repite en cada colegio del país.</p>
+      <h2>El problema: gestionar a ciegas</h2>
+      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico. No es una percepción aislada: los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
+    </div>
+
+    <h3 style="font-size:1.15rem; color:var(--navy); margin-bottom:20px;">Lo que dicen los estudios</h3>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">31,3%</div>
+        <p>del tiempo de los directores de colegios en Chile se destina a tareas administrativas, por sobre el monitoreo del currículum.</p>
+        <span class="stat-source">Weinstein et al. (2016)</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">70%+</div>
+        <p>de los directores declara destinar entre 40% y 80% de su tiempo a exigencias burocráticas.</p>
+        <span class="stat-source">Educación 2020 (2018)</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">68%</div>
+        <p>del tiempo de un director se va en gestión administrativa; solo 32% queda para lo pedagógico. 7 de cada 10 directores reporta alto nivel de estrés.</p>
+        <span class="stat-source">Encuesta Educarchile</span>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">80,6%</div>
+        <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas — encuesta nacional a 5.734 directores.</p>
+        <span class="stat-source">Directores por Chile, 2026 (Mineduc)</span>
+      </div>
+    </div>
+
+    <div class="brain-block" style="margin-top:56px;">
+      <h3>La causa N°1, según los propios directores</h3>
+      <p>El mismo estudio de Mineduc (2026) preguntó a los directores qué origina esa sobrecarga. Las tres causas principales que identificaron:</p>
+      <ul class="causes-list">
+        <li><strong>Gestión de plataformas informáticas</strong><span>62,5% — la causa más mencionada</span></li>
+        <li><strong>Requerimientos de los sostenedores</strong><span>54,2%</span></li>
+        <li><strong>Exigencias de la Superintendencia de Educación</strong><span>38,2%</span></li>
+      </ul>
+      <p style="margin-top:20px;">La causa que más mencionan los propios directores para explicar su sobrecarga es, literalmente, la gestión de plataformas informáticas — el problema exacto que GADUAI resuelve al consolidar en un solo sistema lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
+    </div>
+
+    <div class="section-head" style="margin-top:56px;">
+      <h3 style="font-size:1.4rem; color:var(--navy); margin-bottom:12px;">Un problema estructural, no individual</h3>
+      <p>Los datos viven fragmentados entre el SIGE y planillas Excel paralelas. Las decisiones son reactivas, sin alertas tempranas. No existe visión de red completa. Esto no es una falla de gestión de una persona: es una falla estructural del sistema con el que los equipos directivos trabajan hoy — y es exactamente el problema que GADUAI fue diseñado para resolver.</p>
     </div>
     <div class="problem-list">
       <div class="problem-item">
@@ -283,6 +337,14 @@
         </div>
       </div>
     </div>
+
+    <p class="sources-list">
+      <strong>Fuentes:</strong>
+      Weinstein, J. et al. (2016). Citado en investigación sobre gestión curricular en escuelas chilenas de bajo desempeño (Redalyc).
+      Educación 2020 (2018). "Menos carga administrativa, más calidad educativa."
+      Educarchile. "Gestión escolar: el rol de la IA en el liderazgo educativo."
+      Ministerio de Educación de Chile / La Tercera (2026). Iniciativa "Directores por Chile": 16 jornadas regionales con 1.800 directores y encuesta nacional con 5.734 respuestas.
+    </p>
   </div>
 </section>
 
@@ -322,14 +384,14 @@
     var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var el = document.getElementById('statNum');
     if(!el) return;
-    if(prefersReduced){ el.textContent = '31'; return; }
+    if(prefersReduced){ el.textContent = '80'; return; }
     var start = null;
     var duration = 900;
     function step(ts){
       if(!start) start = ts;
       var progress = Math.min((ts - start) / duration, 1);
       var eased = 1 - Math.pow(1-progress, 3);
-      el.textContent = Math.round(eased * 31);
+      el.textContent = Math.round(eased * 80);
       if(progress < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
