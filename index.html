@@ -49,13 +49,14 @@
   }
   nav .wrap{
     display:flex; align-items:center; justify-content:space-between;
-    height:72px;
+    height:96px;
   }
   .wordmark{
     display:flex; align-items:center;
     text-decoration:none;
   }
-  .wordmark img{height:34px; width:auto; display:block;}
+  .wordmark img{height:64px; width:auto; display:block;}
+  @media (max-width:640px){ .wordmark img{height:48px;} }
   .navlinks{display:flex; gap:32px; align-items:center;}
   .navlinks a{
     font-size:0.94rem; text-decoration:none; color:var(--ink);
