@@ -203,6 +203,26 @@
   .cta-section .btn-outline{color:#fff; border-color:#fff;}
   .cta-section .btn-outline:hover{background:#fff; color:var(--navy);}
 
+  /* ---------- MODAL CONTACTO ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(23,26,46,0.55);
+    display:flex; align-items:center; justify-content:center; padding:20px; z-index:100;
+  }
+  .modal-box{
+    background:var(--bg); border-radius:6px; padding:32px; max-width:440px; width:100%;
+    position:relative;
+  }
+  .modal-box h3{font-size:1.25rem;}
+  .modal-close{
+    position:absolute; top:16px; right:16px; background:none; border:none;
+    font-size:1.4rem; line-height:1; cursor:pointer; color:var(--muted);
+  }
+  .modal-box label{display:block; font-size:0.8rem; font-weight:600; color:var(--muted); margin-bottom:6px;}
+  .modal-box input, .modal-box textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px;
+    font-size:0.92rem; margin-bottom:16px; font-family:inherit; background:#fff; color:var(--ink);
+  }
+
   footer{padding:40px 0; }
   footer .wrap{
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
@@ -366,10 +386,29 @@
     <h2>Conversemos sobre su red</h2>
     <p>Si dirige un colegio o una red de establecimientos y quiere ver GADUAI en funcionamiento, escríbanos.</p>
     <div class="cta-row">
+      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto()" type="button">Escríbanos</button>
       <a class="btn btn-outline" href="#top">Volver arriba</a>
     </div>
   </div>
 </section>
+
+<div id="modal-contacto" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <button class="modal-close" onclick="cerrarContacto()" type="button" aria-label="Cerrar">&times;</button>
+    <h3>Escríbanos su consulta</h3>
+    <p class="sub" style="margin-bottom:20px;">Le respondemos directamente a su correo.</p>
+    <form id="form-contacto" onsubmit="return enviarContacto(event)">
+      <label>Nombre</label>
+      <input type="text" name="nombre" required>
+      <label>Correo</label>
+      <input type="email" name="correo" required>
+      <label>Su consulta</label>
+      <textarea name="mensaje" rows="4" required></textarea>
+      <button class="btn" type="submit">Enviar</button>
+      <p id="contacto-msg" style="margin-top:12px; font-size:0.85rem;"></p>
+    </form>
+  </div>
+</div>
 
 <footer>
   <div class="wrap">
@@ -396,6 +435,46 @@
     }
     requestAnimationFrame(step);
   })();
+
+  function abrirContacto(){ document.getElementById('modal-contacto').hidden = false; }
+  function cerrarContacto(){ document.getElementById('modal-contacto').hidden = true; }
+  document.getElementById('modal-contacto').addEventListener('click', function(e){
+    if(e.target === this) cerrarContacto();
+  });
+
+  function enviarContacto(e){
+    e.preventDefault();
+    var form = e.target;
+    var msg = document.getElementById('contacto-msg');
+    var data = {
+      nombre: form.nombre.value,
+      correo: form.correo.value,
+      mensaje: form.mensaje.value
+    };
+    msg.style.color = '#C7CDEE';
+    msg.textContent = 'Enviando...';
+    fetch('https://gaduai-portal.onrender.com/api/contacto', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, body: j}; }); })
+      .then(function(res){
+        if(res.ok){
+          msg.style.color = '#166534';
+          msg.textContent = '¡Gracias! Le responderemos a la brevedad.';
+          form.reset();
+          setTimeout(cerrarContacto, 1800);
+        } else {
+          msg.style.color = '#b91c1c';
+          msg.textContent = res.body.error || 'No se pudo enviar. Intente nuevamente.';
+        }
+      })
+      .catch(function(){
+        msg.style.color = '#b91c1c';
+        msg.textContent = 'No se pudo enviar. Intente nuevamente.';
+      });
+    return false;
+  }
 </script>
 
 </body>
