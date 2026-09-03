@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>TRIAGE GADUAI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root{color-scheme:dark}
+  html,body{background:#020617;margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:#334155;border-radius:99px}
+  ::-webkit-scrollbar-track{background:transparent}
+  .gaduai-focus{--tw-ring-color:#818cf8}
+  .fade-in{animation:fadeIn .25s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  .triage-card{transition:.15s}
+  .triage-card:hover{transform:translateY(-1px);border-color:#64748b}
+  .fab{box-shadow:0 10px 30px -8px rgba(99,102,241,.6)}
+  .fab:hover{transform:translateY(-2px) scale(1.04)}
+  .quad-cell{transition:.15s;cursor:pointer}
+  .quad-cell:hover{transform:scale(1.02)}
+  .quad-cell.selected{outline:3px solid #fff;outline-offset:-3px}
+  .modal-scroll{max-height:82vh;overflow-y:auto}
+  .brand-gradient{background:linear-gradient(90deg,#f43f5e,#f59e0b,#818cf8,#38bdf8)}
+  .gaduai-gradient{background:linear-gradient(90deg,#4338ca,#0ea5e9)}
+  .logo-orb{background:radial-gradient(circle at 35% 30%,#22d3ee,#4338ca 65%,#1e1b4b);box-shadow:0 0 30px -4px rgba(56,189,248,.7)}
+  .react-btn{transition:.15s;cursor:pointer}
+  .react-btn:hover{transform:scale(1.15)}
+  .react-btn.active{filter:drop-shadow(0 0 4px currentColor)}
+  .tab-btn{transition:.15s}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body class="text-slate-200 min-h-screen">
+
+<!-- ============ PANTALLA 0: PORTADA DEL PRODUCTO (estilo relacionai, colores GADUAI) ============ -->
+<div id="pantalla-landing" class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-lg fade-in">
+    <div class="flex flex-col items-center text-center mb-8">
+      <div class="w-20 h-20 rounded-full logo-orb flex items-center justify-center text-white text-3xl mb-4"><i class="fa-solid fa-list-check"></i></div>
+      <h1 class="text-3xl font-black text-white leading-tight">TRIAGE <span class="text-cyan-400">GADUAI</span></h1>
+      <p class="text-sm font-bold text-slate-300 mt-1">Sistema de Inteligencia Organizacional para colegios</p>
+      <p class="text-[11px] uppercase tracking-widest text-slate-500 mt-2">Timeline · Perfiles · Triage inteligente</p>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-8">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+        <i class="fa-solid fa-timeline text-cyan-400 text-lg"></i>
+        <p class="text-[11px] font-bold text-white mt-2">Timeline compartido</p>
+        <p class="text-[10px] text-slate-500 mt-1">Toda la comunidad escolar en un mismo hilo de hitos y tareas.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+        <i class="fa-solid fa-circle-half-stroke text-indigo-400 text-lg"></i>
+        <p class="text-[11px] font-bold text-white mt-2">Triage por color</p>
+        <p class="text-[10px] text-slate-500 mt-1">Cuadrante de Covey: clasifica cada acción en Rojo, Azul, Naranjo o Gris.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 text-center">
+        <i class="fa-solid fa-school text-emerald-400 text-lg"></i>
+        <p class="text-[11px] font-bold text-white mt-2">Cualquier colegio</p>
+        <p class="text-[10px] text-slate-500 mt-1">Se activa en minutos y cada establecimiento administra sus propios perfiles.</p>
+      </div>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6">
+      <p id="landing-colegios" class="text-[11px] text-slate-500 mb-3 hidden"></p>
+      <button onclick="mostrarSetup()" class="w-full gaduai-gradient text-white text-sm font-bold py-3 rounded-xl mb-2"><i class="fa-solid fa-plus mr-1"></i> Activar TRIAGE GADUAI en un colegio nuevo</button>
+      <button onclick="mostrarLoginDesdeLanding()" class="w-full text-center text-[11px] text-slate-400 hover:text-white py-2">Ya tengo un colegio activado → Ingresar al Sistema GADUAI</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANTALLA 1: CONFIGURACIÓN DEL COLEGIO (primer uso del producto en un establecimiento nuevo) ============ -->
+<div id="pantalla-setup" class="min-h-screen flex items-center justify-center p-4" hidden>
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 fade-in">
+    <div class="flex items-center gap-3 mb-1">
+      <div class="w-11 h-11 rounded-2xl gaduai-gradient flex items-center justify-center text-white text-lg"><i class="fa-solid fa-list-check"></i></div>
+      <div>
+        <h1 class="text-lg font-black text-white leading-tight">TRIAGE GADUAI</h1>
+        <p class="text-[11px] text-slate-500">Configuración inicial del establecimiento</p>
+      </div>
+    </div>
+    <p class="text-xs text-slate-400 mt-4 mb-5">Este producto funciona en cualquier colegio: complete estos datos una sola vez para activar TRIAGE GADUAI en su establecimiento. Al activarlo se crea automáticamente el perfil <b>Director ejecutivo/máster</b>, desde donde podrá agregar al resto de los usuarios.</p>
+    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Nombre del colegio / institución</label>
+    <input id="setup-colegio" placeholder="Ej. Colegio San Andrés" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl p-3 mb-4 outline-none focus:ring-2 gaduai-focus">
+    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Comuna / ciudad (opcional)</label>
+    <input id="setup-comuna" placeholder="Ej. Puente Alto" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl p-3 mb-4 outline-none focus:ring-2 gaduai-focus">
+    <label class="block text-[11px] font-semibold text-slate-400 mb-1">Correo del Director ejecutivo/máster</label>
+    <input id="setup-correo" placeholder="Ej. director@colegio.cl" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl p-3 mb-5 outline-none focus:ring-2 gaduai-focus">
+    <button onclick="crearColegio()" class="w-full gaduai-gradient text-white text-sm font-bold py-3 rounded-xl"><i class="fa-solid fa-right-to-bracket mr-1"></i> Activar TRIAGE GADUAI en este colegio</button>
+    <button onclick="mostrarLanding()" class="w-full text-center text-[11px] text-slate-500 mt-4 hover:text-slate-300">Volver</button>
+  </div>
+</div>
+
+<!-- ============ PANTALLA 2: LOGIN (misma pantalla de inicio de GADUAI) ============ -->
+<div id="pantalla-login" class="min-h-screen flex items-center justify-center p-4" hidden>
+  <div class="w-full max-w-md rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 fade-in">
+    <div class="h-1.5 gaduai-gradient"></div>
+    <div class="p-8">
+      <div class="flex flex-col items-center text-center mb-5">
+        <div class="w-16 h-16 rounded-full logo-orb flex items-center justify-center text-white text-2xl mb-3"><i class="fa-solid fa-list-check"></i></div>
+        <h1 class="text-xl font-black"><span class="text-indigo-400">PLATAFORMA</span> <span class="text-cyan-400">GADUAI</span></h1>
+        <p class="text-xs font-bold text-slate-300">Triage · Sistema de Inteligencia Organizacional</p>
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 mt-1">Datos · Personas · Propósito</p>
+      </div>
+
+      <label class="block text-[10px] uppercase tracking-wide text-slate-400 mb-1">Colegio</label>
+      <p id="login-colegio-label" class="text-sm font-bold text-white mb-4">—</p>
+
+      <label class="block text-[10px] uppercase tracking-wide text-slate-400 mb-1">Correo de acceso</label>
+      <input id="login-correo" placeholder="nombre@colegio.cl" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl p-3 mb-4 outline-none focus:ring-2 gaduai-focus">
+
+      <label class="block text-[10px] uppercase tracking-wide text-slate-400 mb-1">Clave de acceso</label>
+      <input id="login-clave" type="password" placeholder="••••••" class="w-full bg-slate-800 border border-slate-700 text-white text-sm rounded-xl p-3 mb-2 outline-none focus:ring-2 gaduai-focus">
+      <p id="login-hint" class="text-[10px] text-slate-500 mb-5"></p>
+
+      <button onclick="ingresar()" class="w-full gaduai-gradient text-white text-sm font-bold py-3 rounded-xl"><i class="fa-solid fa-right-to-bracket mr-1"></i> Ingresar al Sistema GADUAI</button>
+      <button onclick="mostrarLanding()" class="w-full text-center text-[11px] text-slate-500 mt-4 hover:text-slate-300">Cambiar de colegio / portada</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PANTALLA 3: APP · TIMELINE POR PERFIL (pantalla principal tras ingresar) ============ -->
+<div id="pantalla-app" class="min-h-screen" hidden>
+
+  <header class="sticky top-0 z-30 bg-slate-950/95 backdrop-blur border-b border-slate-800 px-4 py-3">
+    <div class="flex items-center justify-between gap-2 flex-wrap">
+      <div class="flex items-center gap-2 min-w-0">
+        <button onclick="toggleMenu()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-bars"></i></button>
+        <div class="min-w-0">
+          <p class="text-[10px] uppercase tracking-wide text-slate-500 truncate">Timeline del establecimiento · <span id="app-perfil-label">Perfil</span></p>
+          <p class="text-sm font-black text-white truncate">TRIAGE GADUAI · <span id="app-colegio-label"></span></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="hitos-count" class="text-[11px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-3 py-1">0 hitos</span>
+        <button onclick="abrirAlertas()" class="relative text-[11px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-full px-3 py-1"><i class="fa-solid fa-bell"></i> <span id="alertas-count">0</span></button>
+        <button onclick="cerrarSesion()" class="text-[11px] text-slate-500 hover:text-rose-400"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+    <p class="text-[10px] text-slate-500 mt-2">Alimentado por Director/a, Inspector/a General, UTP, Convivencia, Dupla y Docentes del colegio · ordenado de lo más próximo a vencer a lo último solicitado.</p>
+    <div class="flex items-center justify-between gap-2 mt-3 flex-wrap">
+      <div class="flex items-center gap-1.5">
+        <button onclick="filtrarTipo('todos')" data-tipo="todos" class="tab-btn px-3 py-1.5 rounded-lg text-[11px] font-bold bg-indigo-600 text-white">Todos</button>
+        <button onclick="filtrarTipo('tarea')" data-tipo="tarea" class="tab-btn px-3 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300"><i class="fa-solid fa-clipboard-list mr-1"></i>Tareas</button>
+        <button onclick="filtrarTipo('hito')" data-tipo="hito" class="tab-btn px-3 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-300"><i class="fa-solid fa-exclamation mr-1"></i>Hitos</button>
+      </div>
+      <div class="flex items-center gap-1.5" id="filtro-triage">
+        <button onclick="filtrarColor('todos')" data-f="todos" class="filtro-btn px-2 py-1 rounded-lg text-[10px] font-bold bg-slate-800 text-white ring-2 ring-white">Color</button>
+        <button onclick="filtrarColor('Rojo')" data-f="Rojo" class="filtro-btn w-7 h-7 rounded-lg text-sm bg-rose-600/20" title="Rojo · Crítico">🔴</button>
+        <button onclick="filtrarColor('Azul')" data-f="Azul" class="filtro-btn w-7 h-7 rounded-lg text-sm bg-sky-600/20" title="Azul · Estratégico">🔵</button>
+        <button onclick="filtrarColor('Naranjo')" data-f="Naranjo" class="filtro-btn w-7 h-7 rounded-lg text-sm bg-amber-600/20" title="Naranjo · Delegable">🟠</button>
+        <button onclick="filtrarColor('Gris')" data-f="Gris" class="filtro-btn w-7 h-7 rounded-lg text-sm bg-slate-600/20" title="Gris · Diferible">⚪</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú lateral: cambiar de perfil + administración de usuarios (solo máster) -->
+  <div id="menu-lateral" class="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm" hidden onclick="if(event.target===this)toggleMenu()">
+    <div class="w-72 h-full bg-slate-900 border-r border-slate-800 p-5 fade-in overflow-y-auto">
+      <p class="text-xs font-black text-white mb-1">Perfiles conectados</p>
+      <p class="text-[11px] text-slate-500 mb-4">Todos comparten el mismo Timeline del colegio.</p>
+      <div id="menu-perfiles" class="space-y-1.5"></div>
+      <button id="btn-usuarios" onclick="abrirUsuarios()" hidden class="w-full mt-5 text-[11px] text-cyan-300 border border-cyan-500/30 rounded-lg py-2"><i class="fa-solid fa-users-gear mr-1"></i> Administrar usuarios (máster)</button>
+      <button onclick="toggleMenu();cerrarSesion()" class="w-full mt-3 text-[11px] text-rose-400 border border-rose-500/30 rounded-lg py-2">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <main class="max-w-2xl mx-auto px-4 py-5 pb-32">
+    <div id="timeline-container" class="space-y-3"></div>
+    <p id="timeline-empty" class="text-center text-xs text-slate-600 py-14" hidden>Aún no hay hitos ni tareas en el Timeline. Use el botón <b>+</b> para registrar el primero.</p>
+  </main>
+
+  <!-- BOTÓN FLOTANTE + (destacado, abre ventana para ingresar acción) -->
+  <button onclick="abrirModal()" class="fab fixed bottom-7 right-1/2 translate-x-1/2 md:right-8 md:translate-x-0 w-16 h-16 rounded-full brand-gradient text-white text-3xl font-black flex items-center justify-center z-40">+</button>
+</div>
+
+<!-- ============ MODAL: REGISTRAR TAREA O HITO (TRIAGE GADUAI) ============ -->
+<div id="modal-triage" class="hidden fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 modal-scroll fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-list-check text-amber-400"></i> Triage GADUAI</h3>
+        <p class="text-[11px] text-slate-500">Registre una tarea o hallazgo; queda incorporado al Timeline del colegio.</p>
+      </div>
+      <button onclick="cerrarModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+
+    <label class="block text-[11px] text-slate-400 mb-1">Tipo de registro</label>
+    <select id="f-tipo" onchange="toggleTipo()" class="w-full bg-slate-950 border border-amber-500/40 rounded-xl p-3 text-xs text-white font-bold mb-4">
+      <option value="tarea">📋 Tarea (con círculo de la promesa)</option>
+      <option value="hito">❗ Hito (marcar avance en el Timeline)</option>
+    </select>
+
+    <label class="block text-[11px] text-slate-400 mb-1">Situación / acción / hallazgo</label>
+    <input id="f-titulo" placeholder="Ej. Reunión de apoderados 4°B" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-4">
+
+    <div id="bloque-covey" class="mb-4">
+      <label class="block text-[11px] text-slate-400 mb-2">Cuadrante de Covey — ¿es urgente? ¿es importante?</label>
+      <div class="grid grid-cols-2 gap-2">
+        <div onclick="setQuad('Rojo')" data-q="Rojo" class="quad-cell p-3 rounded-xl border border-rose-500/40 bg-rose-500/10"><b class="text-rose-300 text-[11px]">🔴 Urgente + Importante</b><small class="block text-[9px] text-slate-400 mt-0.5">Crítico · actuar ahora</small></div>
+        <div onclick="setQuad('Azul')" data-q="Azul" class="quad-cell p-3 rounded-xl border border-sky-500/40 bg-sky-500/10"><b class="text-sky-300 text-[11px]">🔵 No urgente + Importante</b><small class="block text-[9px] text-slate-400 mt-0.5">Estratégico · planificar</small></div>
+        <div onclick="setQuad('Naranjo')" data-q="Naranjo" class="quad-cell p-3 rounded-xl border border-amber-500/40 bg-amber-500/10"><b class="text-amber-300 text-[11px]">🟠 Urgente + No importante</b><small class="block text-[9px] text-slate-400 mt-0.5">Delegable · resolver</small></div>
+        <div onclick="setQuad('Gris')" data-q="Gris" class="quad-cell p-3 rounded-xl border border-slate-500/40 bg-slate-500/10"><b class="text-slate-300 text-[11px]">⚪ No urgente + No importante</b><small class="block text-[9px] text-slate-400 mt-0.5">Diferible · programar</small></div>
+      </div>
+      <div id="quad-preview" class="mt-2 text-[11px] text-slate-400"></div>
+    </div>
+
+    <label class="block text-[11px] text-slate-400 mb-1">Fecha</label>
+    <input id="f-fecha" type="date" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-4">
+
+    <label class="block text-[11px] text-slate-400 mb-1">Detalle, contexto o evidencia</label>
+    <textarea id="f-desc" rows="3" placeholder="Detalle, contexto o evidencia..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-4"></textarea>
+
+    <label class="block text-[11px] text-slate-400 mb-1">Adjuntar documento (queda almacenado en el Timeline)</label>
+    <input id="f-archivo" type="file" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-[10px] text-slate-400 mb-4">
+
+    <label class="block text-[11px] text-slate-400 mb-1">Responsable de la acción</label>
+    <select id="f-responsable" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-4"></select>
+
+    <label class="block text-[11px] text-slate-400 mb-1">Copiar a (Ctrl/Cmd+clic = varios)</label>
+    <select id="f-copiar" multiple class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white mb-5 h-24"></select>
+
+    <button onclick="registrar()" class="w-full brand-gradient text-white text-sm font-bold py-3 rounded-xl"><i class="fa-solid fa-list-check mr-1"></i> Registrar en GADUAI</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: ADMINISTRAR USUARIOS (perfil máster) ============ -->
+<div id="modal-usuarios" class="hidden fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 modal-scroll fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-users-gear text-cyan-400"></i> Administrar usuarios</h3>
+        <p class="text-[11px] text-slate-500">Cree un acceso por cada persona del colegio: nombre, correo, contraseña y perfil.</p>
+      </div>
+      <button onclick="cerrarUsuarios()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+
+    <div id="lista-usuarios" class="space-y-2 mb-5"></div>
+
+    <div class="border-t border-slate-800 pt-4">
+      <p class="text-[11px] font-bold text-white mb-2">Nuevo usuario</p>
+      <input id="u-nombre" placeholder="Nombre completo" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-2">
+      <input id="u-correo" placeholder="correo@colegio.cl" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-2">
+      <input id="u-clave" placeholder="Contraseña" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-2">
+      <select id="u-perfil" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-3"></select>
+      <button onclick="agregarUsuario()" class="w-full gaduai-gradient text-white text-xs font-bold py-2.5 rounded-xl"><i class="fa-solid fa-user-plus mr-1"></i> Crear usuario</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: MINUTA (resumen formal del registro, descargable) ============ -->
+<div id="modal-minuta" class="hidden fixed inset-0 z-[110] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 modal-scroll fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-file-lines text-slate-300"></i> Minuta</h3>
+      <button onclick="cerrarModalId('modal-minuta')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+    <pre id="minuta-texto" class="whitespace-pre-wrap text-[11px] text-slate-300 bg-slate-950 border border-slate-800 rounded-xl p-4 mb-4"></pre>
+    <button onclick="descargarMinuta()" class="w-full gaduai-gradient text-white text-xs font-bold py-2.5 rounded-xl"><i class="fa-solid fa-download mr-1"></i> Descargar minuta (.txt)</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: CHAT DEL REGISTRO ============ -->
+<div id="modal-chat" class="hidden fixed inset-0 z-[110] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 fade-in flex flex-col" style="max-height:82vh">
+    <div class="flex justify-between items-start mb-3">
+      <div>
+        <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-comments text-sky-300"></i> Chat</h3>
+        <p id="chat-item-titulo" class="text-[11px] text-slate-500"></p>
+      </div>
+      <button onclick="cerrarModalId('modal-chat')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+    <div id="chat-mensajes" class="flex-1 overflow-y-auto space-y-2 mb-3 pr-1"></div>
+    <div class="flex gap-2">
+      <input id="chat-input" placeholder="Escribir un mensaje..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+      <button onclick="enviarChat()" class="bg-sky-600 text-white px-3 rounded-xl text-xs font-bold"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ENVIAR ALERTA ============ -->
+<div id="modal-alertar" class="hidden fixed inset-0 z-[110] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 fade-in">
+    <div class="flex justify-between items-start mb-3">
+      <h3 class="text-base font-black text-white flex items-center gap-2">🔔 Enviar alerta</h3>
+      <button onclick="cerrarModalId('modal-alertar')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+    <p id="alertar-destinatario" class="text-[11px] text-slate-500 mb-3"></p>
+    <textarea id="alertar-msg" rows="3" placeholder="Mensaje de la alerta (opcional)..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs text-white mb-4"></textarea>
+    <div id="alertar-historial" class="space-y-1.5 mb-4"></div>
+    <button onclick="enviarAlerta()" class="w-full brand-gradient text-white text-xs font-bold py-2.5 rounded-xl">🔔 Enviar alerta</button>
+  </div>
+</div>
+
+<!-- ============ MODAL: MIS ALERTAS (campana del perfil) ============ -->
+<div id="modal-alertas" class="hidden fixed inset-0 z-[110] bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 modal-scroll fade-in">
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-base font-black text-white flex items-center gap-2">🔔 Mis alertas</h3>
+      <button onclick="cerrarModalId('modal-alertas')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+    </div>
+    <div id="lista-alertas" class="space-y-2"></div>
+  </div>
+</div>
+
+<div id="toast" class="hidden fixed bottom-28 md:bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 border border-slate-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl z-[200] fade-in max-w-[90vw] text-center"></div>
+
+<script>
+/* ===================== TRIAGE GADUAI · producto standalone, multi-colegio =====================
+   Funciona para cualquier colegio: portada → activación del colegio (crea automáticamente el
+   perfil Director ejecutivo/máster) → login por correo/clave → Timeline. El perfil máster puede
+   agregar el resto de los usuarios del colegio (nombre, correo, contraseña, perfil). Todo queda
+   guardado con memoria en este navegador por colegio (localStorage): colegios, usuarios y el
+   Timeline (incluyendo los documentos adjuntos, guardados como archivo embebido en cada registro). */
+
+const PERFILES = [
+  "Director ejecutivo/máster",
+  "Director/a de colegio",
+  "Inspector General",
+  "UTP",
+  "Encargado de Convivencia Educativa",
+  "Dupla psicosocial",
+  "Docente"
+];
+const PERFIL_MASTER = PERFILES[0];
+
+const TRIAGE = {
+  Rojo:   {orden:0, color:"#fb7185", icon:"🔴", nombre:"Crítico",     desc:"Urgente + importante · Actuar ahora"},
+  Azul:   {orden:1, color:"#38bdf8", icon:"🔵", nombre:"Estratégico", desc:"No urgente + importante · Planificar"},
+  Naranjo:{orden:2, color:"#fbbf24", icon:"🟠", nombre:"Delegable",   desc:"Urgente + no importante · Resolver/delegar"},
+  Gris:   {orden:3, color:"#94a3b8", icon:"⚪", nombre:"Diferible",   desc:"No urgente + no importante · Programar/eliminar"}
+};
+
+let STATE = { colegioId:null, colegio:null, perfil:null, persona:null, correo:null, isMaster:false, filtroTipo:"todos", filtroColor:"todos" };
+let archivoPendiente = null;
+
+/* ---------- almacenamiento (memoria por colegio: colegios, usuarios, timeline con documentos) ---------- */
+function keyColegios(){ return "triageGaduai.colegios"; }
+function keyTimeline(id){ return "triageGaduai.timeline."+id; }
+function keyUsuarios(id){ return "triageGaduai.usuarios."+id; }
+function slug(s){ return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,""); }
+function loadColegios(){ try{return JSON.parse(localStorage.getItem(keyColegios())||"[]")}catch(e){return []} }
+function saveColegios(arr){ localStorage.setItem(keyColegios(), JSON.stringify(arr)); }
+function loadTimeline(id){ try{return JSON.parse(localStorage.getItem(keyTimeline(id))||"[]")}catch(e){return []} }
+function saveTimeline(id, arr){ try{ localStorage.setItem(keyTimeline(id), JSON.stringify(arr)); }catch(e){ toast("No se pudo guardar: el documento adjunto es muy pesado para la memoria del navegador."); } }
+function loadUsuarios(id){ try{return JSON.parse(localStorage.getItem(keyUsuarios(id))||"[]")}catch(e){return []} }
+function saveUsuarios(id, arr){ localStorage.setItem(keyUsuarios(id), JSON.stringify(arr)); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.hidden=false; t.classList.remove("hidden"); clearTimeout(window._toastT); window._toastT=setTimeout(()=>t.classList.add("hidden"),2800); }
+function pantallas(){ return ["pantalla-landing","pantalla-setup","pantalla-login","pantalla-app"]; }
+function mostrarPantalla(id){ pantallas().forEach(p=>document.getElementById(p).hidden = p!==id); }
+
+/* ---------- navegación entre portada / activación / login ---------- */
+function mostrarLanding(){
+  const colegios = loadColegios();
+  const p = document.getElementById("landing-colegios");
+  if(colegios.length){ p.hidden=false; p.innerHTML = "Colegios ya activados en este navegador: " + colegios.map(c=>`<button onclick="entrarColegio('${c.id}');mostrarPantalla('pantalla-login')" class="underline text-cyan-300">${esc(c.nombre)}</button>`).join(", "); }
+  else p.hidden=true;
+  mostrarPantalla("pantalla-landing");
+}
+function mostrarSetup(){ mostrarPantalla("pantalla-setup"); }
+function mostrarLoginDesdeLanding(){
+  const colegios = loadColegios();
+  const last = localStorage.getItem("triageGaduai.ultimoColegio");
+  const id = (last && colegios.find(c=>c.id===last)) ? last : (colegios[0] && colegios[0].id);
+  if(!id){ toast("Primero active TRIAGE GADUAI en su colegio"); mostrarSetup(); return; }
+  entrarColegio(id);
+  mostrarPantalla("pantalla-login");
+}
+
+/* ---------- arranque ---------- */
+function init(){
+  const colegios = loadColegios();
+  const last = localStorage.getItem("triageGaduai.ultimoColegio");
+  if(last && colegios.find(c=>c.id===last)){
+    entrarColegio(last);
+    mostrarPantalla("pantalla-login");
+  } else {
+    mostrarLanding();
+  }
+}
+
+function crearColegio(){
+  const nombre = document.getElementById("setup-colegio").value.trim();
+  const comuna = document.getElementById("setup-comuna").value.trim();
+  const correoMaster = document.getElementById("setup-correo").value.trim() || "director@"+(slug(nombre)||"colegio")+".cl";
+  if(!nombre){ toast("Ingrese el nombre del colegio"); return; }
+  const id = slug(nombre) || ("colegio-"+Date.now());
+  const colegios = loadColegios();
+  if(!colegios.find(c=>c.id===id)){ colegios.push({id, nombre, comuna}); saveColegios(colegios); }
+  if(!loadUsuarios(id).length){
+    saveUsuarios(id, [{nombre:"Director ejecutivo", correo:correoMaster, clave:"123456", perfil:PERFIL_MASTER}]);
+  }
+  entrarColegio(id);
+  mostrarPantalla("pantalla-login");
+  document.getElementById("login-correo").value = correoMaster;
+  toast(`Colegio activado. Acceso máster: ${correoMaster} / clave 123456`);
+}
+
+function entrarColegio(id){
+  const colegios = loadColegios();
+  STATE.colegio = colegios.find(c=>c.id===id) || {id, nombre:id};
+  STATE.colegioId = id;
+  localStorage.setItem("triageGaduai.ultimoColegio", id);
+  document.getElementById("login-colegio-label").textContent = STATE.colegio.nombre + (STATE.colegio.comuna ? " · "+STATE.colegio.comuna : "");
+  const usuarios = loadUsuarios(id);
+  const master = usuarios.find(u=>u.perfil===PERFIL_MASTER);
+  document.getElementById("login-hint").textContent = master ? `Primer ingreso como máster: ${master.correo} / clave ${master.clave}` : "";
+}
+
+/* ---------- login por correo + clave (usuarios creados por el máster del colegio) ---------- */
+function ingresar(){
+  const correo = document.getElementById("login-correo").value.trim().toLowerCase();
+  const clave = document.getElementById("login-clave").value;
+  if(!correo || !clave){ toast("Ingrese correo y clave"); return; }
+  const usuarios = loadUsuarios(STATE.colegioId);
+  const usuario = usuarios.find(u=>u.correo.toLowerCase()===correo && u.clave===clave);
+  if(!usuario){ toast("Correo o clave incorrectos para este colegio"); return; }
+  STATE.perfil = usuario.perfil;
+  STATE.persona = usuario.nombre;
+  STATE.correo = usuario.correo;
+  STATE.isMaster = usuario.perfil===PERFIL_MASTER;
+  mostrarPantalla("pantalla-app");
+  document.getElementById("app-perfil-label").textContent = STATE.perfil;
+  document.getElementById("app-colegio-label").textContent = STATE.colegio.nombre;
+  document.getElementById("btn-usuarios").hidden = !STATE.isMaster;
+  renderMenuPerfiles();
+  renderTimeline();
+  actualizarBadgeAlertas();
+}
+
+function renderMenuPerfiles(){
+  const usuarios = loadUsuarios(STATE.colegioId);
+  const menu = document.getElementById("menu-perfiles");
+  menu.innerHTML = usuarios.map(u=>`<div class="text-[11px] px-3 py-2 rounded-lg ${u.correo===STATE.correo?'bg-indigo-600/30 text-white font-bold':'text-slate-400'}"><i class="fa-solid fa-circle-user mr-1"></i>${esc(u.nombre)} <span class="text-[9px] block text-slate-500">${esc(u.perfil)}</span></div>`).join("") || '<p class="text-[10px] text-slate-600">Sin usuarios registrados.</p>';
+}
+
+function toggleMenu(){ const m=document.getElementById("menu-lateral"); m.hidden=!m.hidden; }
+
+function cerrarSesion(){
+  mostrarPantalla("pantalla-login");
+  document.getElementById("login-clave").value="";
+}
+
+/* ---------- administración de usuarios (perfil máster) ---------- */
+function abrirUsuarios(){
+  toggleMenu();
+  renderListaUsuarios();
+  const sel = document.getElementById("u-perfil");
+  sel.innerHTML = PERFILES.map(p=>`<option>${esc(p)}</option>`).join("");
+  document.getElementById("u-nombre").value="";
+  document.getElementById("u-correo").value="";
+  document.getElementById("u-clave").value="";
+  document.getElementById("modal-usuarios").classList.remove("hidden");
+}
+function cerrarUsuarios(){ document.getElementById("modal-usuarios").classList.add("hidden"); }
+function renderListaUsuarios(){
+  const usuarios = loadUsuarios(STATE.colegioId);
+  document.getElementById("lista-usuarios").innerHTML = usuarios.map((u,i)=>`
+    <div class="flex items-center justify-between gap-2 bg-slate-950 border border-slate-800 rounded-xl p-3">
+      <div class="min-w-0">
+        <p class="text-xs font-bold text-white truncate">${esc(u.nombre)} ${u.perfil===PERFIL_MASTER?'<span class="text-[9px] text-cyan-300">· máster</span>':''}</p>
+        <p class="text-[10px] text-slate-500 truncate">${esc(u.correo)} · ${esc(u.perfil)}</p>
+      </div>
+      ${u.perfil===PERFIL_MASTER ? '' : `<button onclick="eliminarUsuario(${i})" class="text-rose-400 hover:text-rose-300 text-xs px-2"><i class="fa-solid fa-trash"></i></button>`}
+    </div>`).join("");
+}
+function agregarUsuario(){
+  const nombre = document.getElementById("u-nombre").value.trim();
+  const correo = document.getElementById("u-correo").value.trim();
+  const clave = document.getElementById("u-clave").value.trim();
+  const perfil = document.getElementById("u-perfil").value;
+  if(!nombre||!correo||!clave){ toast("Complete nombre, correo y contraseña"); return; }
+  const usuarios = loadUsuarios(STATE.colegioId);
+  if(usuarios.find(u=>u.correo.toLowerCase()===correo.toLowerCase())){ toast("Ya existe un usuario con ese correo"); return; }
+  usuarios.push({nombre, correo, clave, perfil});
+  saveUsuarios(STATE.colegioId, usuarios);
+  renderListaUsuarios();
+  renderMenuPerfiles();
+  document.getElementById("u-nombre").value="";
+  document.getElementById("u-correo").value="";
+  document.getElementById("u-clave").value="";
+  toast(`Usuario creado: ${nombre} (${perfil})`);
+}
+function eliminarUsuario(i){
+  const usuarios = loadUsuarios(STATE.colegioId);
+  usuarios.splice(i,1);
+  saveUsuarios(STATE.colegioId, usuarios);
+  renderListaUsuarios();
+  renderMenuPerfiles();
+}
+
+/* ---------- timeline ---------- */
+function filtrarTipo(v){
+  STATE.filtroTipo=v;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("bg-indigo-600","text-white"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.add("bg-slate-800","text-slate-300"));
+  const btn = document.querySelector(`.tab-btn[data-tipo="${v}"]`);
+  btn.classList.remove("bg-slate-800","text-slate-300"); btn.classList.add("bg-indigo-600","text-white");
+  renderTimeline();
+}
+function filtrarColor(v){
+  STATE.filtroColor=v;
+  document.querySelectorAll(".filtro-btn").forEach(b=>b.classList.remove("ring-2","ring-white"));
+  document.querySelector(`.filtro-btn[data-f="${v}"]`).classList.add("ring-2","ring-white");
+  renderTimeline();
+}
+
+function reaccionar(id, tipo){
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===id);
+  if(!item) return;
+  item.react = item.react || {like:0,dislike:0,ok:0,heart:0,done:false};
+  if(tipo==="done") item.react.done = !item.react.done;
+  else item.react[tipo] = (item.react[tipo]||0) + 1;
+  item.revisado = true;
+  saveTimeline(STATE.colegioId, items);
+  renderTimeline();
+}
+
+function renderTimeline(){
+  const cont = document.getElementById("timeline-container");
+  let items = loadTimeline(STATE.colegioId);
+  document.getElementById("hitos-count").textContent = items.filter(x=>x.tipo==='hito').length + " hitos";
+  if(STATE.filtroTipo!=="todos") items = items.filter(x=>x.tipo===STATE.filtroTipo);
+  if(STATE.filtroColor!=="todos") items = items.filter(x=>x.triage===STATE.filtroColor);
+  items = [...items].sort((a,b)=> new Date(a.fecha)-new Date(b.fecha) || TRIAGE[a.triage].orden - TRIAGE[b.triage].orden);
+  document.getElementById("timeline-empty").hidden = items.length>0;
+  cont.innerHTML = items.map(h=>{
+    const cfg = TRIAGE[h.triage];
+    const today = new Date(); today.setHours(0,0,0,0);
+    const due = new Date(h.fecha+"T12:00:00");
+    const diff = Math.round((due-today)/86400000);
+    const dueClass = diff<0 ? "text-rose-400" : diff===0 ? "text-amber-300" : "text-sky-300";
+    const dueText = diff<0 ? `Vencido hace ${Math.abs(diff)}d` : diff===0 ? "Vence hoy" : `Vence ${h.fecha}`;
+    const react = h.react || {like:0,dislike:0,ok:0,heart:0,done:false};
+    const estado = h.tipo==='hito' ? (react.done ? "Cumplido" : "Pendiente") : (h.revisado ? "Revisado" : "Nuevo, sin revisar");
+    return `<div class="bg-slate-900/70 border ${h.tipo==='hito' && !react.done ? 'border-rose-500/40':'border-slate-800'} rounded-2xl p-4 triage-card fade-in">
+      <div class="flex justify-between gap-2 items-start flex-wrap">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full inline-block" style="background:${cfg.color}"></span>
+          <p class="text-sm font-black text-white">${esc(h.titulo)}</p>
+          ${h.tipo==='hito'?'<span class="text-[9px] font-bold uppercase bg-slate-700 text-slate-200 rounded px-1.5 py-0.5">Hito</span>':''}
+          ${!h.revisado?'<span class="text-[9px] font-bold uppercase bg-rose-600 text-white rounded-full px-2 py-0.5">Nuevo</span>':''}
+        </div>
+        <span class="text-[10px] font-mono font-bold ${dueClass}">${dueText}</span>
+      </div>
+      ${h.desc?`<p class="text-xs text-slate-400 mt-1">${esc(h.desc)}</p>`:""}
+      <p class="text-[11px] mt-2" style="color:${cfg.color}">${h.triage} · vence ${h.fecha} · ${h.tipo==='hito'?'creado por':'registró'} ${esc(h.persona)}${h.responsable && h.responsable!==h.persona ? ` · asignado a ${esc(h.responsable)}`:''}</p>
+      ${h.archivoNombre ? `<a href="${h.archivoData}" download="${esc(h.archivoNombre)}" class="text-[10px] text-indigo-300 underline mt-1 inline-block"><i class="fa-solid fa-paperclip"></i> ${esc(h.archivoNombre)}</a>` : ""}
+      <div class="flex items-center gap-3 mt-3 text-sm">
+        <span class="react-btn ${react.done?'active text-emerald-400':'text-slate-500'}" style="color:${cfg.color}" title="Prioridad">❗</span>
+        <span class="react-btn text-slate-500 ${react.like?'active text-emerald-400':''}" onclick="reaccionar(${h.id},'like')" title="Me parece bien">👍<sup class="text-[9px]">${react.like||''}</sup></span>
+        <span class="react-btn text-slate-500 ${react.dislike?'active text-rose-400':''}" onclick="reaccionar(${h.id},'dislike')" title="No corresponde">👎<sup class="text-[9px]">${react.dislike||''}</sup></span>
+        <span class="react-btn text-slate-500 ${react.ok?'active text-amber-300':''}" onclick="reaccionar(${h.id},'ok')" title="Acuso recibo">🤙<sup class="text-[9px]">${react.ok||''}</sup></span>
+        <span class="react-btn text-slate-500 ${react.done?'active text-emerald-400':''}" onclick="reaccionar(${h.id},'done')" title="Marcar cumplido"><i class="fa-solid fa-circle-check"></i></span>
+        <span class="react-btn text-slate-500 ${react.heart?'active text-pink-400':''}" onclick="reaccionar(${h.id},'heart')" title="Agradecer">♥<sup class="text-[9px]">${react.heart||''}</sup></span>
+        <span class="text-[10px] text-slate-500 ml-auto">${estado}</span>
+      </div>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <button onclick="abrirMinuta(${h.id})" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-[10px] font-semibold"><i class="fa-solid fa-file-lines mr-1"></i>Solicitar Minuta</button>
+        <button onclick="abrirChat(${h.id})" class="bg-sky-600/20 text-sky-300 px-3 py-1.5 rounded-lg text-[10px] font-semibold"><i class="fa-solid fa-comments mr-1"></i>Chat${(h.chat&&h.chat.length)?` (${h.chat.length})`:''}</button>
+        <button onclick="abrirAlertar(${h.id})" class="bg-amber-600/20 text-amber-300 px-3 py-1.5 rounded-lg text-[10px] font-semibold">🔔 Alertar${(h.alertas&&h.alertas.length)?` (${h.alertas.length})`:''}</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- modal registrar (tarea o hito, con documento adjunto que queda almacenado) ---------- */
+let quadSel = "Rojo";
+function abrirModal(){
+  document.getElementById("modal-triage").classList.remove("hidden");
+  document.getElementById("f-tipo").value="tarea";
+  document.getElementById("f-titulo").value="";
+  document.getElementById("f-desc").value="";
+  document.getElementById("f-archivo").value="";
+  archivoPendiente = null;
+  document.getElementById("f-fecha").value=new Date().toISOString().slice(0,10);
+  const usuarios = loadUsuarios(STATE.colegioId);
+  const opciones = usuarios.length ? usuarios.map(u=>`<option value="${esc(u.nombre)}">${esc(u.nombre)} · ${esc(u.perfil)}</option>`).join("") : PERFILES.map(p=>`<option>${esc(p)}</option>`).join("");
+  document.getElementById("f-responsable").innerHTML = opciones;
+  document.getElementById("f-copiar").innerHTML = opciones;
+  document.getElementById("f-responsable").value = STATE.persona;
+  toggleTipo();
+  setQuad("Rojo");
+}
+function cerrarModal(){ document.getElementById("modal-triage").classList.add("hidden"); }
+function toggleTipo(){
+  /* tanto tareas como hitos llevan color de triage (ver Timeline: los hitos también se
+     clasifican por color), así que el cuadrante de Covey queda siempre visible. */
+}
+function setQuad(q){
+  quadSel = q;
+  document.querySelectorAll(".quad-cell").forEach(c=>c.classList.toggle("selected", c.dataset.q===q));
+  const cfg = TRIAGE[q];
+  document.getElementById("quad-preview").innerHTML = `<b style="color:${cfg.color}">${cfg.icon} ${q} · ${cfg.nombre}</b> · ${cfg.desc}`;
+}
+document.addEventListener("change", e=>{
+  if(e.target.id==="f-archivo"){
+    const file = e.target.files[0];
+    if(!file){ archivoPendiente=null; return; }
+    if(file.size > 4*1024*1024){ toast("El documento debe pesar menos de 4MB"); e.target.value=""; archivoPendiente=null; return; }
+    const reader = new FileReader();
+    reader.onload = ()=>{ archivoPendiente = {nombre:file.name, data:reader.result}; };
+    reader.readAsDataURL(file);
+  }
+});
+function registrar(){
+  const titulo = document.getElementById("f-titulo").value.trim();
+  if(!titulo){ toast("Ingrese la situación / acción / hallazgo"); return; }
+  const tipo = document.getElementById("f-tipo").value;
+  const triage = tipo==="tarea" ? quadSel : quadSel;
+  const item = {
+    id: Date.now(),
+    tipo, triage,
+    titulo,
+    desc: document.getElementById("f-desc").value.trim(),
+    fecha: document.getElementById("f-fecha").value || new Date().toISOString().slice(0,10),
+    responsable: document.getElementById("f-responsable").value,
+    copiados: [...document.getElementById("f-copiar").selectedOptions].map(o=>o.value),
+    persona: STATE.persona,
+    perfil: STATE.perfil,
+    creado: new Date().toLocaleDateString("es-CL"),
+    revisado: false,
+    archivoNombre: archivoPendiente ? archivoPendiente.nombre : null,
+    archivoData: archivoPendiente ? archivoPendiente.data : null,
+    chat: [],
+    alertas: []
+  };
+  const items = loadTimeline(STATE.colegioId);
+  items.push(item);
+  saveTimeline(STATE.colegioId, items);
+  cerrarModal();
+  renderTimeline();
+  toast(`Incorporado al Timeline: ${TRIAGE[triage].icon} ${TRIAGE[triage].nombre}${item.archivoNombre?' · documento almacenado':''}`);
+}
+
+/* ---------- minuta (resumen formal, descargable) ---------- */
+let minutaItemActual = null;
+function cerrarModalId(id){ document.getElementById(id).classList.add("hidden"); }
+function textoMinuta(h){
+  const cfg = TRIAGE[h.triage];
+  const lineas = [
+    `MINUTA · TRIAGE GADUAI`,
+    `Colegio: ${STATE.colegio.nombre}`,
+    `Tipo: ${h.tipo==='hito'?'Hito':'Tarea'} · Triage ${h.triage} (${cfg.nombre})`,
+    `Título: ${h.titulo}`,
+    `Fecha compromiso: ${h.fecha}`,
+    `${h.tipo==='hito'?'Creado por':'Registrado por'}: ${h.persona} (${h.perfil})`,
+    `Responsable: ${h.responsable||'—'}`,
+    h.copiados && h.copiados.length ? `Copiado a: ${h.copiados.join(', ')}` : null,
+    ``,
+    `Detalle:`,
+    h.desc || '(sin detalle adicional)',
+    ``,
+    `Recomendación TRIAGE: ${cfg.desc}.`,
+    h.archivoNombre ? `Documento adjunto: ${h.archivoNombre}` : null,
+    ``,
+    `Historial de chat (${(h.chat||[]).length}):`,
+    ...(h.chat && h.chat.length ? h.chat.map(m=>`  [${m.fecha}] ${m.autor}: ${m.texto}`) : ['  (sin mensajes)']),
+    ``,
+    `Alertas enviadas (${(h.alertas||[]).length}):`,
+    ...(h.alertas && h.alertas.length ? h.alertas.map(a=>`  [${a.fecha}] ${a.autor} → ${a.destinatario}${a.mensaje?': '+a.mensaje:''}`) : ['  (sin alertas)']),
+    ``,
+    `Generado: ${new Date().toLocaleString('es-CL')}`
+  ].filter(x=>x!==null);
+  return lineas.join("\n");
+}
+function abrirMinuta(id){
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===id);
+  if(!item) return;
+  minutaItemActual = item;
+  document.getElementById("minuta-texto").textContent = textoMinuta(item);
+  document.getElementById("modal-minuta").classList.remove("hidden");
+}
+function descargarMinuta(){
+  if(!minutaItemActual) return;
+  const blob = new Blob([textoMinuta(minutaItemActual)], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `minuta-${slug(minutaItemActual.titulo)||minutaItemActual.id}.txt`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+  toast("Minuta descargada");
+}
+
+/* ---------- chat por registro ---------- */
+let chatItemActual = null;
+function abrirChat(id){
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===id);
+  if(!item) return;
+  chatItemActual = id;
+  document.getElementById("chat-item-titulo").textContent = item.titulo + " · " + STATE.colegio.nombre;
+  renderChatMensajes(item);
+  document.getElementById("modal-chat").classList.remove("hidden");
+  document.getElementById("chat-input").value = "";
+  document.getElementById("chat-input").focus();
+}
+function renderChatMensajes(item){
+  const cont = document.getElementById("chat-mensajes");
+  cont.innerHTML = (item.chat||[]).map(m=>`
+    <div class="text-[11px] ${m.autor===STATE.persona?'text-right':''}">
+      <div class="inline-block ${m.autor===STATE.persona?'bg-indigo-600/30':'bg-slate-800'} rounded-xl px-3 py-2 max-w-[85%]">
+        <p class="font-bold text-white">${esc(m.autor)} <span class="text-[9px] text-slate-500 font-normal">${esc(m.perfil)}</span></p>
+        <p class="text-slate-300">${esc(m.texto)}</p>
+      </div>
+      <p class="text-[9px] text-slate-600">${m.fecha}</p>
+    </div>`).join("") || '<p class="text-[10px] text-slate-600 text-center py-6">Sin mensajes todavía.</p>';
+  cont.scrollTop = cont.scrollHeight;
+}
+function enviarChat(){
+  const texto = document.getElementById("chat-input").value.trim();
+  if(!texto || !chatItemActual) return;
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===chatItemActual);
+  item.chat = item.chat || [];
+  item.chat.push({autor:STATE.persona, perfil:STATE.perfil, texto, fecha:new Date().toLocaleString('es-CL')});
+  saveTimeline(STATE.colegioId, items);
+  document.getElementById("chat-input").value = "";
+  renderChatMensajes(item);
+  renderTimeline();
+}
+
+/* ---------- alertar (registra la alerta en el historial del ítem y en la campana del destinatario) ---------- */
+let alertarItemActual = null;
+function abrirAlertar(id){
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===id);
+  if(!item) return;
+  alertarItemActual = id;
+  document.getElementById("alertar-destinatario").textContent = `Se alertará a: ${item.responsable || '—'} · ${item.titulo}`;
+  document.getElementById("alertar-msg").value = "";
+  document.getElementById("alertar-historial").innerHTML = (item.alertas||[]).map(a=>`<p class="text-[10px] text-slate-500">🔔 ${a.fecha} · ${esc(a.autor)} → ${esc(a.destinatario)}${a.mensaje?': '+esc(a.mensaje):''}</p>`).join("") || '<p class="text-[10px] text-slate-600">Sin alertas previas para este registro.</p>';
+  document.getElementById("modal-alertar").classList.remove("hidden");
+}
+function enviarAlerta(){
+  if(!alertarItemActual) return;
+  const items = loadTimeline(STATE.colegioId);
+  const item = items.find(x=>x.id===alertarItemActual);
+  item.alertas = item.alertas || [];
+  item.alertas.push({autor:STATE.persona, destinatario:item.responsable||'—', mensaje:document.getElementById("alertar-msg").value.trim(), fecha:new Date().toLocaleString('es-CL'), leida:false});
+  saveTimeline(STATE.colegioId, items);
+  cerrarModalId("modal-alertar");
+  renderTimeline();
+  toast(`Alerta enviada a ${item.responsable||'—'}`);
+}
+function actualizarBadgeAlertas(){
+  const items = loadTimeline(STATE.colegioId);
+  let n = 0;
+  items.forEach(h=>(h.alertas||[]).forEach(a=>{ if(a.destinatario===STATE.persona && !a.leida) n++; }));
+  document.getElementById("alertas-count").textContent = n;
+}
+function abrirAlertas(){
+  const items = loadTimeline(STATE.colegioId);
+  const propias = [];
+  items.forEach(h=>(h.alertas||[]).forEach(a=>{ if(a.destinatario===STATE.persona){ propias.push({...a, item:h}); a.leida=true; } }));
+  saveTimeline(STATE.colegioId, items);
+  propias.sort((a,b)=> new Date(b.fecha)-new Date(a.fecha));
+  document.getElementById("lista-alertas").innerHTML = propias.map(a=>`
+    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3">
+      <p class="text-[10px] text-amber-300 font-bold">🔔 ${esc(a.autor)} te alertó · ${a.fecha}</p>
+      <p class="text-xs font-bold text-white mt-1">${esc(a.item.titulo)}</p>
+      ${a.mensaje?`<p class="text-[11px] text-slate-400 mt-1">${esc(a.mensaje)}</p>`:''}
+      <button onclick="cerrarModalId('modal-alertas');abrirChat(${a.item.id})" class="text-[10px] text-sky-300 mt-2"><i class="fa-solid fa-comments mr-1"></i>Responder en el chat</button>
+    </div>`).join("") || '<p class="text-[11px] text-slate-500 text-center py-8">No tienes alertas.</p>';
+  document.getElementById("modal-alertas").classList.remove("hidden");
+  actualizarBadgeAlertas();
+  renderTimeline();
+}
+
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ cerrarModal(); cerrarUsuarios(); ["modal-minuta","modal-chat","modal-alertar","modal-alertas"].forEach(cerrarModalId); } });
+init();
+</script>
+</body>
+</html>
