@@ -36,6 +36,15 @@ CREATE TABLE IF NOT EXISTS accesos (
   url TEXT,
   UNIQUE(colegio_id, producto)
 );
+
+CREATE TABLE IF NOT EXISTS mensajes_contacto (
+  id SERIAL PRIMARY KEY,
+  nombre TEXT NOT NULL,
+  correo TEXT NOT NULL,
+  mensaje TEXT NOT NULL,
+  leido BOOLEAN NOT NULL DEFAULT false,
+  creado_en TIMESTAMP DEFAULT now()
+);
 """
 
 
