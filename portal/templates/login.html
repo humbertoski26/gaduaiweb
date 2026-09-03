@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Ingresar · Portal GADUAI{% endblock %}
+{% block body %}
+<div class="wrap">
+  <h1>Portal GADUAI</h1>
+  <p class="sub">Ingrese con el correo y clave de su colegio.</p>
+  {% if error %}<div class="flash">{{ error }}</div>{% endif %}
+  <form method="post">
+    <label>Correo</label>
+    <input type="email" name="email" required autofocus>
+    <label>Clave</label>
+    <input type="password" name="password" required>
+    <button class="btn" type="submit">Ingresar</button>
+  </form>
+</div>
+{% endblock %}
