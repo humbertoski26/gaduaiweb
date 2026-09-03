@@ -3,7 +3,10 @@
 {% block body %}
 <div class="topbar">
   <strong>Admin GADUAI</strong>
-  <a href="{{ url_for('admin_logout') }}">Cerrar sesión</a>
+  <div style="display:flex; gap:16px; align-items:center;">
+    <a href="{{ url_for('admin_mensajes') }}">Mensajes{% if mensajes_no_leidos %} <span class="badge badge-on">{{ mensajes_no_leidos }}</span>{% endif %}</a>
+    <a href="{{ url_for('admin_logout') }}">Cerrar sesión</a>
+  </div>
 </div>
 <div class="wrap" style="max-width:900px;">
   <h1>Colegios</h1>
