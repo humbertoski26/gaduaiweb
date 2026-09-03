@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GADUAI — Inteligencia organizacional para redes de educación pública</title>
+<meta name="description" content="GADUAI es el segundo cerebro de los directores de redes educativas: libera tiempo administrativo y habilita decisiones predictivas y generativas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF8;
+    --ink:#171A2E;
+    --navy:#1E2761;
+    --navy-soft:#F0F1F8;
+    --accent:#E8722C;
+    --line:#E2E1DA;
+    --muted:#5B5D72;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Lora',Georgia,serif;
+    font-weight:600;
+    line-height:1.15;
+    margin:0;
+    color:var(--navy);
+  }
+  a{color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,248,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:72px;
+  }
+  .wordmark{
+    font-family:'Lora',serif; font-weight:600; font-size:1.35rem;
+    color:var(--navy); letter-spacing:0.01em;
+    text-decoration:none;
+  }
+  .navlinks{display:flex; gap:32px; align-items:center;}
+  .navlinks a{
+    font-size:0.94rem; text-decoration:none; color:var(--ink);
+    font-weight:500;
+  }
+  .navlinks a:hover{color:var(--accent);}
+  .btn{
+    display:inline-block;
+    background:var(--navy); color:#fff;
+    padding:11px 22px; border-radius:3px;
+    font-weight:600; font-size:0.92rem;
+    text-decoration:none;
+    border:1px solid var(--navy);
+    transition:background .15s ease, color .15s ease;
+  }
+  .btn:hover{background:var(--accent); border-color:var(--accent);}
+  .btn-outline{
+    background:transparent; color:var(--navy); border:1px solid var(--navy);
+  }
+  .btn-outline:hover{background:var(--navy); color:#fff;}
+  @media (max-width:760px){ .navlinks a:not(.btn){display:none;} }
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:64px; align-items:center;
+  }
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
+
+  .eyebrow{
+    font-size:0.85rem; color:var(--muted); margin-bottom:18px; font-weight:500;
+  }
+  .hero-stat{
+    font-family:'Lora',serif; font-weight:600;
+    font-size:clamp(4rem, 11vw, 7.5rem);
+    color:var(--navy); line-height:0.95;
+    letter-spacing:-0.02em;
+  }
+  .hero-stat sup{font-size:0.35em; top:-1.6em; font-weight:500;}
+  .hero-label{
+    font-size:1.2rem; margin-top:18px; color:var(--ink); max-width:36ch;
+  }
+  .hero-source{
+    font-size:0.85rem; color:var(--muted); margin-top:14px;
+  }
+  .hero-cta{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
+
+  .network-svg{width:100%; height:auto;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:88px 0; border-bottom:1px solid var(--line);}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
+  .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px;}
+
+  /* ---------- PROBLEMA (dossier list) ---------- */
+  .problem-list{border-top:1px solid var(--line);}
+  .problem-item{
+    display:grid; grid-template-columns:64px 1fr;
+    gap:24px; padding:28px 0; border-bottom:1px solid var(--line);
+  }
+  .problem-num{
+    font-family:'Lora',serif; color:var(--accent); font-size:1.3rem; font-weight:600;
+  }
+  .problem-item h3{font-size:1.15rem; margin-bottom:6px; color:var(--ink);}
+  .problem-item p{color:var(--muted); margin:0; max-width:60ch;}
+
+  /* ---------- SOLUCION ---------- */
+  .brain-block{
+    background:var(--navy); color:#fff; border-radius:4px;
+    padding:48px; margin-bottom:56px;
+  }
+  .brain-block h3{color:#fff; font-size:1.6rem; margin-bottom:16px;}
+  .brain-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch;}
+  .decision-pair{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:28px;}
+  @media (max-width:700px){ .decision-pair{grid-template-columns:1fr;} }
+  .decision-pair div{border-left:2px solid var(--accent); padding-left:18px;}
+  .decision-pair strong{display:block; color:#fff; margin-bottom:6px; font-size:1.02rem;}
+  .decision-pair span{color:#C7CDEE; font-size:0.96rem;}
+
+  .module-index{border-top:1px solid var(--line);}
+  .module-row{
+    display:grid; grid-template-columns:40px 1fr 2fr; gap:20px;
+    padding:20px 0; border-bottom:1px solid var(--line); align-items:baseline;
+  }
+  @media (max-width:700px){ .module-row{grid-template-columns:32px 1fr; }
+    .module-row .module-desc{grid-column:2/3; margin-top:4px;} }
+  .module-n{font-family:'Lora',serif; color:var(--muted); font-size:0.95rem;}
+  .module-name{font-weight:600; color:var(--ink);}
+  .module-desc{color:var(--muted); font-size:0.95rem;}
+
+  /* ---------- POR QUE AHORA ---------- */
+  .now-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
+  @media (max-width:800px){ .now-grid{grid-template-columns:1fr;} }
+  .big-figure{font-family:'Lora',serif; font-size:4.2rem; color:var(--navy); font-weight:600; line-height:1;}
+  .big-figure + p{color:var(--muted); margin-top:12px; max-width:40ch;}
+  .now-list{list-style:none; margin:0; padding:0;}
+  .now-list li{padding:16px 0; border-top:1px solid var(--line); color:var(--muted);}
+  .now-list li:last-child{border-bottom:1px solid var(--line);}
+  .now-list strong{color:var(--ink); display:block; margin-bottom:4px;}
+
+  /* ---------- EQUIPO ---------- */
+  .team-block{display:grid; grid-template-columns:180px 1fr; gap:36px; align-items:start;}
+  @media (max-width:600px){ .team-block{grid-template-columns:1fr;} }
+  .avatar{
+    width:120px; height:120px; border-radius:50%;
+    background:var(--navy); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Lora',serif; font-size:1.8rem; font-weight:600;
+  }
+  .team-block h3{font-size:1.4rem;}
+  .team-block .role{color:var(--accent); font-weight:600; font-size:0.95rem; margin:4px 0 16px;}
+  .team-block p{color:var(--muted); max-width:62ch;}
+  .credentials{list-style:none; padding:0; margin:18px 0 0; display:flex; flex-wrap:wrap; gap:10px;}
+  .credentials li{
+    font-size:0.85rem; color:var(--navy); background:var(--navy-soft);
+    padding:6px 14px; border-radius:20px;
+  }
+
+  /* ---------- CTA / CONTACTO ---------- */
+  .cta-section{
+    background:var(--navy); color:#fff; border-bottom:none;
+  }
+  .cta-section h2{color:#fff;}
+  .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch;}
+  .cta-row{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
+  .cta-section .btn-outline{color:#fff; border-color:#fff;}
+  .cta-section .btn-outline:hover{background:#fff; color:var(--navy);}
+
+  footer{padding:40px 0; }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  footer p{color:var(--muted); font-size:0.85rem; margin:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="wordmark" href="#top">GADUAI</a>
+    <div class="navlinks">
+      <a href="#problema">El problema</a>
+      <a href="#solucion">La solución</a>
+      <a href="#equipo">Equipo</a>
+      <a class="btn" href="#contacto">Solicitar demo</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Sistema de inteligencia organizacional para redes de educación pública</p>
+      <div class="hero-stat"><span id="statNum">31</span>–68<sup>%</sup></div>
+      <p class="hero-label">del tiempo de un director de colegio en Chile se pierde en tareas administrativas, no en liderazgo pedagógico.</p>
+      <p class="hero-source">Weinstein et al. (2016); Educación 2020 (2018); encuesta citada por Educarchile.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#contacto">Solicitar una demostración</a>
+        <a class="btn btn-outline" href="#solucion">Ver cómo funciona</a>
+      </div>
+    </div>
+    <div>
+      <svg class="network-svg" viewBox="0 0 420 380" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Red de establecimientos conectados">
+        <line x1="210" y1="190" x2="70" y2="70" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="210" y1="190" x2="340" y2="60" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="210" y1="190" x2="60" y2="230" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="210" y1="190" x2="350" y2="240" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="210" y1="190" x2="150" y2="330" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="210" y1="190" x2="290" y2="330" stroke="#D8DAEC" stroke-width="1.5"/>
+        <line x1="70" y1="70" x2="150" y2="330" stroke="#EDEEF6" stroke-width="1"/>
+        <line x1="340" y1="60" x2="350" y2="240" stroke="#EDEEF6" stroke-width="1"/>
+        <circle cx="210" cy="190" r="22" fill="#1E2761"/>
+        <circle cx="70" cy="70" r="10" fill="#E8722C"/>
+        <circle cx="340" cy="60" r="10" fill="#1E2761" fill-opacity="0.55"/>
+        <circle cx="60" cy="230" r="10" fill="#1E2761" fill-opacity="0.55"/>
+        <circle cx="350" cy="240" r="10" fill="#E8722C"/>
+        <circle cx="150" cy="330" r="10" fill="#1E2761" fill-opacity="0.55"/>
+        <circle cx="290" cy="330" r="10" fill="#1E2761" fill-opacity="0.55"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section id="problema">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Gestionar una red de colegios hoy es gestionar a ciegas</h2>
+      <p>No es un problema de gestión individual. Es estructural — y se repite en cada SLEP del país.</p>
+    </div>
+    <div class="problem-list">
+      <div class="problem-item">
+        <div class="problem-num">01</div>
+        <div>
+          <h3>Datos fragmentados</h3>
+          <p>La información vive dispersa entre SIGE, planillas Excel paralelas y el conocimiento informal de cada director.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">02</div>
+        <div>
+          <h3>Decisiones reactivas</h3>
+          <p>Sin alertas tempranas, los directores se enteran de una crisis cuando ya escaló.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">03</div>
+        <div>
+          <h3>Sin visión de red</h3>
+          <p>Cada colegio se gestiona aislado; no existe un tablero único para comparar y priorizar.</p>
+        </div>
+      </div>
+      <div class="problem-item">
+        <div class="problem-num">04</div>
+        <div>
+          <h3>Sobrecarga administrativa</h3>
+          <p>El tiempo que debería ir a lo pedagógico se pierde reportando manualmente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solucion">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Un segundo cerebro para quien dirige la red</h2>
+      <p>GADUAI no es un dashboard pasivo que hay que ir a revisar. Es un sistema que libera tiempo — agregando, prediciendo y alertando automáticamente — para que ese tiempo se use en tomar mejores decisiones.</p>
+    </div>
+
+    <div class="brain-block">
+      <h3>Dos tipos de decisiones que habilita</h3>
+      <div class="decision-pair">
+        <div>
+          <strong>Predictivas</strong>
+          <span>Anticipa qué estudiante está en riesgo de desertar, qué establecimiento se está quedando atrás, dónde puede escalar la próxima crisis — antes de que ocurra.</span>
+        </div>
+        <div>
+          <strong>Generativas</strong>
+          <span>No solo avisa: ayuda a construir la respuesta. Redacta el primer borrador de un plan de acción, sistematiza una buena práctica, arma el informe.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-index">
+      <div class="module-row">
+        <div class="module-n">01</div>
+        <div class="module-name">Dashboard ejecutivo de red</div>
+        <div class="module-desc">Vista unificada de todos los establecimientos, en tiempo real.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">02</div>
+        <div class="module-name">Georreferenciación de la red</div>
+        <div class="module-desc">Visualización geográfica de la red completa con indicadores por zona.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">03</div>
+        <div class="module-name">Triage y timeline ejecutivo</div>
+        <div class="module-desc">Priorización automática de situaciones críticas, con línea de tiempo.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">04</div>
+        <div class="module-name">Control de ausentismo laboral</div>
+        <div class="module-desc">Monitoreo de ausentismo en tiempo real para toda la red.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">05</div>
+        <div class="module-name">Dotación y horas contratadas</div>
+        <div class="module-desc">Gestión de dotación y control de horas por establecimiento.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">06</div>
+        <div class="module-name">Bitácoras de red</div>
+        <div class="module-desc">Registro centralizado de eventos y decisiones en toda la red.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">07</div>
+        <div class="module-name">Alertas de crisis georreferenciadas</div>
+        <div class="module-desc">Detección y localización automática de situaciones de crisis.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">08</div>
+        <div class="module-name">Predicción de deserción y repitencia</div>
+        <div class="module-desc">Modelos predictivos para identificar estudiantes en riesgo.</div>
+      </div>
+      <div class="module-row">
+        <div class="module-n">09</div>
+        <div class="module-name">IA GADUAI con memoria activa</div>
+        <div class="module-desc">Asistente contextualizado a la red específica, no un chatbot genérico.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="por-que-ahora">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Por qué ahora</h2>
+    </div>
+    <div class="now-grid">
+      <div>
+        <div class="big-figure">70</div>
+        <p>SLEP proyectados a nivel nacional al completarse la reforma de educación pública en Chile. Hoy hay 11 en funcionamiento — ventana de adopción temprana antes de que el mercado se consolide.</p>
+      </div>
+      <ul class="now-list">
+        <li><strong>IA accesible</strong>La IA predictiva y generativa ya está madura para ofrecer, a costo accesible para el sector público, capacidades antes solo al alcance de organizaciones privadas grandes.</li>
+        <li><strong>Escala real</strong>Cada SLEP administra en promedio 30–50 establecimientos y miles de funcionarios — complejidad que hoy se gestiona sin herramientas diseñadas para ello.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="equipo">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Construido por quien vivió el problema</h2>
+    </div>
+    <div class="team-block">
+      <div class="avatar">HG</div>
+      <div>
+        <h3>Humberto Garrido San Martín</h3>
+        <p class="role">Fundador</p>
+        <p>20 años en educación. Como jefe de educación de Santiago dirigió 44 establecimientos y cerca de 3.500 colaboradores. GADUAI nace de esa experiencia — diseñado desde el escritorio de un director a las 7 de la mañana, no desde una oficina de fiscalización del Estado.</p>
+        <ul class="credentials">
+          <li>Profesor de Educación Física</li>
+          <li>MBA, Universidad de Chile</li>
+          <li>Ex rector, Liceo de Aplicación</li>
+          <li>Fundador, Legítimo Otro</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contacto" style="border-bottom:none;">
+  <div class="wrap">
+    <h2>Conversemos sobre su red</h2>
+    <p>Si dirige un SLEP o una red de establecimientos y quiere ver GADUAI en funcionamiento, escríbanos.</p>
+    <div class="cta-row">
+      <a class="btn" style="background:var(--accent); border-color:var(--accent);" href="mailto:contacto@gaduai.cl">contacto@gaduai.cl</a>
+      <a class="btn btn-outline" href="#top">Volver arriba</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 GADUAI. Sistema de inteligencia organizacional para redes de educación pública.</p>
+    <p>Santiago, Chile</p>
+  </div>
+</footer>
+
+<script>
+  // Single deliberate motion moment: the hero stat counts up once on load
+  (function(){
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var el = document.getElementById('statNum');
+    if(!el) return;
+    if(prefersReduced){ el.textContent = '31'; return; }
+    var start = null;
+    var duration = 900;
+    function step(ts){
+      if(!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1-progress, 3);
+      el.textContent = Math.round(eased * 31);
+      if(progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+</script>
+
+</body>
+</html>
