@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ colegio.nombre }} · Admin GADUAI{% endblock %}
+{% block body %}
+<div class="topbar">
+  <strong>Admin GADUAI</strong>
+  <a href="{{ url_for('admin_dashboard') }}">← Volver</a>
+</div>
+<div class="wrap">
+  <h1>{{ colegio.nombre }}</h1>
+  <p class="sub">{{ colegio.comuna or 'Sin comuna' }} · usuario: {{ usuario.email if usuario else '—' }}</p>
+  {% if msg %}<div class="flash">{{ msg }}</div>{% endif %}
+
+  <div class="card">
+    <strong>Relacionai</strong>
+    <p style="font-size:0.85rem;color:var(--muted);">Cada colegio tiene su propio despliegue de Relacionai — pegue la URL específica de este colegio.</p>
+    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='relacionai') }}">
+      <label>URL de Relacionai para este colegio</label>
+      <input type="url" name="url" placeholder="https://relacionai-nombre-colegio.onrender.com" value="{{ acc.relacionai_url or '' }}">
+      <button class="btn" type="submit" name="habilitado" value="1">Guardar y habilitar</button>
+      <button class="btn btn-outline" type="submit" name="habilitado" value="0">Deshabilitar</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <strong>TRIAGE GADUAI</strong>
+    <p style="font-size:0.85rem;color:var(--muted);">TRIAGE es un solo despliegue compartido — el colegio se identifica dentro de la app.</p>
+    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='triage') }}">
+      <label>URL de TRIAGE</label>
+      <input type="url" name="url" placeholder="https://triage-gaduai.onrender.com" value="{{ acc.triage_url or '' }}">
+      <button class="btn" type="submit" name="habilitado" value="1">Guardar y habilitar</button>
+      <button class="btn btn-outline" type="submit" name="habilitado" value="0">Deshabilitar</button>
+    </form>
+  </div>
+
+  <div class="card" style="opacity:0.6;">
+    <strong>GADUAI</strong>
+    <p style="font-size:0.85rem;color:var(--muted);">Aún es prototipo, no disponible para habilitar.</p>
+  </div>
+
+  <div class="card">
+    <strong>Clave de acceso del colegio</strong>
+    <form method="post" action="{{ url_for('admin_reset_password', colegio_id=colegio.id) }}">
+      <label>Nueva clave</label>
+      <input type="text" name="password" required>
+      <button class="btn" type="submit">Actualizar clave</button>
+    </form>
+  </div>
+
+  <form method="post" action="{{ url_for('admin_eliminar_colegio', colegio_id=colegio.id) }}" onsubmit="return confirm('¿Eliminar este colegio y todos sus accesos?');">
+    <button class="btn btn-danger" type="submit">Eliminar colegio</button>
+  </form>
+</div>
+{% endblock %}
