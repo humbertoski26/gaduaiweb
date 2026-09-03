@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Mensajes · Admin GADUAI{% endblock %}
+{% block body %}
+<div class="topbar">
+  <strong>Admin GADUAI</strong>
+  <a href="{{ url_for('admin_dashboard') }}">← Volver</a>
+</div>
+<div class="wrap" style="max-width:760px;">
+  <h1>Mensajes de contacto</h1>
+  <p class="sub">Consultas recibidas desde el formulario de gaduai.cl. Responda directamente al correo de cada persona desde su casilla habitual.</p>
+  {% for m in mensajes %}
+  <div class="card" style="opacity:{{ '1' if not m.leido else '0.7' }};">
+    <div style="display:flex; justify-content:space-between; align-items:start; gap:12px;">
+      <div>
+        <strong>{{ m.nombre }}</strong> {% if not m.leido %}<span class="badge badge-on">Nuevo</span>{% endif %}
+        <div style="font-size:0.85rem; color:var(--muted); margin-top:2px;">
+          <a href="mailto:{{ m.correo }}">{{ m.correo }}</a> · {{ m.creado_en.strftime('%d-%m-%Y %H:%M') }}
+        </div>
+      </div>
+      {% if not m.leido %}
+      <form method="post" action="{{ url_for('admin_marcar_leido', mensaje_id=m.id) }}">
+        <button class="btn btn-outline" type="submit" style="font-size:0.8rem; padding:6px 12px;">Marcar leído</button>
+      </form>
+      {% endif %}
+    </div>
+    <p style="margin-top:12px; white-space:pre-wrap;">{{ m.mensaje }}</p>
+  </div>
+  {% else %}
+  <p style="color:var(--muted);">Aún no hay mensajes.</p>
+  {% endfor %}
+</div>
+{% endblock %}
