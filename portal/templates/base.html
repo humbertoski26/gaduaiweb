@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Portal GADUAI{% endblock %}</title>
+<style>
+  :root{--bg:#FAFAF8;--ink:#171A2E;--navy:#1E2761;--navy-soft:#F0F1F8;--accent:#E8722C;--line:#E2E1DA;--muted:#5B5D72;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'Inter',system-ui,sans-serif;font-size:16px;line-height:1.5;}
+  .wrap{max-width:640px;margin:0 auto;padding:48px 24px;}
+  h1{font-size:1.5rem;margin:0 0 8px;color:var(--navy);}
+  p.sub{color:var(--muted);margin:0 0 32px;font-size:0.95rem;}
+  label{display:block;font-size:0.8rem;font-weight:600;color:var(--muted);margin-bottom:6px;}
+  input,select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:6px;font-size:0.95rem;margin-bottom:16px;background:#fff;color:var(--ink);}
+  .btn{display:inline-block;background:var(--navy);color:#fff;padding:11px 22px;border-radius:4px;font-weight:600;font-size:0.92rem;text-decoration:none;border:none;cursor:pointer;}
+  .btn:hover{background:var(--accent);}
+  .btn-danger{background:#b91c1c;}
+  .btn-outline{background:transparent;color:var(--navy);border:1px solid var(--navy);}
+  .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px;margin-bottom:16px;}
+  .flash{background:#FFF4E5;border:1px solid #F0C36D;color:#7A4A00;padding:10px 14px;border-radius:6px;margin-bottom:20px;font-size:0.9rem;}
+  a{color:var(--navy);}
+  table{width:100%;border-collapse:collapse;}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:0.9rem;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;}
+  .badge-on{background:#DCFCE7;color:#166534;}
+  .badge-off{background:#F1F1EE;color:var(--muted);}
+  .topbar{display:flex;justify-content:space-between;align-items:center;max-width:900px;margin:0 auto;padding:16px 24px;}
+  .topbar a{font-size:0.85rem;color:var(--muted);text-decoration:none;}
+</style>
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>
