@@ -1,7 +1,7 @@
 import os
 from functools import wraps
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from db import get_conn, init_db
@@ -13,6 +13,20 @@ PRODUCTOS = {
     "relacionai": {"nombre": "Relacionai", "descripcion": "Gestión de convivencia escolar y casos."},
     "triage": {"nombre": "TRIAGE GADUAI", "descripcion": "Timeline y triage de la gestión del colegio."},
 }
+
+# El botón de contacto vive en el sitio público (otro origen), así que ese único
+# endpoint necesita CORS habilitado para poder recibir el POST desde gaduai.cl.
+ALLOWED_ORIGINS = {"https://gaduai.cl", "https://www.gaduai.cl", "https://gaduai-web.onrender.com"}
+
+
+@app.after_request
+def add_cors_headers(resp):
+    origin = request.headers.get("Origin")
+    if origin in ALLOWED_ORIGINS:
+        resp.headers["Access-Control-Allow-Origin"] = origin
+        resp.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+        resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    return resp
 
 with app.app_context():
     init_db()
@@ -118,6 +132,52 @@ def admin_logout():
     return redirect(url_for("admin_login"))
 
 
+# ---------- formulario de contacto público (llamado desde gaduai.cl) ----------
+
+@app.route("/api/contacto", methods=["POST", "OPTIONS"])
+def api_contacto():
+    if request.method == "OPTIONS":
+        return ("", 204)
+    data = request.get_json(silent=True) or request.form
+    nombre = (data.get("nombre") or "").strip()
+    correo = (data.get("correo") or "").strip()
+    mensaje = (data.get("mensaje") or "").strip()
+    if not nombre or not correo or not mensaje:
+        return jsonify({"error": "Complete todos los campos."}), 400
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO mensajes_contacto (nombre, correo, mensaje) VALUES (%s, %s, %s)",
+        (nombre, correo, mensaje),
+    )
+    cur.close()
+    conn.close()
+    return jsonify({"ok": True})
+
+
+@app.route("/admin/mensajes")
+@admin_login_required
+def admin_mensajes():
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM mensajes_contacto ORDER BY creado_en DESC")
+    mensajes = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template("admin_mensajes.html", mensajes=mensajes)
+
+
+@app.route("/admin/mensajes/<int:mensaje_id>/leido", methods=["POST"])
+@admin_login_required
+def admin_marcar_leido(mensaje_id):
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("UPDATE mensajes_contacto SET leido = true WHERE id = %s", (mensaje_id,))
+    cur.close()
+    conn.close()
+    return redirect(url_for("admin_mensajes"))
+
+
 @app.route("/admin")
 @admin_login_required
 def admin_dashboard():
@@ -125,6 +185,8 @@ def admin_dashboard():
     cur = conn.cursor()
     cur.execute("SELECT * FROM colegios ORDER BY nombre")
     colegios = cur.fetchall()
+    cur.execute("SELECT COUNT(*) AS n FROM mensajes_contacto WHERE leido = false")
+    mensajes_no_leidos = cur.fetchone()["n"]
     cur.execute("SELECT * FROM accesos")
     accesos_por_colegio = {}
     for row in cur.fetchall():
@@ -134,7 +196,7 @@ def admin_dashboard():
 
     for c in colegios:
         c["acc"] = accesos_por_colegio.get(c["id"], {})
-    return render_template("admin_dashboard.html", colegios=colegios)
+    return render_template("admin_dashboard.html", colegios=colegios, mensajes_no_leidos=mensajes_no_leidos)
 
 
 @app.route("/admin/colegios/nuevo", methods=["GET", "POST"])
