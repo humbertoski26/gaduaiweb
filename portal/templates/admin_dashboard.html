@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Colegios · Admin GADUAI{% endblock %}
+{% block body %}
+<div class="topbar">
+  <strong>Admin GADUAI</strong>
+  <a href="{{ url_for('admin_logout') }}">Cerrar sesión</a>
+</div>
+<div class="wrap" style="max-width:900px;">
+  <h1>Colegios</h1>
+  <p class="sub">Cree colegios y administre el acceso a cada producto.</p>
+  {% if error %}<div class="flash">{{ error }}</div>{% endif %}
+  <div class="card">
+    <table>
+      <tr><th>Colegio</th><th>Comuna</th><th>Relacionai</th><th>TRIAGE</th><th>GADUAI</th><th></th></tr>
+      {% for c in colegios %}
+      <tr>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.comuna or '—' }}</td>
+        <td><span class="badge {{ 'badge-on' if c.acc.relacionai else 'badge-off' }}">{{ 'Sí' if c.acc.relacionai else 'No' }}</span></td>
+        <td><span class="badge {{ 'badge-on' if c.acc.triage else 'badge-off' }}">{{ 'Sí' if c.acc.triage else 'No' }}</span></td>
+        <td><span class="badge badge-off">Prototipo</span></td>
+        <td><a href="{{ url_for('admin_colegio', colegio_id=c.id) }}">Administrar</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="color:var(--muted);">Aún no hay colegios creados.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+  <a class="btn" href="{{ url_for('admin_nuevo_colegio') }}">+ Nuevo colegio</a>
+</div>
+{% endblock %}
