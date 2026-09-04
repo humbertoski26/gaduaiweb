@@ -11,24 +11,30 @@
   {% if msg %}<div class="flash">{{ msg }}</div>{% endif %}
 
   <div class="card">
-    <strong>Relacionai</strong>
-    <p style="font-size:0.85rem;color:var(--muted);">Cada colegio tiene su propio despliegue de Relacionai — pegue la URL específica de este colegio.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>Relacionai</strong>
+      <span class="badge {{ 'badge-on' if acc.relacionai else 'badge-off' }}">{{ 'Habilitado' if acc.relacionai else 'No habilitado' }}</span>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted);">Cada colegio tiene su propio despliegue de Relacionai — pegue la URL específica de este colegio. Sin URL, el colegio no puede quedar habilitado.</p>
     <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='relacionai') }}">
       <label>URL de Relacionai para este colegio</label>
-      <input type="url" name="url" placeholder="https://relacionai-nombre-colegio.onrender.com" value="{{ acc.relacionai_url or '' }}">
-      <button class="btn" type="submit" name="habilitado" value="1">Guardar y habilitar</button>
-      <button class="btn btn-outline" type="submit" name="habilitado" value="0">Deshabilitar</button>
+      <input type="url" name="url" placeholder="https://relacionai-nombre-colegio.onrender.com" value="{{ acc.relacionai_url or '' }}" required>
+      <button class="btn {{ 'btn-muted' if acc.relacionai else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.relacionai else 'Guardar y habilitar' }}</button>
+      <button class="btn {{ '' if acc.relacionai else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
     </form>
   </div>
 
   <div class="card">
-    <strong>TRIAGE GADUAI</strong>
-    <p style="font-size:0.85rem;color:var(--muted);">TRIAGE es un solo despliegue compartido — el colegio se identifica dentro de la app.</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>TRIAGE GADUAI</strong>
+      <span class="badge {{ 'badge-on' if acc.triage else 'badge-off' }}">{{ 'Habilitado' if acc.triage else 'No habilitado' }}</span>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted);">TRIAGE es un solo despliegue compartido — el colegio se identifica dentro de la app. Sin URL, el colegio no puede quedar habilitado.</p>
     <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='triage') }}">
       <label>URL de TRIAGE</label>
-      <input type="url" name="url" placeholder="https://triage-gaduai.onrender.com" value="{{ acc.triage_url or '' }}">
-      <button class="btn" type="submit" name="habilitado" value="1">Guardar y habilitar</button>
-      <button class="btn btn-outline" type="submit" name="habilitado" value="0">Deshabilitar</button>
+      <input type="url" name="url" placeholder="https://triage-gaduai.onrender.com" value="{{ acc.triage_url or '' }}" required>
+      <button class="btn {{ 'btn-muted' if acc.triage else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.triage else 'Guardar y habilitar' }}</button>
+      <button class="btn {{ '' if acc.triage else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
     </form>
   </div>
 
