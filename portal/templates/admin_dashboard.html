@@ -21,7 +21,7 @@
         <td>{{ c.comuna or '—' }}</td>
         <td><span class="badge {{ 'badge-on' if c.acc.relacionai else 'badge-off' }}">{{ 'Sí' if c.acc.relacionai else 'No' }}</span></td>
         <td><span class="badge {{ 'badge-on' if c.acc.triage else 'badge-off' }}">{{ 'Sí' if c.acc.triage else 'No' }}</span></td>
-        <td><span class="badge badge-off">Prototipo</span></td>
+        <td><span class="badge {{ 'badge-on' if c.acc.gaduai else 'badge-off' }}">{{ 'Sí' if c.acc.gaduai else 'No' }}</span></td>
         <td><a href="{{ url_for('admin_colegio', colegio_id=c.id) }}">Administrar</a></td>
       </tr>
       {% else %}

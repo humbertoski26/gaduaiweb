@@ -17,6 +17,7 @@ app.secret_key = os.environ["SECRET_KEY"]
 PRODUCTOS = {
     "relacionai": {"nombre": "Relacionai", "descripcion": "Gestión de convivencia escolar y casos."},
     "triage": {"nombre": "TRIAGE GADUAI", "descripcion": "Timeline y triage de la gestión del colegio."},
+    "gaduai": {"nombre": "GADUAI", "descripcion": "Plataforma multi-perfil del colegio: timeline, entrevista formal y más — un despliegue propio por colegio, como Relacionai."},
 }
 
 TRIAGE_BASE_URL = (os.environ.get("TRIAGE_BASE_URL") or "https://triage-gaduai.onrender.com").rstrip("/")
@@ -305,7 +306,7 @@ def admin_colegio(colegio_id):
 @app.route("/admin/colegios/<int:colegio_id>/acceso/<producto>", methods=["POST"])
 @admin_login_required
 def admin_toggle_acceso(colegio_id, producto):
-    if producto not in ("relacionai", "triage"):
+    if producto not in ("relacionai", "triage", "gaduai"):
         return redirect(url_for("admin_colegio", colegio_id=colegio_id))
     habilitado = request.form.get("habilitado") == "1"
     msg = "Guardado."

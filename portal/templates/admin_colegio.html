@@ -37,9 +37,18 @@
     </form>
   </div>
 
-  <div class="card" style="opacity:0.6;">
-    <strong>GADUAI</strong>
-    <p style="font-size:0.85rem;color:var(--muted);">Aún es prototipo, no disponible para habilitar.</p>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>GADUAI</strong>
+      <span class="badge {{ 'badge-on' if acc.gaduai else 'badge-off' }}">{{ 'Habilitado' if acc.gaduai else 'No habilitado' }}</span>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted);">Igual que Relacionai, cada colegio tiene su propio despliegue de GADUAI — pegue la URL específica de este colegio. Sin URL, el colegio no puede quedar habilitado.</p>
+    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='gaduai') }}">
+      <label>URL de GADUAI para este colegio</label>
+      <input type="url" name="url" placeholder="https://gaduai-nombre-colegio.onrender.com" value="{{ acc.gaduai_url or '' }}" required>
+      <button class="btn {{ 'btn-muted' if acc.gaduai else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.gaduai else 'Guardar y habilitar' }}</button>
+      <button class="btn {{ '' if acc.gaduai else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
+    </form>
   </div>
 
   <div class="card">
