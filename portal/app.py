@@ -1,5 +1,10 @@
+import json
 import os
+import re
+import unicodedata
 from functools import wraps
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,6 +18,52 @@ PRODUCTOS = {
     "relacionai": {"nombre": "Relacionai", "descripcion": "Gestión de convivencia escolar y casos."},
     "triage": {"nombre": "TRIAGE GADUAI", "descripcion": "Timeline y triage de la gestión del colegio."},
 }
+
+TRIAGE_BASE_URL = (os.environ.get("TRIAGE_BASE_URL") or "https://triage-gaduai.onrender.com").rstrip("/")
+TRIAGE_ADMIN_KEY = os.environ.get("TRIAGE_ADMIN_KEY")
+
+
+def slug_colegio(nombre):
+    """Debe producir el mismo id que la función slug() de TRIAGE (server.js) para el mismo
+    nombre, porque ahí es donde vive de verdad el colegio: TRIAGE deriva su id a partir del
+    nombre, nosotros solo lo recalculamos para saber qué link armar."""
+    s = unicodedata.normalize("NFD", nombre or "").encode("ascii", "ignore").decode("ascii").lower()
+    s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+    return s
+
+
+class TriageError(Exception):
+    pass
+
+
+def activar_colegio_en_triage(nombre, comuna):
+    """Crea (o reconoce, si ya existe) el colegio en TRIAGE GADUAI y devuelve el link directo
+    a su login (?colegio=<id>) más las credenciales del usuario máster, si se acaban de crear.
+    Lanza TriageError si TRIAGE no está configurado o no responde."""
+    if not TRIAGE_ADMIN_KEY:
+        raise TriageError("Falta configurar TRIAGE_ADMIN_KEY en este servicio.")
+    body = json.dumps({"nombre": nombre, "comuna": comuna}).encode("utf-8")
+    req = Request(
+        f"{TRIAGE_BASE_URL}/api/colegios",
+        data=body,
+        method="POST",
+        headers={"Content-Type": "application/json", "X-Admin-Key": TRIAGE_ADMIN_KEY},
+    )
+    try:
+        with urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return {
+            "id": data["id"],
+            "url": f"{TRIAGE_BASE_URL}/?colegio={data['id']}",
+            "master": data.get("master"),
+        }
+    except HTTPError as exc:
+        if exc.code == 409:
+            colegio_id = slug_colegio(nombre)
+            return {"id": colegio_id, "url": f"{TRIAGE_BASE_URL}/?colegio={colegio_id}", "master": None}
+        raise TriageError(f"TRIAGE respondió con error ({exc.code}).") from exc
+    except URLError as exc:
+        raise TriageError("No se pudo conectar con TRIAGE.") from exc
 
 # El botón de contacto vive en el sitio público (otro origen), así que ese único
 # endpoint necesita CORS habilitado para poder recibir el POST desde gaduai.cl.
@@ -257,9 +308,28 @@ def admin_toggle_acceso(colegio_id, producto):
     if producto not in ("relacionai", "triage"):
         return redirect(url_for("admin_colegio", colegio_id=colegio_id))
     habilitado = request.form.get("habilitado") == "1"
-    url = request.form.get("url", "").strip() or None
+    msg = "Guardado."
+
     conn = get_conn()
     cur = conn.cursor()
+    if producto == "triage" and habilitado:
+        # TRIAGE es un solo despliegue compartido: en vez de pedir una URL a mano, el propio
+        # panel activa el colegio ahí (o reconoce el que ya existe) y arma el link directo a
+        # su login — así el encargado nunca ve la pantalla pública de "crear colegio".
+        cur.execute("SELECT nombre, comuna FROM colegios WHERE id = %s", (colegio_id,))
+        colegio = cur.fetchone()
+        try:
+            activado = activar_colegio_en_triage(colegio["nombre"], colegio["comuna"])
+        except TriageError as exc:
+            cur.close()
+            conn.close()
+            return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=f"No se pudo habilitar TRIAGE: {exc}"))
+        url = activado["url"]
+        if activado["master"]:
+            msg = f"TRIAGE activado. Acceso máster: {activado['master']['correo']} / clave {activado['master']['clave']} (guárdala, no se muestra de nuevo)."
+    else:
+        url = request.form.get("url", "").strip() or None
+
     cur.execute(
         """INSERT INTO accesos (colegio_id, producto, habilitado, url) VALUES (%s, %s, %s, %s)
            ON CONFLICT (colegio_id, producto) DO UPDATE SET habilitado = EXCLUDED.habilitado, url = EXCLUDED.url""",
@@ -267,7 +337,7 @@ def admin_toggle_acceso(colegio_id, producto):
     )
     cur.close()
     conn.close()
-    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg="Guardado."))
+    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
 
 
 @app.route("/admin/colegios/<int:colegio_id>/clave", methods=["POST"])
