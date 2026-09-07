@@ -145,8 +145,17 @@ def portal():
     cur.close()
     conn.close()
 
+    # Si el colegio ya tiene GADUAI habilitado, ese es el único punto de entrada: absorbe
+    # TRIAGE y enlaza a Relacionai desde su propio header — el colegio nunca más ve esta
+    # pantalla de elegir producto, entra directo con su correo/clave de GADUAI.
+    gaduai_acc = accesos.get("gaduai")
+    if gaduai_acc and gaduai_acc["habilitado"] and gaduai_acc["url"]:
+        return redirect(gaduai_acc["url"])
+
     productos = []
     for clave, meta in PRODUCTOS.items():
+        if clave == "gaduai":
+            continue  # no se ofrece como tarjeta suelta — o reemplaza todo, o no se muestra
         acc = accesos.get(clave)
         productos.append({
             "nombre": meta["nombre"],
@@ -154,13 +163,6 @@ def portal():
             "habilitado": bool(acc and acc["habilitado"]),
             "url": acc["url"] if acc else None,
         })
-    # GADUAI (la plataforma completa) sigue en prototipo: nunca se ofrece como habilitable todavía.
-    productos.append({
-        "nombre": "GADUAI",
-        "descripcion": "Sistema de inteligencia organizacional completo.",
-        "habilitado": False,
-        "url": None,
-    })
     return render_template("portal.html", colegio=colegio, productos=productos)
 
 
