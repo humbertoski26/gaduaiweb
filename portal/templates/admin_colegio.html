@@ -49,6 +49,11 @@
       <button class="btn {{ 'btn-muted' if acc.gaduai else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.gaduai else 'Guardar y habilitar' }}</button>
       <button class="btn {{ '' if acc.gaduai else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
     </form>
+    {% if acc.gaduai and acc.gaduai_url %}
+    <p style="font-size:0.8rem;margin-top:10px;">📲 Comparte este link con el colegio — al abrirlo, el navegador les ofrece "Instalar app" / "Agregar a pantalla de inicio", y les queda un ícono de GADUAI permanente en el celular o computador:<br>
+      <a href="{{ acc.gaduai_url }}" target="_blank" rel="noopener">{{ acc.gaduai_url }}</a>
+    </p>
+    {% endif %}
   </div>
 
   <div class="card">
