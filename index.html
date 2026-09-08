@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GADUAI — Inteligencia organizacional para redes de educación pública</title>
-<meta name="description" content="GADUAI es el segundo cerebro de los directores de redes educativas: libera tiempo administrativo y habilita decisiones predictivas y generativas.">
+<title>GADUAI — El segundo cerebro del equipo directivo</title>
+<meta name="description" content="GADUAI es una capa de inteligencia organizacional para la educación: anticipa problemas, prioriza lo importante y libera tiempo para liderar.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,20 +50,20 @@
   }
   nav .wrap{
     display:flex; align-items:center; justify-content:space-between;
-    height:184px;
+    height:184px; flex-wrap:wrap; gap:16px; padding-top:12px; padding-bottom:12px;
   }
   .wordmark{
     display:flex; align-items:center;
     text-decoration:none;
   }
   .wordmark img{height:152px; width:auto; display:block;}
-  @media (max-width:640px){ .wordmark img{height:96px;} }
-  .navlinks{display:flex; gap:32px; align-items:center;}
-  .navlinks a{
+  @media (max-width:640px){ .wordmark img{height:96px;} nav .wrap{height:auto;} }
+  .navlinks{display:flex; gap:24px; align-items:center; flex-wrap:wrap;}
+  .navlinks a:not(.btn){
     font-size:0.94rem; text-decoration:none; color:var(--ink);
     font-weight:500;
   }
-  .navlinks a:hover{color:var(--accent);}
+  .navlinks a:not(.btn):hover{color:var(--accent);}
   .btn{
     display:inline-block;
     background:var(--navy); color:#fff;
@@ -78,11 +78,11 @@
     background:transparent; color:var(--navy); border:1px solid var(--navy);
   }
   .btn-outline:hover{background:var(--navy); color:#fff;}
-  @media (max-width:760px){ .navlinks a:not(.btn){display:none;} }
+  @media (max-width:900px){ .navlinks a:not(.btn){display:none;} }
 
   /* ---------- HERO ---------- */
   header.hero{
-    padding:96px 0 72px;
+    padding:72px 0 72px;
     border-bottom:1px solid var(--line);
   }
   .hero-grid{
@@ -90,48 +90,26 @@
   }
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
 
-  .eyebrow{
-    font-size:0.85rem; color:var(--muted); margin-bottom:18px; font-weight:500;
+  .hero h1{font-size:clamp(2.4rem, 6vw, 3.4rem); letter-spacing:-0.01em;}
+  .hero-tagline{
+    font-family:'Lora',serif; font-style:italic; font-weight:500;
+    font-size:clamp(1.3rem, 2.6vw, 1.6rem); color:var(--ink); margin-top:10px;
   }
-  .hero-stat{
-    font-family:'Lora',serif; font-weight:600;
-    font-size:clamp(4rem, 11vw, 7.5rem);
-    color:var(--navy); line-height:0.95;
-    letter-spacing:-0.02em;
-  }
-  .hero-stat sup{font-size:0.35em; top:-1.6em; font-weight:500;}
   .hero-label{
-    font-size:1.2rem; margin-top:18px; color:var(--ink); max-width:36ch;
-    border:1px solid var(--line); border-radius:6px; padding:18px 20px;
+    font-size:1.1rem; margin-top:22px; color:var(--muted); max-width:44ch;
     text-align:justify;
   }
-  .hero-source{
-    font-size:0.85rem; color:var(--muted); margin-top:14px;
-    text-align:justify;
-  }
-  .hero-eyebrow-line{color:var(--navy); font-weight:700; font-size:1.05rem; margin-bottom:14px;}
   .hero-cta{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
 
   .network-svg{width:100%; height:auto;}
 
   /* ---------- SECTION HEADERS ---------- */
-  section{padding:88px 0; border-bottom:1px solid var(--line);}
-  .section-head{max-width:640px; margin-bottom:56px;}
+  section{padding:80px 0; border-bottom:1px solid var(--line);}
+  .section-head{max-width:680px; margin-bottom:48px;}
   .section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
   .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px; text-align:justify;}
 
-  /* ---------- PROBLEMA (dossier list) ---------- */
-  .problem-list{border-top:1px solid var(--line);}
-  .problem-item{
-    display:grid; grid-template-columns:64px 1fr;
-    gap:24px; padding:28px 0; border-bottom:1px solid var(--line);
-  }
-  .problem-num{
-    font-family:'Lora',serif; color:var(--accent); font-size:1.3rem; font-weight:600;
-  }
-  .problem-item h3{font-size:1.15rem; margin-bottom:6px; color:var(--ink);}
-  .problem-item p{color:var(--muted); margin:0; max-width:60ch; text-align:justify;}
-
+  /* ---------- PROBLEMA ---------- */
   .stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
   @media (max-width:700px){ .stats-grid{grid-template-columns:1fr;} }
   .stat-card{background:#fff; border:1px solid var(--line); border-radius:8px; padding:24px;}
@@ -139,65 +117,73 @@
   .stat-card p{color:var(--ink); font-size:0.95rem; margin:10px 0 8px; text-align:justify;}
   .stat-source{color:var(--muted); font-size:0.8rem;}
 
-  .causes-list{list-style:none; margin:20px 0 0; padding:0;}
-  .causes-list li{display:flex; justify-content:space-between; gap:16px; padding:14px 0; border-top:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.95rem;}
-  .causes-list li span{color:#7DE0FF; font-weight:600; white-space:nowrap;}
+  .hero-stat-block{
+    background:#fff; border:1px solid var(--line); border-radius:10px;
+    padding:36px 40px; margin-bottom:40px; display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center;
+  }
+  @media (max-width:700px){ .hero-stat-block{grid-template-columns:1fr;} }
+  .hero-stat-block .num{
+    font-family:'Lora',serif; font-weight:600; font-size:clamp(3.2rem,7vw,4.6rem);
+    color:var(--navy); line-height:0.95; white-space:nowrap;
+  }
+  .hero-stat-block .num sup{font-size:0.4em;}
+  .hero-stat-block p{margin:0; color:var(--ink); font-size:1.05rem; text-align:justify;}
+  .hero-stat-block .hero-source{display:block; margin-top:10px; font-size:0.8rem; color:var(--muted); text-align:justify;}
 
-  .sources-list{color:var(--muted); font-size:0.78rem; line-height:1.8; margin-top:40px; padding-top:20px; border-top:1px solid var(--line);}
+  .insight-line{
+    border-left:3px solid var(--accent); padding-left:20px; margin:32px 0;
+    font-size:1.1rem; color:var(--ink); max-width:64ch; text-align:justify;
+  }
+  .insight-line strong{color:var(--navy);}
 
-  /* ---------- SOLUCION ---------- */
-  .brain-block{
+  .sources-list{color:var(--muted); font-size:0.78rem; line-height:1.8; margin-top:32px; padding-top:20px; border-top:1px solid var(--line);}
+
+  /* ---------- LA PROMESA ---------- */
+  .promise-block{
     background:var(--navy); color:#fff; border-radius:4px;
-    padding:48px; margin-bottom:56px;
+    padding:48px;
   }
-  .brain-block h3{color:#fff; font-size:1.6rem; margin-bottom:16px;}
-  .brain-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch; text-align:justify;}
-  .decision-pair{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:28px;}
-  @media (max-width:700px){ .decision-pair{grid-template-columns:1fr;} }
-  .decision-pair div{border-left:2px solid var(--accent); padding-left:18px;}
-  .decision-pair strong{display:block; color:#fff; margin-bottom:6px; font-size:1.02rem;}
-  .decision-pair span{color:#C7CDEE; font-size:0.96rem;}
+  .promise-block h2{color:#fff; font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
+  .promise-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch; margin-top:18px; text-align:justify;}
+  .promise-block .arrow-line{margin-top:24px; font-family:'Lora',serif; font-style:italic; color:#fff; font-size:1.05rem;}
 
-  .module-index{border-top:1px solid var(--line);}
-  .module-row{
-    display:grid; grid-template-columns:40px 1fr 2fr; gap:20px;
-    padding:20px 0; border-bottom:1px solid var(--line); align-items:baseline;
+  /* ---------- COMO FUNCIONA ---------- */
+  .flow-steps{border-top:1px solid var(--line);}
+  .flow-step-row{display:grid; grid-template-columns:56px 1fr; gap:20px; padding:26px 0; border-bottom:1px solid var(--line);}
+  .flow-num{font-family:'Lora',serif; font-weight:600; font-size:1.4rem; color:var(--accent);}
+  .flow-step-row h3{font-size:1.15rem; margin-bottom:6px;}
+  .flow-step-row p{color:var(--muted); font-size:0.95rem; text-align:justify; margin:0; max-width:60ch;}
+
+  /* ---------- PRODUCTO / DOLORES QUE SANAMOS ---------- */
+  .pain-list{border-top:1px solid var(--line);}
+  .pain-item{padding:22px 0; border-bottom:1px solid var(--line);}
+  .pain-item strong{display:block; color:var(--navy); font-size:1.05rem; margin-bottom:6px;}
+  .pain-item p{color:var(--muted); font-size:0.95rem; margin:0; max-width:68ch; text-align:justify;}
+  .action-card{
+    background:#fff; border:1px solid var(--line); border-radius:10px; padding:40px; margin-top:40px;
   }
-  @media (max-width:700px){ .module-row{grid-template-columns:32px 1fr; }
-    .module-row .module-desc{grid-column:2/3; margin-top:4px;} }
-  .module-n{font-family:'Lora',serif; color:var(--muted); font-size:0.95rem;}
-  .module-name{font-weight:600; color:var(--ink);}
-  .module-desc{color:var(--muted); font-size:0.95rem; text-align:justify;}
+  .action-card p{color:var(--muted); font-size:1.05rem; max-width:68ch; text-align:justify;}
+  .action-card .cta-row{margin-top:28px;}
 
-  /* ---------- POR QUE AHORA ---------- */
-  .now-grid{display:grid; grid-template-columns:1fr 1fr; gap:56px;}
-  @media (max-width:800px){ .now-grid{grid-template-columns:1fr;} }
-  .big-figure{font-family:'Lora',serif; font-size:4.2rem; color:var(--navy); font-weight:600; line-height:1;}
-  .big-figure + p{color:var(--muted); margin-top:12px; max-width:40ch;}
-  .now-list{list-style:none; margin:0; padding:0;}
-  .now-list li{padding:16px 0; border-top:1px solid var(--line); color:var(--muted); text-align:justify;}
-  .now-list li:last-child{border-bottom:1px solid var(--line);}
-  .now-list strong{color:var(--ink); display:block; margin-bottom:4px;}
-
-  /* ---------- EQUIPO ---------- */
-  .team-block{display:grid; grid-template-columns:180px 1fr; gap:36px; align-items:start;}
-  @media (max-width:600px){ .team-block{grid-template-columns:1fr;} }
-  .avatar{
-    width:120px; height:120px; border-radius:50%;
-    background:var(--navy); color:#fff;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Lora',serif; font-size:1.8rem; font-weight:600;
+  /* ---------- RED / ESCALABILIDAD ---------- */
+  .role-ladder{border-top:1px solid var(--line); margin-top:8px;}
+  .role-step{display:flex; align-items:center; gap:22px; padding:22px 0; border-bottom:1px solid var(--line);}
+  .role-badge{
+    flex:none; width:48px; height:48px; border-radius:50%; background:var(--navy-soft); color:var(--navy);
+    display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-weight:600; font-size:1.1rem;
   }
-  .team-block h3{font-size:1.4rem;}
-  .team-block .role{color:var(--accent); font-weight:600; font-size:0.95rem; margin:4px 0 16px;}
-  .team-block p{color:var(--muted); max-width:62ch;}
-  .credentials{list-style:none; padding:0; margin:18px 0 0; display:flex; flex-wrap:wrap; gap:10px;}
-  .credentials li{
-    font-size:0.85rem; color:var(--navy); background:var(--navy-soft);
-    padding:6px 14px; border-radius:20px;
-  }
+  .role-step strong{display:block; color:var(--ink); font-size:1.02rem;}
+  .role-step span{color:var(--muted); font-size:0.92rem;}
+  .role-note{margin-top:24px; color:var(--ink); font-size:1.05rem; font-family:'Lora',serif; font-style:italic;}
 
-  /* ---------- CTA / CONTACTO ---------- */
+  /* ---------- IMPACTO ---------- */
+  .impact-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:32px;}
+  @media (max-width:760px){ .impact-grid{grid-template-columns:1fr;} }
+  .impact-card .impact-num{font-family:'Lora',serif; color:var(--accent); font-size:1.3rem; font-weight:600; margin-bottom:10px;}
+  .impact-card strong{display:block; font-size:1.1rem; color:var(--navy); margin-bottom:6px;}
+  .impact-card p{color:var(--muted); font-size:0.92rem; margin:0; text-align:justify;}
+
+  /* ---------- CTA / DEMO / CONTACTO ---------- */
   .cta-section{
     background:var(--navy); color:#fff; border-bottom:none;
   }
@@ -247,8 +233,10 @@
     <a class="wordmark" href="#top"><img src="gaduai-logo-v2.png" alt="GADUAI"></a>
     <div class="navlinks">
       <a href="#problema">El problema</a>
-      <a href="#solucion">La solución</a>
-      <a class="btn btn-outline" href="https://gaduai-portal.onrender.com/login">Acceso colegios</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#red">La plataforma</a>
+      <a class="btn btn-outline" href="https://gaduai-portal.onrender.com/login">Entrar a GADUAI</a>
+      <a class="btn" href="#demo">Solicitar demostración</a>
     </div>
   </div>
 </nav>
@@ -256,13 +244,12 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <p class="hero-eyebrow-line">Sistema de Inteligencia Organizacional - Educación</p>
-      <div class="hero-stat"><span id="statNum">80</span>,6<sup>%</sup></div>
-      <p class="hero-label">de los directores de colegios en Chile declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
-      <p class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</p>
+      <h1>GADUAI</h1>
+      <p class="hero-tagline">El segundo cerebro del equipo directivo.</p>
+      <p class="hero-label">Inteligencia organizacional para anticipar problemas, priorizar lo importante y liberar tiempo para liderar.</p>
       <div class="hero-cta">
-        <a class="btn" href="#contacto">Solicitar una demostración</a>
-        <a class="btn btn-outline" href="#solucion">Ver cómo funciona</a>
+        <a class="btn" href="#producto">Ver GADUAI en acción</a>
+        <a class="btn btn-outline" href="#como-funciona">Conocer la solución</a>
       </div>
     </div>
     <div>
@@ -274,79 +261,19 @@
 <section id="problema">
   <div class="wrap">
     <div class="section-head">
-      <h2>El problema: gestionar a ciegas</h2>
-      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico. No es una percepción aislada: los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
+      <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
+      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — y los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
     </div>
 
-    <h3 style="font-size:1.15rem; color:var(--navy); margin-bottom:20px;">Lo que dicen los estudios</h3>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-num">31,3%</div>
-        <p>del tiempo de los directores de colegios en Chile se destina a tareas administrativas, por sobre el monitoreo del currículum.</p>
-        <span class="stat-source">Weinstein et al. (2016)</span>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">70%+</div>
-        <p>de los directores declara destinar entre 40% y 80% de su tiempo a exigencias burocráticas.</p>
-        <span class="stat-source">Educación 2020 (2018)</span>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">68%</div>
-        <p>del tiempo de un director se va en gestión administrativa; solo 32% queda para lo pedagógico. 7 de cada 10 directores reporta alto nivel de estrés.</p>
-        <span class="stat-source">Encuesta Educarchile</span>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">80,6%</div>
-        <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas — encuesta nacional a 5.734 directores.</p>
-        <span class="stat-source">Directores por Chile, 2026 (Mineduc)</span>
+    <div class="hero-stat-block">
+      <div class="num">80<span style="font-size:0.6em;">,6</span><sup>%</sup></div>
+      <div>
+        <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
+        <span class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</span>
       </div>
     </div>
 
-    <div class="brain-block" style="margin-top:56px;">
-      <h3>La causa N°1, según los propios directores</h3>
-      <p>El mismo estudio de Mineduc (2026) preguntó a los directores qué origina esa sobrecarga. Las tres causas principales que identificaron:</p>
-      <ul class="causes-list">
-        <li><strong>Gestión de plataformas informáticas</strong><span>62,5% — la causa más mencionada</span></li>
-        <li><strong>Requerimientos de los sostenedores</strong><span>54,2%</span></li>
-        <li><strong>Exigencias de la Superintendencia de Educación</strong><span>38,2%</span></li>
-      </ul>
-      <p style="margin-top:20px;">La causa que más mencionan los propios directores para explicar su sobrecarga es, literalmente, la gestión de plataformas informáticas — el problema exacto que GADUAI resuelve al consolidar en un solo sistema lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
-    </div>
-
-    <div class="section-head" style="margin-top:56px;">
-      <h3 style="font-size:1.4rem; color:var(--navy); margin-bottom:12px;">Un problema estructural, no individual</h3>
-      <p>Los datos viven fragmentados entre el SIGE y planillas Excel paralelas. Las decisiones son reactivas, sin alertas tempranas. No existe visión de red completa. Esto no es una falla de gestión de una persona: es una falla estructural del sistema con el que los equipos directivos trabajan hoy — y es exactamente el problema que GADUAI fue diseñado para resolver.</p>
-    </div>
-    <div class="problem-list">
-      <div class="problem-item">
-        <div class="problem-num">01</div>
-        <div>
-          <h3>Datos fragmentados</h3>
-          <p>La información vive dispersa entre SIGE, planillas Excel paralelas y el conocimiento informal de cada director.</p>
-        </div>
-      </div>
-      <div class="problem-item">
-        <div class="problem-num">02</div>
-        <div>
-          <h3>Decisiones reactivas</h3>
-          <p>Sin alertas tempranas, los directores se enteran de una crisis cuando ya escaló.</p>
-        </div>
-      </div>
-      <div class="problem-item">
-        <div class="problem-num">03</div>
-        <div>
-          <h3>Sin visión de red</h3>
-          <p>Cada colegio se gestiona aislado; no existe un tablero único para comparar y priorizar.</p>
-        </div>
-      </div>
-      <div class="problem-item">
-        <div class="problem-num">04</div>
-        <div>
-          <h3>Sobrecarga administrativa</h3>
-          <p>El tiempo que debería ir a lo pedagógico se pierde reportando manualmente.</p>
-        </div>
-      </div>
-    </div>
+    <p class="insight-line"><strong>El problema no es que los directivos no sepan gestionar.</strong> El problema es que gestionan con información fragmentada — y la causa que más mencionan los propios directores es, literalmente, la gestión de plataformas informáticas (62,5%, Mineduc 2026): el problema exacto que GADUAI resuelve al consolidar en un solo sistema lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
 
     <p class="sources-list">
       <strong>Fuentes:</strong>
@@ -358,26 +285,157 @@
   </div>
 </section>
 
-<section id="solucion">
+<section id="promesa">
   <div class="wrap">
-    <div class="section-head">
-      <h2>Una empresa de soluciones para la educación</h2>
-      <p>GADUAI diseña e implementa soluciones tecnológicas para que quienes dirigen colegios y redes educativas puedan dedicar su tiempo a lo pedagógico, no a lo administrativo.</p>
-    </div>
-    <div class="brain-block">
-      <h3>Un aliado para la gestión escolar</h3>
-      <p style="color:#C7CDEE; font-size:1.08rem; max-width:70ch;">Trabajamos junto a directores y equipos directivos para ordenar la información, anticipar problemas y liberar tiempo de gestión — con soluciones a la medida de cada establecimiento.</p>
+    <div class="promise-block">
+      <h2>Menos gestión. Más liderazgo.</h2>
+      <p>GADUAI devuelve al equipo directivo el tiempo y el foco que hoy consume la gestión administrativa. Es una nueva capa de inteligencia entre la información del sistema educativo y las decisiones de quienes lo lideran.</p>
+      <p class="arrow-line">De gestionar a ciegas → a decidir con inteligencia.</p>
     </div>
   </div>
 </section>
 
-<section class="cta-section" id="contacto" style="border-bottom:none;">
+<section id="como-funciona">
   <div class="wrap">
-    <h2>Conversemos sobre su red</h2>
+    <div class="section-head">
+      <h2>De la información a la decisión</h2>
+      <p>GADUAI no reemplaza al director: le devuelve capacidad de decisión.</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step-row">
+        <div class="flow-num">01</div>
+        <div>
+          <h3>GADUAI observa</h3>
+          <p>Integra la información del colegio y sus sistemas en un solo lugar.</p>
+        </div>
+      </div>
+      <div class="flow-step-row">
+        <div class="flow-num">02</div>
+        <div>
+          <h3>GADUAI anticipa</h3>
+          <p>Relaciona datos, tareas, situaciones y señales para detectar riesgos antes de que escalen.</p>
+        </div>
+      </div>
+      <div class="flow-step-row">
+        <div class="flow-num">03</div>
+        <div>
+          <h3>GADUAI prioriza</h3>
+          <p>Propone qué requiere atención ahora, en lugar de dejar que el directivo lo descubra a ciegas.</p>
+        </div>
+      </div>
+      <div class="flow-step-row" style="border-bottom:none;">
+        <div class="flow-num">04</div>
+        <div>
+          <h3>El directivo decide</h3>
+          <p>Actúa con contexto y evidencia — GADUAI mantiene el control de la decisión donde siempre debió estar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="producto">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Los dolores que sanamos</h2>
+      <p>GADUAI no se mide por sus funcionalidades, sino por lo que resuelve en el día a día de quien dirige un colegio.</p>
+    </div>
+    <div class="pain-list">
+      <div class="pain-item">
+        <strong>Falta de tiempo para liderar</strong>
+        <p>Recupera el tiempo que hoy se pierde en tareas administrativas para volver a liderar pedagógicamente, no solo a gestionar.</p>
+      </div>
+      <div class="pain-item">
+        <strong>Foco pedagógico</strong>
+        <p>Vuelve a centrar la atención del equipo directivo en lo pedagógico, en vez de perderla en lo operativo.</p>
+      </div>
+      <div class="pain-item">
+        <strong>Comunicación fragmentada</strong>
+        <p>Ordena la comunicación entre el equipo directivo, docentes y apoderados, hoy dispersa entre WhatsApp, correos y planillas.</p>
+      </div>
+      <div class="pain-item">
+        <strong>Convivencia educativa sobrecargada</strong>
+        <p>Automatiza procesos de convivencia escolar y libera tiempo del equipo a cargo, hoy consumido en gestión manual de casos.</p>
+      </div>
+      <div class="pain-item" style="border-bottom:none;">
+        <strong>Clima laboral</strong>
+        <p>Un equipo con menos sobrecarga administrativa decide mejor y trabaja en un mejor clima laboral.</p>
+      </div>
+    </div>
+    <div class="action-card">
+      <p>GADUAI organiza la gestión del colegio en un único lugar: prioriza lo urgente, deja registro de lo acordado, y mantiene visible lo que aún está pendiente de cumplir — todo accesible desde el mismo sistema, sin plataformas paralelas.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://gaduai-portal.onrender.com/login">Entrar a GADUAI</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="terreno">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>GADUAI te acompaña donde ocurre la gestión: en terreno.</h2>
+      <p>No necesitas estar frente a un escritorio para saber qué está pasando en tu colegio o tu red. Mientras el equipo directivo está en terreno, GADUAI sigue mirando.</p>
+    </div>
+  </div>
+</section>
+
+<section id="red">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Una plataforma. Una red completa.</h2>
+      <p>El mismo sistema cambia de perspectiva según el rol de quien lo usa.</p>
+    </div>
+    <div class="role-ladder">
+      <div class="role-step">
+        <div class="role-badge">1</div>
+        <div><strong>Director/a</strong><span>Ve su establecimiento.</span></div>
+      </div>
+      <div class="role-step">
+        <div class="role-badge">2</div>
+        <div><strong>Director/a ejecutivo/a (DEM / SLEP)</strong><span>Ve todos los establecimientos de la red.</span></div>
+      </div>
+      <div class="role-step" style="border-bottom:none;">
+        <div class="role-badge">3</div>
+        <div><strong>Red educativa</strong><span>Información consolidada para tomar decisiones.</span></div>
+      </div>
+    </div>
+    <p class="role-note">Un director ve su colegio. Un director ejecutivo ve la red completa. Pero ambos trabajan sobre el mismo sistema de inteligencia organizacional.</p>
+  </div>
+</section>
+
+<section id="impacto">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Impacto</h2>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-num">01</div>
+        <strong>Más tiempo pedagógico</strong>
+        <p>El tiempo que hoy se pierde en gestión administrativa vuelve al liderazgo pedagógico y al trabajo en terreno.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">02</div>
+        <strong>Mejores decisiones</strong>
+        <p>Decisiones tomadas con contexto y evidencia, no a ciegas ni bajo presión de última hora.</p>
+      </div>
+      <div class="impact-card">
+        <div class="impact-num">03</div>
+        <strong>Mayor capacidad de anticipación</strong>
+        <p>Las señales de riesgo se identifican antes de que escalen, en un colegio o en toda una red.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="demo" style="border-bottom:none;">
+  <div class="wrap">
+    <h2>Vea cómo funciona GADUAI en un colegio real.</h2>
     <p>Si dirige un colegio o una red de establecimientos y quiere ver GADUAI en funcionamiento, escríbanos.</p>
     <p style="margin-top:8px;"><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a></p>
     <div class="cta-row">
-      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto()" type="button">Escríbanos</button>
+      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto()" type="button">Solicitar demostración</button>
       <a class="btn btn-outline" href="#top">Volver arriba</a>
     </div>
   </div>
@@ -403,30 +461,12 @@
 
 <footer>
   <div class="wrap">
-    <p>© 2026 GADUAI. Sistema de inteligencia organizacional para redes de educación pública.</p>
+    <p>© 2026 GADUAI. Inteligencia organizacional para la educación.</p>
     <p>Santiago, Chile</p>
   </div>
 </footer>
 
 <script>
-  // Single deliberate motion moment: the hero stat counts up once on load
-  (function(){
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var el = document.getElementById('statNum');
-    if(!el) return;
-    if(prefersReduced){ el.textContent = '80'; return; }
-    var start = null;
-    var duration = 900;
-    function step(ts){
-      if(!start) start = ts;
-      var progress = Math.min((ts - start) / duration, 1);
-      var eased = 1 - Math.pow(1-progress, 3);
-      el.textContent = Math.round(eased * 80);
-      if(progress < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  })();
-
   function abrirContacto(){ document.getElementById('modal-contacto').hidden = false; }
   function cerrarContacto(){ document.getElementById('modal-contacto').hidden = true; }
   document.getElementById('modal-contacto').addEventListener('click', function(e){
