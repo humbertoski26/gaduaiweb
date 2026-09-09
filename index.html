@@ -147,6 +147,19 @@
   .promise-block p{color:#C7CDEE; font-size:1.08rem; max-width:70ch; margin-top:18px; text-align:justify;}
   .promise-block .arrow-line{margin-top:24px; font-family:'Lora',serif; font-style:italic; color:#fff; font-size:1.05rem;}
 
+  /* ---------- PRIVACIDAD Y CUMPLIMIENTO ---------- */
+  .compliance-list{list-style:none; margin:0; padding:0;}
+  .compliance-list li{
+    display:flex; gap:14px; align-items:flex-start; padding:16px 0;
+    border-top:1px solid rgba(255,255,255,0.15); color:#fff; font-size:0.95rem; text-align:justify;
+  }
+  .compliance-list li:first-child{border-top:none; padding-top:0;}
+  .compliance-list .check{
+    flex:none; width:22px; height:22px; margin-top:1px; border-radius:50%;
+    background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; font-weight:700;
+  }
+
   /* ---------- COMO FUNCIONA ---------- */
   .flow-steps{border-top:1px solid var(--line);}
   .flow-step-row{display:grid; grid-template-columns:56px 1fr; gap:20px; padding:26px 0; border-bottom:1px solid var(--line);}
@@ -243,6 +256,7 @@
       <a href="#problema">El problema</a>
       <a href="#como-funciona">Cómo funciona</a>
       <a href="#red">La plataforma</a>
+      <a href="#privacidad">Privacidad</a>
       <a class="btn btn-outline" href="https://gaduai-portal.onrender.com/login">Entrar a GADUAI</a>
       <button class="btn" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
     </div>
@@ -441,6 +455,23 @@
         <strong>Mayor capacidad de anticipación</strong>
         <p>Las señales de riesgo se identifican antes de que escalen, en un colegio o en toda una red.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="privacidad">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Privacidad y cumplimiento</h2>
+      <p>GADUAI está construido para cumplir con la Ley 21.719 de Chile antes de que sea obligatorio (vigencia diciembre 2026).</p>
+    </div>
+    <div class="promise-block">
+      <ul class="compliance-list">
+        <li><span class="check">✓</span> El colegio o la red educativa siempre es responsable de sus datos — GADUAI actúa solo como encargado del tratamiento.</li>
+        <li><span class="check">✓</span> Trazabilidad completa vía bitácoras de red: quién accedió a qué dato, y cuándo.</li>
+        <li><span class="check">✓</span> La IA nunca decide por el director — todas las alertas y predicciones pasan por decisión humana.</li>
+        <li><span class="check">✓</span> Datos de menores incorporados solo con autorización institucional del colegio.</li>
+      </ul>
     </div>
   </div>
 </section>
