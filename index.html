@@ -90,6 +90,11 @@
   }
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:48px;} }
 
+  .eyebrow{
+    font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 14px;
+  }
+  .promise-block .eyebrow{color:#F0A97A;}
   .hero h1{font-size:clamp(2.4rem, 6vw, 3.4rem); letter-spacing:-0.01em;}
   .hero-tagline{
     font-family:'Lora',serif; font-style:italic; font-weight:500;
@@ -109,6 +114,7 @@
   .section-head{max-width:680px; margin-bottom:48px;}
   .section-head h2{font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
   .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px; text-align:justify;}
+  .section-head p.eyebrow{color:var(--accent); font-size:0.82rem; margin-top:0;}
 
   /* ---------- PROBLEMA ---------- */
   .stats-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
@@ -267,12 +273,13 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <h1>GADUAI</h1>
-      <p class="hero-tagline">El segundo cerebro del equipo directivo.</p>
-      <p class="hero-label">Inteligencia organizacional para anticipar problemas, priorizar lo importante y liberar tiempo para liderar.</p>
+      <p class="eyebrow">Por qué existimos</p>
+      <h1>Un director no debería tener que elegir entre gestionar y liderar.</h1>
+      <p class="hero-tagline">GADUAI existe para que nunca más tenga que elegir.</p>
+      <p class="hero-label">Es la capa de inteligencia organizacional que anticipa problemas, prioriza lo importante y libera tiempo para liderar.</p>
       <div class="hero-cta">
-        <a class="btn" href="#producto">Ver GADUAI en acción</a>
-        <a class="btn btn-outline" href="#como-funciona">Conocer la solución</a>
+        <a class="btn" href="#como-funciona">Conocer cómo lo hacemos</a>
+        <a class="btn btn-outline" href="#producto">Ver el producto</a>
       </div>
     </div>
     <div>
@@ -284,6 +291,7 @@
 <section id="problema">
   <div class="wrap">
     <div class="section-head">
+      <p class="eyebrow">La evidencia</p>
       <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
       <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — y los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
     </div>
@@ -311,6 +319,7 @@
 <section id="promesa">
   <div class="wrap">
     <div class="promise-block">
+      <p class="eyebrow">La promesa</p>
       <h2>Menos gestión. Más liderazgo.</h2>
       <p>GADUAI devuelve al equipo directivo el tiempo y el foco que hoy consume la gestión administrativa. Es una nueva capa de inteligencia entre la información del sistema educativo y las decisiones de quienes lo lideran.</p>
       <p class="arrow-line">De gestionar a ciegas → a decidir con inteligencia.</p>
@@ -321,6 +330,7 @@
 <section id="como-funciona">
   <div class="wrap">
     <div class="section-head">
+      <p class="eyebrow">Cómo lo hacemos</p>
       <h2>De la información a la decisión</h2>
       <p>GADUAI no reemplaza al director: le devuelve capacidad de decisión.</p>
     </div>
@@ -360,6 +370,7 @@
 <section id="producto">
   <div class="wrap">
     <div class="section-head">
+      <p class="eyebrow">Qué es GADUAI</p>
       <h2>Los dolores que sanamos</h2>
       <p>GADUAI no se mide por sus funcionalidades, sino por lo que resuelve en el día a día de quien dirige un colegio.</p>
     </div>
