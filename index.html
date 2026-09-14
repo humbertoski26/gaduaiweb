@@ -95,6 +95,39 @@
     color:var(--accent); margin:0 0 14px;
   }
   .promise-block .eyebrow{color:#F0A97A;}
+
+  /* ---------- MARCADORES DEL CÍRCULO DE ORO (¿Por qué? ¿Cómo? ¿Qué?) ---------- */
+  .circle-marker{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:10px;
+  }
+  .circle-marker .num{
+    font-family:'Lora',serif; font-weight:600; color:var(--accent); font-size:1.3rem; line-height:1;
+  }
+  .circle-marker .q{
+    font-family:'Lora',serif; font-weight:600; font-style:italic; color:var(--navy);
+    font-size:clamp(1.5rem, 3vw, 1.9rem); line-height:1;
+  }
+  .promise-block .circle-marker .q{color:#fff;}
+
+  /* ---------- MAPA: MINI CÍRCULO DE ORO ---------- */
+  .map-section{padding:56px 0 64px;}
+  .map-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;}
+  @media (max-width:900px){ .map-grid{grid-template-columns:1fr; gap:32px;} }
+  .map-svg{width:100%; max-width:340px; height:auto; margin:0 auto; display:block;}
+  .map-svg a{cursor:pointer;}
+  .map-svg .ring-label{font-family:'Inter',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.06em;}
+  .map-svg .ring-phrase{font-family:'Lora',serif; font-weight:600;}
+  .map-legend{list-style:none; margin:0; padding:0;}
+  .map-legend li{
+    display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-top:1px solid var(--line);
+  }
+  .map-legend li:first-child{border-top:none; padding-top:0;}
+  .map-legend .map-num{
+    flex:none; font-family:'Lora',serif; font-weight:600; color:var(--accent); font-size:1.2rem;
+  }
+  .map-legend strong{display:block; color:var(--navy); font-family:'Lora',serif; font-style:italic; font-size:1.05rem;}
+  .map-legend span{display:block; color:var(--muted); font-size:0.9rem; margin-top:3px;}
+  .map-legend a{text-decoration:none;}
   .hero h1{font-size:clamp(2.4rem, 6vw, 3.4rem); letter-spacing:-0.01em;}
   .hero-tagline{
     font-family:'Lora',serif; font-style:italic; font-weight:500;
@@ -273,6 +306,7 @@
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
+      <p class="circle-marker"><span class="num">1</span><span class="q">¿Por qué?</span></p>
       <p class="eyebrow">Por qué existimos</p>
       <h1>Un director no debería tener que elegir entre gestionar y liderar.</h1>
       <p class="hero-tagline">GADUAI existe para que nunca más tenga que elegir.</p>
@@ -287,6 +321,49 @@
     </div>
   </div>
 </header>
+
+<section class="map-section" id="mapa">
+  <div class="wrap map-grid">
+    <svg class="map-svg" viewBox="0 0 320 340" role="img" aria-label="El Círculo de Oro de GADUAI: por qué, cómo y qué">
+      <a href="#producto">
+        <circle cx="160" cy="170" r="155" fill="#EEF0F8" stroke="#E2E1DA" stroke-width="1"></circle>
+        <text x="160" y="34" text-anchor="middle" class="ring-label" fill="#1E2761">QUÉ</text>
+        <text x="160" y="50" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="12">El segundo cerebro</text>
+        <text x="160" y="64" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="12">del equipo directivo.</text>
+      </a>
+      <a href="#como-funciona">
+        <circle cx="160" cy="170" r="98" fill="#D7DBF0" stroke="#C7CDEE" stroke-width="1"></circle>
+        <text x="160" y="93" text-anchor="middle" class="ring-label" fill="#1E2761">CÓMO</text>
+        <text x="160" y="108" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="11">De la información</text>
+        <text x="160" y="121" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="11">a la decisión.</text>
+      </a>
+      <a href="#top">
+        <circle cx="160" cy="170" r="50" fill="#E8722C"></circle>
+        <text x="160" y="159" text-anchor="middle" class="ring-label" fill="#fff">POR QUÉ</text>
+        <text x="160" y="176" text-anchor="middle" class="ring-phrase" fill="#fff" font-size="12">Menos gestión.</text>
+        <text x="160" y="190" text-anchor="middle" class="ring-phrase" fill="#fff" font-size="12">Más liderazgo.</text>
+      </a>
+    </svg>
+    <div>
+      <p class="eyebrow">El mapa</p>
+      <h2 style="font-size:clamp(1.5rem, 2.6vw, 1.9rem); margin-bottom:20px;">Así está construida esta página.</h2>
+      <ul class="map-legend">
+        <li>
+          <span class="map-num">1</span>
+          <a href="#top"><div><strong>¿Por qué? — Menos gestión. Más liderazgo.</strong><span>La convicción detrás de GADUAI: un director no debería tener que elegir entre administrar y liderar.</span></div></a>
+        </li>
+        <li>
+          <span class="map-num">2</span>
+          <a href="#como-funciona"><div><strong>¿Cómo? — De la información a la decisión.</strong><span>GADUAI observa, anticipa y prioriza — el directivo mantiene siempre el control de la decisión.</span></div></a>
+        </li>
+        <li>
+          <span class="map-num">3</span>
+          <a href="#producto"><div><strong>¿Qué? — El segundo cerebro del equipo directivo.</strong><span>La plataforma concreta: dolores que resuelve, roles, impacto y cumplimiento.</span></div></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 <section id="problema">
   <div class="wrap">
@@ -330,6 +407,7 @@
 <section id="como-funciona">
   <div class="wrap">
     <div class="section-head">
+      <p class="circle-marker"><span class="num">2</span><span class="q">¿Cómo?</span></p>
       <p class="eyebrow">Cómo lo hacemos</p>
       <h2>De la información a la decisión</h2>
       <p>GADUAI no reemplaza al director: le devuelve capacidad de decisión.</p>
@@ -370,6 +448,7 @@
 <section id="producto">
   <div class="wrap">
     <div class="section-head">
+      <p class="circle-marker"><span class="num">3</span><span class="q">¿Qué?</span></p>
       <p class="eyebrow">Qué es GADUAI</p>
       <h2>Los dolores que sanamos</h2>
       <p>GADUAI no se mide por sus funcionalidades, sino por lo que resuelve en el día a día de quien dirige un colegio.</p>
