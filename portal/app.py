@@ -1,6 +1,8 @@
+import hmac
 import json
 import os
 import re
+import time
 import unicodedata
 from functools import wraps
 from urllib.error import HTTPError, URLError
@@ -13,6 +15,33 @@ from db import get_conn, init_db
 
 app = Flask(__name__)
 app.secret_key = os.environ["SECRET_KEY"]
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SECURE"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+
+# Auditoría de seguridad: límite simple de intentos por IP en los dos logins de este panel
+# (colegio y super-admin) — mismo patrón que en Relacionai y en GADUAI.
+_intentos = {}
+
+
+def limite_intentos(clave_ruta, tope=20, ventana_seg=900):
+    def decorador(vista):
+        @wraps(vista)
+        def envoltura(*args, **kwargs):
+            ip = request.headers.get("X-Forwarded-For", request.remote_addr or "desconocida").split(",")[0].strip()
+            k = (clave_ruta, ip)
+            ahora = time.time()
+            n, desde = _intentos.get(k, (0, ahora))
+            if ahora - desde > ventana_seg:
+                n, desde = 0, ahora
+            n += 1
+            _intentos[k] = (n, desde)
+            if n > tope:
+                from flask import abort
+                abort(429)
+            return vista(*args, **kwargs)
+        return envoltura
+    return decorador
 
 PRODUCTOS = {
     "relacionai": {"nombre": "Relacionai", "descripcion": "Gestión de convivencia escolar y casos."},
@@ -110,6 +139,7 @@ def index():
 
 
 @app.route("/login", methods=["GET", "POST"])
+@limite_intentos("login")
 def login():
     if request.method == "POST":
         email = request.form["email"].strip().lower()
@@ -169,11 +199,14 @@ def portal():
 # ---------- admin ----------
 
 @app.route("/admin/login", methods=["GET", "POST"])
+@limite_intentos("admin_login")
 def admin_login():
     if request.method == "POST":
         email = request.form["email"].strip().lower()
         password = request.form["password"]
-        if email == os.environ["ADMIN_EMAIL"].strip().lower() and password == os.environ["ADMIN_PASSWORD"]:
+        email_ok = hmac.compare_digest(email.encode(), os.environ["ADMIN_EMAIL"].strip().lower().encode())
+        password_ok = hmac.compare_digest(password.encode(), os.environ["ADMIN_PASSWORD"].encode())
+        if email_ok and password_ok:
             session["is_admin"] = True
             return redirect(url_for("admin_dashboard"))
         return render_template("admin_login.html", error="Correo o clave incorrectos.")
