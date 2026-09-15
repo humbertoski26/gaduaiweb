@@ -96,6 +96,12 @@
   }
   .promise-block .eyebrow{color:#F0A97A;}
 
+  .gov-badge{
+    display:inline-block; background:var(--navy); color:#fff;
+    font-size:0.8rem; font-weight:700; letter-spacing:0.03em;
+    padding:9px 18px; border-radius:999px; margin:0 0 28px;
+  }
+
   /* ---------- MARCADORES DEL CÍRCULO DE ORO (¿Por qué? ¿Cómo? ¿Qué?) ---------- */
   .circle-marker{
     display:flex; align-items:baseline; gap:14px; margin-bottom:10px;
@@ -129,7 +135,7 @@
   .map-legend strong{display:block; color:var(--navy); font-family:'Lora',serif; font-style:italic; font-size:1.05rem;}
   .map-legend span{display:block; color:var(--muted); font-size:0.9rem; margin-top:3px;}
   .map-legend a{text-decoration:none;}
-  .hero h1{font-size:clamp(2.4rem, 6vw, 3.4rem); letter-spacing:-0.01em;}
+  .hero h1{font-size:clamp(1.9rem, 3.4vw, 2.6rem); letter-spacing:-0.01em;}
   .hero-tagline{
     font-family:'Lora',serif; font-style:italic; font-weight:500;
     font-size:clamp(1.3rem, 2.6vw, 1.6rem); color:var(--ink); margin-top:10px;
@@ -304,6 +310,35 @@
   </div>
 </nav>
 
+<section id="problema">
+  <div class="wrap">
+    <p class="gov-badge">Gobernanza de datos y ética IA</p>
+    <div class="section-head">
+      <p class="eyebrow">La evidencia</p>
+      <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
+      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — y los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
+    </div>
+
+    <div class="hero-stat-block">
+      <div class="num">80<span style="font-size:0.6em;">,6</span><sup>%</sup></div>
+      <div>
+        <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
+        <span class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</span>
+      </div>
+    </div>
+
+    <p class="insight-line"><strong>El problema no es que los directivos no sepan gestionar.</strong> El problema es que gestionan con información fragmentada, sin trazabilidad ni gobernanza clara sobre quién accede a qué dato — y la causa que más mencionan los propios directores es, literalmente, la gestión de plataformas informáticas (62,5%, Mineduc 2026): el problema exacto que GADUAI resuelve al consolidar en un solo sistema, con reglas claras de acceso y uso ético de la IA, lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
+
+    <p class="sources-list">
+      <strong>Fuentes:</strong>
+      Weinstein, J. et al. (2016). Citado en investigación sobre gestión curricular en escuelas chilenas de bajo desempeño (Redalyc).
+      Educación 2020 (2018). "Menos carga administrativa, más calidad educativa."
+      Educarchile. "Gestión escolar: el rol de la IA en el liderazgo educativo."
+      Ministerio de Educación de Chile / La Tercera (2026). Iniciativa "Directores por Chile": 16 jornadas regionales con 1.800 directores y encuesta nacional con 5.734 respuestas.
+    </p>
+  </div>
+</section>
+
 <header class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
@@ -365,34 +400,6 @@
         </li>
       </ul>
     </div>
-  </div>
-</section>
-
-<section id="problema">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">La evidencia</p>
-      <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
-      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — y los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
-    </div>
-
-    <div class="hero-stat-block">
-      <div class="num">80<span style="font-size:0.6em;">,6</span><sup>%</sup></div>
-      <div>
-        <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
-        <span class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</span>
-      </div>
-    </div>
-
-    <p class="insight-line"><strong>El problema no es que los directivos no sepan gestionar.</strong> El problema es que gestionan con información fragmentada — y la causa que más mencionan los propios directores es, literalmente, la gestión de plataformas informáticas (62,5%, Mineduc 2026): el problema exacto que GADUAI resuelve al consolidar en un solo sistema lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
-
-    <p class="sources-list">
-      <strong>Fuentes:</strong>
-      Weinstein, J. et al. (2016). Citado en investigación sobre gestión curricular en escuelas chilenas de bajo desempeño (Redalyc).
-      Educación 2020 (2018). "Menos carga administrativa, más calidad educativa."
-      Educarchile. "Gestión escolar: el rol de la IA en el liderazgo educativo."
-      Ministerio de Educación de Chile / La Tercera (2026). Iniciativa "Directores por Chile": 16 jornadas regionales con 1.800 directores y encuesta nacional con 5.734 respuestas.
-    </p>
   </div>
 </section>
 
