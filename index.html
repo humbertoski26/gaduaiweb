@@ -97,10 +97,12 @@
   .promise-block .eyebrow{color:#F0A97A;}
 
   .gov-badge{
-    display:inline-block; background:var(--navy); color:#fff;
-    font-size:0.8rem; font-weight:700; letter-spacing:0.03em;
-    padding:9px 18px; border-radius:999px; margin:0 0 28px;
+    display:inline-flex; align-items:center; gap:12px;
+    color:var(--navy); font-size:clamp(1.05rem, 1.8vw, 1.25rem); font-weight:700;
+    letter-spacing:0.01em; margin:0 0 32px; padding-bottom:16px;
+    border-bottom:2px solid var(--accent);
   }
+  .gov-badge svg{flex:none; width:26px; height:26px; color:var(--accent);}
 
   /* ---------- MARCADORES DEL CÍRCULO DE ORO (¿Por qué? ¿Cómo? ¿Qué?) ---------- */
   .circle-marker{
@@ -312,7 +314,10 @@
 
 <section id="problema">
   <div class="wrap">
-    <p class="gov-badge">Gobernanza de datos y ética IA</p>
+    <p class="gov-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 3.4v5.3c0 5-3.2 8.9-7.5 10.3-4.3-1.4-7.5-5.3-7.5-10.3V5.9L12 2.5z"/><path d="M9 12l2 2 4-4"/></svg>
+      Gobernanza de datos y ética IA
+    </p>
     <div class="section-head">
       <p class="eyebrow">La evidencia</p>
       <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
