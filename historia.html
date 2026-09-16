@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia — GADUAI</title>
+<meta name="description" content="La historia detrás de GADUAI: un profesor con más de 20 años en cargos directivos en educación que decidió resolver el problema que vivió en carne propia.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAF8;
+    --ink:#171A2E;
+    --navy:#1E2761;
+    --navy-soft:#F0F1F8;
+    --accent:#E8722C;
+    --line:#E2E1DA;
+    --muted:#5B5D72;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Lora',Georgia,serif;
+    font-weight:600;
+    line-height:1.15;
+    margin:0;
+    color:var(--navy);
+  }
+  a{color:inherit;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,248,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:16px; padding-top:12px; padding-bottom:12px;
+  }
+  .wordmark{
+    display:flex; align-items:center;
+    text-decoration:none;
+  }
+  .wordmark img{height:152px; width:auto; display:block;}
+  @media (max-width:640px){ .wordmark img{height:96px;} nav .wrap{height:auto;} }
+  .navlinks{display:flex; gap:24px; align-items:center; flex-wrap:wrap;}
+  .navlinks a:not(.btn){
+    font-size:0.94rem; text-decoration:none; color:var(--ink);
+    font-weight:500;
+  }
+  .navlinks a:not(.btn):hover{color:var(--accent);}
+  .navlinks a.active{color:var(--accent);}
+  .btn{
+    display:inline-block;
+    background:var(--navy); color:#fff;
+    padding:11px 22px; border-radius:3px;
+    font-weight:600; font-size:0.92rem;
+    text-decoration:none;
+    border:1px solid var(--navy);
+    transition:background .15s ease, color .15s ease;
+  }
+  .btn:hover{background:var(--accent); border-color:var(--accent);}
+  .btn-outline{
+    background:transparent; color:var(--navy); border:1px solid var(--navy);
+  }
+  .btn-outline:hover{background:var(--navy); color:#fff;}
+  @media (max-width:900px){ .navlinks a:not(.btn){display:none;} }
+
+  .eyebrow{
+    font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 14px;
+  }
+  .promise-block .eyebrow{color:#F0A97A;}
+
+  /* ---------- ENCABEZADO DE PÁGINA ---------- */
+  .page-header{padding:72px 0 56px; border-bottom:1px solid var(--line);}
+  .page-header h1{font-size:clamp(1.9rem, 3.4vw, 2.6rem); max-width:22ch;}
+  .page-header .lead{font-size:1.15rem; color:var(--muted); max-width:62ch; margin-top:22px; text-align:justify;}
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{padding:64px 0; border-bottom:1px solid var(--line);}
+  .section-head{max-width:720px; margin-bottom:32px;}
+  .section-head h2{font-size:clamp(1.5rem, 2.6vw, 1.9rem);}
+  .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px; text-align:justify;}
+
+  .insight-line{
+    border-left:3px solid var(--accent); padding-left:20px; margin:32px 0;
+    font-size:1.1rem; color:var(--ink); max-width:70ch; text-align:justify;
+  }
+  .insight-line strong{color:var(--navy);}
+
+  .bio-fact{
+    display:flex; gap:18px; align-items:flex-start; padding:18px 0; border-top:1px solid var(--line);
+  }
+  .bio-fact:first-child{border-top:none; padding-top:0;}
+  .bio-fact .icon{
+    flex:none; width:40px; height:40px; border-radius:50%; background:var(--navy-soft); color:var(--navy);
+    display:flex; align-items:center; justify-content:center; font-family:'Lora',serif; font-weight:600; font-size:1rem;
+  }
+  .bio-fact p{margin:0; color:var(--ink); font-size:0.98rem; max-width:60ch;}
+
+  /* ---------- LA PROMESA (reutilizado para el cierre) ---------- */
+  .promise-block{
+    background:var(--navy); color:#fff; border-radius:4px;
+    padding:48px;
+  }
+  .promise-block h2{color:#fff; font-size:clamp(1.7rem, 3vw, 2.2rem);}
+  .promise-block p{color:#C7CDEE; font-size:1.08rem; max-width:72ch; margin-top:18px; text-align:justify;}
+
+  /* ---------- CTA / DEMO / CONTACTO ---------- */
+  .cta-section{
+    background:var(--navy); color:#fff; border-bottom:none;
+  }
+  .cta-section h2{color:#fff; font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
+  .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch; text-align:justify;}
+  .cta-row{margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;}
+  .cta-section .btn-outline{color:#fff; border-color:#fff;}
+  .cta-section .btn-outline:hover{background:#fff; color:var(--navy);}
+
+  /* ---------- MODAL CONTACTO ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(23,26,46,0.55);
+    align-items:center; justify-content:center; padding:20px; z-index:100;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-overlay:not([hidden]){display:flex;}
+  .modal-box{
+    background:var(--bg); border-radius:6px; padding:36px 32px 32px; max-width:440px; width:100%;
+    position:relative; border-top:5px solid var(--navy); box-shadow:0 20px 60px -12px rgba(23,26,46,0.35);
+  }
+  .modal-logo{display:block; height:44px; width:auto; margin:0 auto 18px;}
+  .modal-box h3{font-size:1.25rem; text-align:center; color:var(--navy);}
+  .modal-box .sub{text-align:center;}
+  .modal-close{
+    position:absolute; top:16px; right:16px; background:none; border:none;
+    font-size:1.4rem; line-height:1; cursor:pointer; color:var(--muted);
+  }
+  .modal-box label{display:block; font-size:0.8rem; font-weight:600; color:var(--muted); margin-bottom:6px;}
+  .modal-box input, .modal-box textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px;
+    font-size:0.92rem; margin-bottom:16px; font-family:inherit; background:#fff; color:var(--ink);
+  }
+  .modal-box input:focus, .modal-box textarea:focus{
+    outline:none; border-color:var(--navy); box-shadow:0 0 0 3px var(--navy-soft);
+  }
+  .modal-box button[type="submit"]{
+    width:100%; background:var(--accent); border-color:var(--accent);
+  }
+
+  footer{padding:40px 0; }
+  footer .wrap{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  footer p{color:var(--muted); font-size:0.85rem; margin:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="wordmark" href="index.html"><img src="gaduai-logo-v2.png" alt="GADUAI"></a>
+    <div class="navlinks">
+      <a href="index.html#problema">El problema</a>
+      <a href="index.html#como-funciona">Cómo funciona</a>
+      <a href="index.html#red">La plataforma</a>
+      <a href="historia.html" class="active">Historia</a>
+      <a href="index.html#privacidad">Privacidad</a>
+      <a class="btn btn-outline" href="https://gaduai-portal.onrender.com/login">Entrar a GADUAI</a>
+      <button class="btn" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header">
+  <div class="wrap">
+    <p class="eyebrow">Nuestra historia</p>
+    <h1>Veinte años viendo el mismo problema desde adentro.</h1>
+    <p class="lead">GADUAI no nace en un laboratorio de tecnología. Nace en la oficina de dirección de un colegio, de la mano de alguien que vivió el problema antes de decidir resolverlo.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">El fundador</p>
+      <h2>Un profesor que dirigió colegios antes de decidir construir un sistema.</h2>
+      <p>El fundador de GADUAI es profesor y trabaja en educación hace más de 20 años, la mayor parte de ese tiempo ocupando cargos directivos en distintos establecimientos. No conoce los dolores de una institución educativa por haberlos estudiado desde afuera: los conoce porque los vivió, día a día, desde dentro de la dirección.</p>
+    </div>
+
+    <p class="insight-line"><strong>El dolor que más marcó su experiencia fue el mismo que hoy resuelve GADUAI:</strong> la enorme cantidad de tiempo que la gestión administrativa le quita al liderazgo pedagógico. Información dispersa, plataformas que no conversan entre sí, y equipos directivos que terminan administrando papeles en lugar de liderar personas.</p>
+
+    <div class="section-head" style="margin-top:16px;">
+      <h2>De la sala de dirección al MBA, sin perder de vista la tecnología.</h2>
+      <p>Con esa experiencia de terreno como base, realizó un MBA en la Universidad de Chile para adquirir las herramientas de gestión necesarias para abordar el problema a escala. A eso sumó algo que lo ha acompañado siempre: su interés por la informática y la tecnología como palanca real de cambio en educación.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="promise-block">
+      <p class="eyebrow">Por qué nace GADUAI</p>
+      <h2>Acortar la brecha educativa empieza por devolverle el tiempo a quien lidera.</h2>
+      <p>Su propósito es acortar la brecha en educación: mejorar las condiciones de aprendizaje de los estudiantes y las condiciones de trabajo de sus colaboradores. Y tiene una convicción central para lograrlo — los equipos directivos solo pueden cumplir ese propósito si su principal preocupación vuelve a ser el trabajo pedagógico, no el trabajo administrativo.</p>
+      <p>De esa convicción nace GADUAI: un segundo cerebro que centraliza los datos hoy desagregados de un colegio y acompaña el liderazgo directivo, para que directivos y docentes vuelvan a tener tiempo para lo que de verdad importa — sus estudiantes.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="demo" style="border-bottom:none;">
+  <div class="wrap">
+    <h2>Conozca la historia completa, hable con nosotros.</h2>
+    <p>Si quiere conocer más sobre cómo nació GADUAI o ver la plataforma en funcionamiento, escríbanos.</p>
+    <p style="margin-top:8px;"><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a></p>
+    <div class="cta-row">
+      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
+      <a class="btn btn-outline" href="index.html">Volver al inicio</a>
+    </div>
+  </div>
+</section>
+
+<div id="modal-contacto" class="modal-overlay" hidden>
+  <div class="modal-box">
+    <button class="modal-close" onclick="cerrarContacto()" type="button" aria-label="Cerrar">&times;</button>
+    <img src="gaduai-logo-v2.png" alt="GADUAI" class="modal-logo">
+    <h3 id="contacto-titulo">Escríbanos su consulta</h3>
+    <p class="sub" style="margin-bottom:20px;">Le respondemos directamente a su correo.</p>
+    <form id="form-contacto" onsubmit="return enviarContacto(event)">
+      <label>Nombre</label>
+      <input type="text" name="nombre" required>
+      <label>Correo</label>
+      <input type="email" name="correo" required>
+      <label>Su consulta</label>
+      <textarea name="mensaje" rows="4" required></textarea>
+      <button class="btn" type="submit">Enviar</button>
+      <p id="contacto-msg" style="margin-top:12px; font-size:0.85rem;"></p>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 GADUAI. Inteligencia organizacional para la educación.</p>
+    <p>Santiago, Chile</p>
+  </div>
+</footer>
+
+<script>
+  function abrirContacto(modo){
+    var titulo = document.getElementById('contacto-titulo');
+    var mensaje = document.querySelector('#form-contacto [name="mensaje"]');
+    if(modo === 'demo'){
+      titulo.textContent = 'Solicitar una demostración';
+      mensaje.value = 'Solicito ver demo';
+    } else {
+      titulo.textContent = 'Escríbanos su consulta';
+      mensaje.value = '';
+    }
+    document.getElementById('modal-contacto').hidden = false;
+  }
+  function cerrarContacto(){ document.getElementById('modal-contacto').hidden = true; }
+  document.getElementById('modal-contacto').addEventListener('click', function(e){
+    if(e.target === this) cerrarContacto();
+  });
+
+  function enviarContacto(e){
+    e.preventDefault();
+    var form = e.target;
+    var msg = document.getElementById('contacto-msg');
+    var data = {
+      nombre: form.nombre.value,
+      correo: form.correo.value,
+      mensaje: form.mensaje.value
+    };
+    msg.style.color = '#C7CDEE';
+    msg.textContent = 'Enviando...';
+    fetch('https://gaduai-portal.onrender.com/api/contacto', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    }).then(function(r){ return r.json().then(function(j){ return {ok: r.ok, body: j}; }); })
+      .then(function(res){
+        if(res.ok){
+          msg.style.color = '#166534';
+          msg.textContent = '¡Gracias! Le responderemos a la brevedad.';
+          form.reset();
+          setTimeout(cerrarContacto, 1800);
+        } else {
+          msg.style.color = '#b91c1c';
+          msg.textContent = res.body.error || 'No se pudo enviar. Intente nuevamente.';
+        }
+      })
+      .catch(function(){
+        msg.style.color = '#b91c1c';
+        msg.textContent = 'No se pudo enviar. Intente nuevamente.';
+      });
+    return false;
+  }
+</script>
+
+</body>
+</html>
