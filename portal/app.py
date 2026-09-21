@@ -95,6 +95,31 @@ def activar_colegio_en_triage(nombre, comuna):
     except URLError as exc:
         raise TriageError("No se pudo conectar con TRIAGE.") from exc
 
+
+def resetear_master_en_triage(colegio_id_triage, correo_nuevo=None):
+    """Genera una clave nueva para el usuario máster de un colegio que ya existe en TRIAGE —
+    para cuando la clave mostrada al habilitar TRIAGE la primera vez ("se muestra una sola
+    vez") se perdió antes de guardarla. Devuelve las credenciales nuevas o lanza TriageError."""
+    if not TRIAGE_ADMIN_KEY:
+        raise TriageError("Falta configurar TRIAGE_ADMIN_KEY en este servicio.")
+    body = json.dumps({"correoNuevo": correo_nuevo} if correo_nuevo else {}).encode("utf-8")
+    req = Request(
+        f"{TRIAGE_BASE_URL}/api/colegios/{colegio_id_triage}/reset-master",
+        data=body,
+        method="POST",
+        headers={"Content-Type": "application/json", "X-Admin-Key": TRIAGE_ADMIN_KEY},
+    )
+    try:
+        with urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return data["master"]
+    except HTTPError as exc:
+        if exc.code == 404:
+            raise TriageError("Ese colegio todavía no está activado en TRIAGE.") from exc
+        raise TriageError(f"TRIAGE respondió con error ({exc.code}).") from exc
+    except URLError as exc:
+        raise TriageError("No se pudo conectar con TRIAGE.") from exc
+
 # El botón de contacto vive en el sitio público (otro origen), así que ese único
 # endpoint necesita CORS habilitado para poder recibir el POST desde gaduai.cl.
 ALLOWED_ORIGINS = {"https://gaduai.cl", "https://www.gaduai.cl", "https://gaduai-web.onrender.com"}
@@ -373,6 +398,31 @@ def admin_toggle_acceso(colegio_id, producto):
     )
     cur.close()
     conn.close()
+    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
+
+
+@app.route("/admin/colegios/<int:colegio_id>/reset-master-triage", methods=["POST"])
+@admin_login_required
+def admin_reset_master_triage(colegio_id):
+    """Genera una clave nueva para el usuario máster de este colegio en TRIAGE GADUAI —
+    para cuando la clave mostrada al habilitar TRIAGE la primera vez se perdió. Opcionalmente
+    también actualiza el correo de acceso, si el campo `correoNuevo` viene lleno."""
+    correo_nuevo = (request.form.get("correoNuevo") or "").strip() or None
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT nombre FROM colegios WHERE id = %s", (colegio_id,))
+    colegio = cur.fetchone()
+    cur.close()
+    conn.close()
+    if not colegio:
+        return redirect(url_for("admin_dashboard"))
+
+    colegio_id_triage = slug_colegio(colegio["nombre"])
+    try:
+        master = resetear_master_en_triage(colegio_id_triage, correo_nuevo)
+    except TriageError as exc:
+        return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=f"No se pudo resetear la clave: {exc}"))
+    msg = f"Clave del máster reseteada. Acceso: {master['correo']} / clave {master['clave']} (guárdala, no se muestra de nuevo)."
     return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
 
 

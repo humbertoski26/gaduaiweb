@@ -35,6 +35,13 @@
       <button class="btn {{ 'btn-muted' if acc.triage else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.triage else 'Habilitar TRIAGE para este colegio' }}</button>
       <button class="btn {{ '' if acc.triage else 'btn-muted' }}" type="submit" name="habilitado" value="0">Deshabilitar</button>
     </form>
+    {% if acc.triage %}
+    <form method="post" action="{{ url_for('admin_reset_master_triage', colegio_id=colegio.id) }}" style="margin-top:14px;border-top:1px solid var(--border,#e5e5e5);padding-top:14px;" onsubmit="return confirm('Esto genera una clave nueva para el usuario máster de este colegio en TRIAGE. La clave actual dejará de funcionar. ¿Continuar?');">
+      <label>¿Perdiste la clave del máster? Resetéala aquí (correo opcional, si quieres cambiarlo)</label>
+      <input type="email" name="correoNuevo" placeholder="correo@real-de-la-persona.cl (opcional)">
+      <button class="btn" type="submit">Resetear clave del máster en TRIAGE</button>
+    </form>
+    {% endif %}
   </div>
 
   <div class="card">
