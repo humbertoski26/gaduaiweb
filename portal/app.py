@@ -2,8 +2,10 @@ import hmac
 import json
 import os
 import re
+import smtplib
 import time
 import unicodedata
+from email.message import EmailMessage
 from functools import wraps
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -246,6 +248,33 @@ def admin_logout():
 
 # ---------- formulario de contacto público (llamado desde gaduai.cl) ----------
 
+# Aviso por correo de cada solicitud del formulario público — antes solo quedaba
+# guardada en mensajes_contacto y nadie se enteraba sin entrar a /admin/mensajes.
+# Si las variables de SMTP no están configuradas, no se envía nada (no rompe el
+# formulario): el mensaje igual queda guardado en la base de datos.
+SMTP_USER = os.environ.get("SMTP_USER")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
+CONTACTO_EMAIL_TO = os.environ.get("CONTACTO_EMAIL_TO", SMTP_USER)
+
+
+def enviar_aviso_contacto(nombre, correo, mensaje):
+    if not SMTP_USER or not SMTP_PASSWORD or not CONTACTO_EMAIL_TO:
+        return
+    email_msg = EmailMessage()
+    email_msg["Subject"] = f"Nueva solicitud desde gaduai.cl — {nombre}"
+    email_msg["From"] = SMTP_USER
+    email_msg["To"] = CONTACTO_EMAIL_TO
+    email_msg["Reply-To"] = correo
+    email_msg.set_content(
+        f"Nombre: {nombre}\nCorreo: {correo}\n\nMensaje:\n{mensaje}\n\n"
+        f"— Enviado desde el formulario de gaduai.cl"
+    )
+    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+        smtp.starttls()
+        smtp.login(SMTP_USER, SMTP_PASSWORD)
+        smtp.send_message(email_msg)
+
+
 @app.route("/api/contacto", methods=["POST", "OPTIONS"])
 def api_contacto():
     if request.method == "OPTIONS":
@@ -264,6 +293,10 @@ def api_contacto():
     )
     cur.close()
     conn.close()
+    try:
+        enviar_aviso_contacto(nombre, correo, mensaje)
+    except Exception as e:
+        app.logger.error(f"No se pudo enviar el aviso de contacto: {e}")
     return jsonify({"ok": True})
 
 
