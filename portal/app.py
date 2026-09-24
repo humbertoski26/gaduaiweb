@@ -275,6 +275,9 @@ def enviar_aviso_contacto(nombre, correo, mensaje):
         headers={
             "Authorization": f"Bearer {RESEND_API_KEY}",
             "Content-Type": "application/json",
+            # Sin esto, Cloudflare bloquea la petición (error 1010) porque el
+            # User-Agent por defecto de urllib se detecta como firma de bot.
+            "User-Agent": "gaduai-portal/1.0",
         },
         method="POST",
     )
