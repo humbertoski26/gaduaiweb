@@ -269,7 +269,7 @@ def enviar_aviso_contacto(nombre, correo, mensaje):
         f"Nombre: {nombre}\nCorreo: {correo}\n\nMensaje:\n{mensaje}\n\n"
         f"— Enviado desde el formulario de gaduai.cl"
     )
-    with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as smtp:
         smtp.starttls()
         smtp.login(SMTP_USER, SMTP_PASSWORD)
         smtp.send_message(email_msg)
