@@ -2,10 +2,8 @@ import hmac
 import json
 import os
 import re
-import smtplib
 import time
 import unicodedata
-from email.message import EmailMessage
 from functools import wraps
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -250,29 +248,38 @@ def admin_logout():
 
 # Aviso por correo de cada solicitud del formulario público — antes solo quedaba
 # guardada en mensajes_contacto y nadie se enteraba sin entrar a /admin/mensajes.
-# Si las variables de SMTP no están configuradas, no se envía nada (no rompe el
+# Va por la API HTTP de Resend (no SMTP): Render bloquea las conexiones SMTP
+# salientes de sus servicios web, así que un smtplib.SMTP normal nunca conecta.
+# Si RESEND_API_KEY no está configurada, no se envía nada (no rompe el
 # formulario): el mensaje igual queda guardado en la base de datos.
-SMTP_USER = os.environ.get("SMTP_USER")
-SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
-CONTACTO_EMAIL_TO = os.environ.get("CONTACTO_EMAIL_TO", SMTP_USER)
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
+CONTACTO_EMAIL_TO = os.environ.get("CONTACTO_EMAIL_TO", "gaduaichile@gmail.com")
 
 
 def enviar_aviso_contacto(nombre, correo, mensaje):
-    if not SMTP_USER or not SMTP_PASSWORD or not CONTACTO_EMAIL_TO:
+    if not RESEND_API_KEY or not CONTACTO_EMAIL_TO:
         return
-    email_msg = EmailMessage()
-    email_msg["Subject"] = f"Nueva solicitud desde gaduai.cl — {nombre}"
-    email_msg["From"] = SMTP_USER
-    email_msg["To"] = CONTACTO_EMAIL_TO
-    email_msg["Reply-To"] = correo
-    email_msg.set_content(
-        f"Nombre: {nombre}\nCorreo: {correo}\n\nMensaje:\n{mensaje}\n\n"
-        f"— Enviado desde el formulario de gaduai.cl"
+    payload = json.dumps({
+        "from": "GADUAI <onboarding@resend.dev>",
+        "to": [CONTACTO_EMAIL_TO],
+        "reply_to": correo,
+        "subject": f"Nueva solicitud desde gaduai.cl — {nombre}",
+        "text": (
+            f"Nombre: {nombre}\nCorreo: {correo}\n\nMensaje:\n{mensaje}\n\n"
+            f"— Enviado desde el formulario de gaduai.cl"
+        ),
+    }).encode("utf-8")
+    req = Request(
+        "https://api.resend.com/emails",
+        data=payload,
+        headers={
+            "Authorization": f"Bearer {RESEND_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
     )
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as smtp:
-        smtp.starttls()
-        smtp.login(SMTP_USER, SMTP_PASSWORD)
-        smtp.send_message(email_msg)
+    with urlopen(req, timeout=10) as resp:
+        resp.read()
 
 
 @app.route("/api/contacto", methods=["POST", "OPTIONS"])
