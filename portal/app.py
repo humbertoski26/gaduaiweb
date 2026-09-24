@@ -302,6 +302,8 @@ def api_contacto():
     conn.close()
     try:
         enviar_aviso_contacto(nombre, correo, mensaje)
+    except HTTPError as e:
+        app.logger.error(f"No se pudo enviar el aviso de contacto: {e} — {e.read().decode('utf-8', 'replace')}")
     except Exception as e:
         app.logger.error(f"No se pudo enviar el aviso de contacto: {e}")
     return jsonify({"ok": True})
