@@ -7,8 +7,26 @@
 </div>
 <div class="wrap">
   <h1>{{ colegio.nombre }}</h1>
-  <p class="sub">{{ colegio.comuna or 'Sin comuna' }} · usuario: {{ usuario.email if usuario else '—' }}</p>
+  <p class="sub">{{ colegio.comuna or 'Sin comuna' }}</p>
   {% if msg %}<div class="flash">{{ msg }}</div>{% endif %}
+
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <strong>Código de acceso</strong>
+      <span class="badge {{ 'badge-on' if colegio.codigo_acceso and destino else 'badge-off' }}">{{ 'Activo' if colegio.codigo_acceso and destino else 'Inactivo' }}</span>
+    </div>
+    <p style="font-size:0.85rem;color:var(--muted);">El personal del colegio escribe este código en <a href="https://www.gaduai.cl/entrar.html" target="_blank" rel="noopener">gaduai.cl/entrar.html</a> y llega al inicio de sesión de GADUAI de su colegio, donde cada persona entra con su propia cuenta. Si el código se filtra, cámbialo aquí: el anterior deja de funcionar de inmediato. Usa algo difícil de adivinar (por ejemplo NR-7K4P), de 4 a 24 letras, números o guiones.</p>
+    {% if destino %}
+    <p style="font-size:0.8rem;">Con el código se llega a: <a href="{{ destino }}" target="_blank" rel="noopener">{{ destino }}</a></p>
+    {% else %}
+    <p style="font-size:0.8rem;color:#b45309;">⚠ Este colegio aún no tiene GADUAI (ni TRIAGE) habilitado con su link: aunque tenga código, desde gaduai.cl no llevará a ningún lado. Habilítalo más abajo.</p>
+    {% endif %}
+    <form method="post" action="{{ url_for('admin_codigo_acceso', colegio_id=colegio.id) }}">
+      <label>Código</label>
+      <input type="text" name="codigo" value="{{ colegio.codigo_acceso or '' }}" placeholder="Ej: NR-7K4P" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em;">
+      <button class="btn" type="submit">Guardar código</button>
+    </form>
+  </div>
 
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -61,15 +79,6 @@
       <a href="{{ acc.gaduai_url }}" target="_blank" rel="noopener">{{ acc.gaduai_url }}</a>
     </p>
     {% endif %}
-  </div>
-
-  <div class="card">
-    <strong>Clave de acceso del colegio</strong>
-    <form method="post" action="{{ url_for('admin_reset_password', colegio_id=colegio.id) }}">
-      <label>Nueva clave</label>
-      <input type="text" name="password" required>
-      <button class="btn" type="submit">Actualizar clave</button>
-    </form>
   </div>
 
   <form method="post" action="{{ url_for('admin_eliminar_colegio', colegio_id=colegio.id) }}" onsubmit="return confirm('¿Eliminar este colegio y todos sus accesos?');">

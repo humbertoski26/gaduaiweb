@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar a GADUAI</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0C0B70;--accent:#0034DA;--spark:#20C9B5;--bg:#FAFAF8;--ink:#171A2E;--muted:#5B5D72;--line:#E2E1DA;--navy-soft:#EAF0FF;--error:#e11d48}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+  .banda{height:4px;background:linear-gradient(90deg,var(--navy),var(--accent),var(--spark))}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 28px}
+  .top img{height:40px}
+  .top a{color:var(--muted);font-size:14px;text-decoration:none}
+  main{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:48px 16px}
+  .card{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:36px 32px;box-shadow:0 12px 40px rgba(12,11,112,.08)}
+  .candado{width:52px;height:52px;border-radius:14px;background:var(--navy-soft);color:var(--navy);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  h1{font-family:'Lora',serif;color:var(--navy);font-size:28px;margin:0 0 8px}
+  .sub{color:var(--muted);margin:0 0 26px;line-height:1.5}
+  label{display:block;font-weight:600;font-size:14px;margin-bottom:8px}
+  input.codigo{width:100%;padding:15px 16px;border:1.5px solid var(--line);border-radius:12px;font:inherit;font-size:20px;letter-spacing:.12em;text-transform:uppercase;text-align:center;outline:none;transition:border .15s}
+  input.codigo:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--navy-soft)}
+  input.codigo.mal{border-color:var(--error);box-shadow:0 0 0 4px #FDE7EC;animation:sacudir .3s}
+  @keyframes sacudir{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .error{display:none;color:var(--error);font-size:14px;margin-top:10px;text-align:center}
+  .recordar{display:flex;gap:8px;align-items:center;margin-top:16px;font-size:14px;color:var(--muted);font-weight:400}
+  .btn{display:block;width:100%;margin-top:20px;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#fff;font:inherit;font-weight:600;font-size:16px;cursor:pointer}
+  .btn:disabled{background:#B9C4E8;cursor:not-allowed}
+  .ayuda{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted);line-height:1.6}
+  .tip{display:flex;gap:12px;margin-top:16px;padding:12px 14px;background:#EAFBF8;border-radius:12px;font-size:13.5px;color:#0F5E55;line-height:1.5}
+  .paso2{display:none;text-align:center}
+  .spin{width:34px;height:34px;border:3px solid var(--navy-soft);border-top-color:var(--accent);border-radius:50%;margin:10px auto 18px;animation:g .8s linear infinite}
+  @keyframes g{to{transform:rotate(360deg)}}
+  .otro{display:inline-block;margin-top:18px;font-size:14px;color:var(--accent);font-weight:600;cursor:pointer;background:none;border:0;font-family:inherit}
+  footer{text-align:center;font-size:12px;color:var(--muted);padding:20px}
+</style>
+</head>
+<body>
+<div class="banda"></div>
+<div class="top">
+  <a href="index.html"><img src="gaduai-logo-v2.png" alt="GADUAI"></a>
+  <a href="index.html">← Volver a gaduai.cl</a>
+</div>
+<main>
+  <div class="card" id="paso1">
+    <div class="candado">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <h1>Entrar a GADUAI</h1>
+    <p class="sub">Acceso exclusivo para el personal de colegios que usan GADUAI.</p>
+
+    <label for="cod">Código de tu colegio</label>
+    <input class="codigo" id="cod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="••••-•••">
+    <div class="error" id="err"></div>
+
+    <label class="recordar"><input type="checkbox" id="recordar" checked> Recordar mi colegio en este dispositivo</label>
+    <button class="btn" id="btn" disabled>Continuar</button>
+
+    <div class="ayuda">
+      ¿No tienes el código? Pídeselo a la dirección de tu colegio.
+      <div class="tip">
+        <span>📱</span>
+        <span><b>Tip:</b> después de entrar, instala GADUAI en tu celular y ábrelo con un toque, sin pasar por esta página.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card paso2" id="paso2">
+    <div class="spin"></div>
+    <h1 style="font-size:22px">Te llevamos a tu colegio</h1>
+    <p class="sub" id="p2"></p>
+    <p class="sub" style="margin:0;font-size:14px">Ahí ingresas con tu correo y clave personal.</p>
+    <button class="otro" id="otro" type="button">¿Otro colegio?</button>
+  </div>
+</main>
+<footer>GADUAI · Inteligencia Educativa</footer>
+
+<script>
+(function () {
+  // El código se valida en el servidor del Portal: esta página no conoce ningún código ni colegio.
+  var API = "https://gaduai-portal.onrender.com/api/entrar";
+  var CLAVE = "gaduai-colegio";
+  var cod = document.getElementById("cod"), btn = document.getElementById("btn"), err = document.getElementById("err");
+  var esperando = null;
+
+  // Solo se sigue a un link de GADUAI (evita que un valor guardado mande a otro sitio).
+  function linkValido(url) {
+    try {
+      var u = new URL(url);
+      return u.protocol === "https:" && (/\.onrender\.com$/.test(u.hostname) || /(^|\.)gaduai\.cl$/.test(u.hostname));
+    } catch (e) { return false; }
+  }
+  function leer() { try { var d = JSON.parse(localStorage.getItem(CLAVE)); return d && linkValido(d.url) ? d : null; } catch (e) { return null; } }
+  function guardar(d) { try { localStorage.setItem(CLAVE, JSON.stringify(d)); } catch (e) {} }
+  function olvidar() { try { localStorage.removeItem(CLAVE); } catch (e) {} }
+
+  function ir(d) {
+    document.getElementById("paso1").style.display = "none";
+    document.getElementById("paso2").style.display = "block";
+    var p = document.getElementById("p2");
+    p.textContent = "Abriendo el ingreso de ";
+    var b = document.createElement("b"); b.textContent = d.nombre; p.appendChild(b);
+    esperando = setTimeout(function () { window.location.href = d.url; }, 1200);
+  }
+  function mostrarError(texto) {
+    cod.classList.remove("mal"); void cod.offsetWidth; cod.classList.add("mal");
+    err.textContent = texto; err.style.display = "block";
+  }
+
+  document.getElementById("otro").addEventListener("click", function () {
+    clearTimeout(esperando); olvidar(); cod.value = ""; btn.disabled = true;
+    document.getElementById("paso2").style.display = "none";
+    document.getElementById("paso1").style.display = "block";
+    cod.focus();
+  });
+
+  cod.addEventListener("input", function () {
+    btn.disabled = cod.value.trim().length < 4;
+    cod.classList.remove("mal"); err.style.display = "none";
+  });
+  cod.addEventListener("keydown", function (e) { if (e.key === "Enter" && !btn.disabled) continuar(); });
+  btn.addEventListener("click", continuar);
+
+  function continuar() {
+    btn.disabled = true; btn.textContent = "Verificando…";
+    fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ codigo: cod.value }) })
+      .then(function (r) { return r.json().then(function (d) { return { status: r.status, d: d }; }); })
+      .then(function (res) {
+        btn.textContent = "Continuar"; btn.disabled = false;
+        if (res.status === 200 && res.d && linkValido(res.d.url)) {
+          if (document.getElementById("recordar").checked) guardar({ url: res.d.url, nombre: res.d.nombre });
+          ir(res.d);
+        } else if (res.status === 429) {
+          mostrarError("Demasiados intentos. Espera 15 minutos e inténtalo de nuevo.");
+        } else {
+          mostrarError("Código no válido. Revísalo e inténtalo de nuevo.");
+        }
+      })
+      .catch(function () {
+        btn.textContent = "Continuar"; btn.disabled = false;
+        mostrarError("No pudimos conectarnos. Revisa tu conexión e inténtalo de nuevo.");
+      });
+  }
+
+  // Si ya entró antes desde este dispositivo, lo lleva directo (con opción de cambiar).
+  var guardado = leer();
+  if (guardado && location.hash !== "#otro") ir(guardado); else cod.focus();
+})();
+</script>
+</body>
+</html>

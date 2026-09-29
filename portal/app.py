@@ -9,7 +9,6 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
 
 from db import get_conn, init_db
 
@@ -120,8 +119,8 @@ def resetear_master_en_triage(colegio_id_triage, correo_nuevo=None):
     except URLError as exc:
         raise TriageError("No se pudo conectar con TRIAGE.") from exc
 
-# El botón de contacto vive en el sitio público (otro origen), así que ese único
-# endpoint necesita CORS habilitado para poder recibir el POST desde gaduai.cl.
+# El formulario de contacto y la caja de código de entrada viven en el sitio público (otro
+# origen), así que esos endpoints necesitan CORS para recibir el POST desde gaduai.cl.
 ALLOWED_ORIGINS = {"https://gaduai.cl", "https://www.gaduai.cl", "https://gaduai-web.onrender.com"}
 
 
@@ -132,19 +131,11 @@ def add_cors_headers(resp):
         resp.headers["Access-Control-Allow-Origin"] = origin
         resp.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
         resp.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        resp.headers["Access-Control-Max-Age"] = "600"
     return resp
 
 with app.app_context():
     init_db()
-
-
-def colegio_login_required(f):
-    @wraps(f)
-    def wrapper(*a, **kw):
-        if not session.get("colegio_id"):
-            return redirect(url_for("login"))
-        return f(*a, **kw)
-    return wrapper
 
 
 def admin_login_required(f):
@@ -156,69 +147,78 @@ def admin_login_required(f):
     return wrapper
 
 
-@app.route("/")
-def index():
-    if session.get("colegio_id"):
-        return redirect(url_for("portal"))
-    return redirect(url_for("login"))
+# ---------- entrada del personal: código de colegio ----------
+# El personal ya no entra aquí con una clave compartida por colegio: en gaduai.cl/entrar.html
+# escribe el código de su colegio, este endpoint lo valida y devuelve el link al GADUAI de ese
+# colegio, donde cada persona inicia sesión con su propia cuenta. Desde fuera no se puede ver
+# ni listar ningún colegio: un código equivocado solo responde "no válido".
+ENTRAR_URL = "https://www.gaduai.cl/entrar.html"
+CODIGO_RE = re.compile(r"^[A-Z0-9-]{4,24}$")
+_fallos_codigo = {}          # ip -> (fallos, desde)
+_fallos_codigo_global = [0, time.time()]
+FALLOS_CODIGO_IP = 10        # por IP cada 15 minutos
+FALLOS_CODIGO_GLOBAL = 300   # entre todas las IP cada 15 minutos (frena adivinar desde muchas IP)
 
 
-@app.route("/login", methods=["GET", "POST"])
-@limite_intentos("login")
-def login():
-    if request.method == "POST":
-        email = request.form["email"].strip().lower()
-        password = request.form["password"]
+def normalizar_codigo(codigo):
+    return re.sub(r"\s+", "", codigo or "").upper()
+
+
+def destino_colegio(cur, colegio_id):
+    """Link de entrada del colegio: su GADUAI (propio o compartido) si está habilitado; si
+    solo tiene el TRIAGE compartido habilitado, ese link. None si no tiene ninguno."""
+    cur.execute(
+        "SELECT producto, url FROM accesos WHERE colegio_id = %s AND habilitado AND url IS NOT NULL",
+        (colegio_id,),
+    )
+    urls = {r["producto"]: r["url"] for r in cur.fetchall()}
+    return urls.get("gaduai") or urls.get("triage")
+
+
+@app.route("/api/entrar", methods=["POST", "OPTIONS"])
+def api_entrar():
+    if request.method == "OPTIONS":
+        return ("", 204)
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr or "desconocida").split(",")[0].strip()
+    ahora = time.time()
+    n, desde = _fallos_codigo.get(ip, (0, ahora))
+    if ahora - desde > 900:
+        n, desde = 0, ahora
+    if ahora - _fallos_codigo_global[1] > 900:
+        _fallos_codigo_global[:] = [0, ahora]
+    if n >= FALLOS_CODIGO_IP or _fallos_codigo_global[0] >= FALLOS_CODIGO_GLOBAL:
+        return jsonify({"error": "demasiados_intentos"}), 429
+
+    data = request.get_json(silent=True) or {}
+    codigo = normalizar_codigo(data.get("codigo"))
+    destino = None
+    if CODIGO_RE.match(codigo):
         conn = get_conn()
         cur = conn.cursor()
-        cur.execute("SELECT * FROM usuarios_colegio WHERE email = %s", (email,))
-        usuario = cur.fetchone()
+        cur.execute("SELECT id, nombre FROM colegios WHERE upper(codigo_acceso) = %s", (codigo,))
+        colegio = cur.fetchone()
+        if colegio:
+            url = destino_colegio(cur, colegio["id"])
+            if url:
+                destino = {"url": url, "nombre": colegio["nombre"]}
         cur.close()
         conn.close()
-        if usuario and check_password_hash(usuario["password_hash"], password):
-            session["colegio_id"] = usuario["colegio_id"]
-            return redirect(url_for("portal"))
-        return render_template("login.html", error="Correo o clave incorrectos.")
-    return render_template("login.html")
+    if not destino:
+        _fallos_codigo[ip] = (n + 1, desde)
+        _fallos_codigo_global[0] += 1
+        return jsonify({"error": "codigo_invalido"}), 404
+    return jsonify(destino)
 
 
-@app.route("/logout")
-def logout():
-    session.pop("colegio_id", None)
-    return redirect(url_for("login"))
-
-
+# La antigua entrada con correo y clave compartida por colegio se retiró: cualquier link
+# viejo a esta pantalla lleva a la caja de código de gaduai.cl.
+@app.route("/")
+@app.route("/login", methods=["GET", "POST"])
 @app.route("/portal")
-@colegio_login_required
-def portal():
-    conn = get_conn()
-    cur = conn.cursor()
-    cur.execute("SELECT * FROM colegios WHERE id = %s", (session["colegio_id"],))
-    colegio = cur.fetchone()
-    cur.execute("SELECT * FROM accesos WHERE colegio_id = %s", (session["colegio_id"],))
-    accesos = {row["producto"]: row for row in cur.fetchall()}
-    cur.close()
-    conn.close()
-
-    # Si el colegio ya tiene GADUAI habilitado, ese es el único punto de entrada: absorbe
-    # TRIAGE y enlaza a Relacionai desde su propio header — el colegio nunca más ve esta
-    # pantalla de elegir producto, entra directo con su correo/clave de GADUAI.
-    gaduai_acc = accesos.get("gaduai")
-    if gaduai_acc and gaduai_acc["habilitado"] and gaduai_acc["url"]:
-        return redirect(gaduai_acc["url"])
-
-    productos = []
-    for clave, meta in PRODUCTOS.items():
-        if clave == "gaduai":
-            continue  # no se ofrece como tarjeta suelta — o reemplaza todo, o no se muestra
-        acc = accesos.get(clave)
-        productos.append({
-            "nombre": meta["nombre"],
-            "descripcion": meta["descripcion"],
-            "habilitado": bool(acc and acc["habilitado"]),
-            "url": acc["url"] if acc else None,
-        })
-    return render_template("portal.html", colegio=colegio, productos=productos)
+@app.route("/logout")
+def login():
+    session.pop("colegio_id", None)
+    return redirect(ENTRAR_URL)
 
 
 # ---------- admin ----------
@@ -362,8 +362,6 @@ def admin_nuevo_colegio():
     if request.method == "POST":
         nombre = request.form["nombre"].strip()
         comuna = request.form.get("comuna", "").strip() or None
-        email = request.form["email"].strip().lower()
-        password = request.form["password"]
         conn = get_conn()
         cur = conn.cursor()
         try:
@@ -372,14 +370,10 @@ def admin_nuevo_colegio():
                 (nombre, comuna),
             )
             colegio_id = cur.fetchone()["id"]
-            cur.execute(
-                "INSERT INTO usuarios_colegio (colegio_id, email, password_hash) VALUES (%s, %s, %s)",
-                (colegio_id, email, generate_password_hash(password)),
-            )
         except Exception:
             cur.close()
             conn.close()
-            return render_template("admin_nuevo_colegio.html", error="No se pudo crear (¿correo ya usado?).")
+            return render_template("admin_nuevo_colegio.html", error="No se pudo crear el colegio.")
         cur.close()
         conn.close()
         return redirect(url_for("admin_colegio", colegio_id=colegio_id))
@@ -393,10 +387,13 @@ def admin_colegio(colegio_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM colegios WHERE id = %s", (colegio_id,))
     colegio = cur.fetchone()
-    cur.execute("SELECT * FROM usuarios_colegio WHERE colegio_id = %s", (colegio_id,))
-    usuario = cur.fetchone()
+    if not colegio:
+        cur.close()
+        conn.close()
+        return redirect(url_for("admin_dashboard"))
     cur.execute("SELECT * FROM accesos WHERE colegio_id = %s", (colegio_id,))
     rows = cur.fetchall()
+    destino = destino_colegio(cur, colegio_id)
     cur.close()
     conn.close()
 
@@ -405,7 +402,7 @@ def admin_colegio(colegio_id):
         acc[row["producto"]] = row["habilitado"]
         acc[f"{row['producto']}_url"] = row["url"]
 
-    return render_template("admin_colegio.html", colegio=colegio, usuario=usuario, acc=acc, msg=request.args.get("msg"))
+    return render_template("admin_colegio.html", colegio=colegio, acc=acc, destino=destino, msg=request.args.get("msg"))
 
 
 @app.route("/admin/colegios/<int:colegio_id>/acceso/<producto>", methods=["POST"])
@@ -471,19 +468,27 @@ def admin_reset_master_triage(colegio_id):
     return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
 
 
-@app.route("/admin/colegios/<int:colegio_id>/clave", methods=["POST"])
+@app.route("/admin/colegios/<int:colegio_id>/codigo", methods=["POST"])
 @admin_login_required
-def admin_reset_password(colegio_id):
-    password = request.form["password"]
+def admin_codigo_acceso(colegio_id):
+    """Define, cambia o quita el código con que el personal entra desde gaduai.cl. Al
+    cambiarlo, el código anterior deja de funcionar de inmediato."""
+    codigo = normalizar_codigo(request.form.get("codigo"))
+    if codigo and not CODIGO_RE.match(codigo):
+        return redirect(url_for("admin_colegio", colegio_id=colegio_id,
+                                msg="Código no guardado: usa entre 4 y 24 letras, números o guiones (sin espacios)."))
     conn = get_conn()
     cur = conn.cursor()
-    cur.execute(
-        "UPDATE usuarios_colegio SET password_hash = %s WHERE colegio_id = %s",
-        (generate_password_hash(password), colegio_id),
-    )
+    try:
+        cur.execute("UPDATE colegios SET codigo_acceso = %s WHERE id = %s", (codigo or None, colegio_id))
+    except Exception:
+        cur.close()
+        conn.close()
+        return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg="Ese código ya lo usa otro colegio. Elige otro."))
     cur.close()
     conn.close()
-    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg="Clave actualizada."))
+    msg = f"Código guardado: {codigo}." if codigo else "Código quitado: nadie puede entrar a este colegio desde gaduai.cl."
+    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
 
 
 @app.route("/admin/colegios/<int:colegio_id>/eliminar", methods=["POST"])

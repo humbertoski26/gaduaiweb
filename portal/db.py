@@ -37,6 +37,12 @@ CREATE TABLE IF NOT EXISTS accesos (
   UNIQUE(colegio_id, producto)
 );
 
+-- Código de acceso que el personal escribe en gaduai.cl/entrar.html para llegar al GADUAI
+-- de su colegio. Lo define Humberto en el panel; único sin importar mayúsculas.
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS codigo_acceso TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS colegios_codigo_acceso_unico
+  ON colegios (upper(codigo_acceso)) WHERE codigo_acceso IS NOT NULL;
+
 CREATE TABLE IF NOT EXISTS mensajes_contacto (
   id SERIAL PRIMARY KEY,
   nombre TEXT NOT NULL,
