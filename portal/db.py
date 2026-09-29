@@ -43,6 +43,10 @@ ALTER TABLE colegios ADD COLUMN IF NOT EXISTS codigo_acceso TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS colegios_codigo_acceso_unico
   ON colegios (upper(codigo_acceso)) WHERE codigo_acceso IS NOT NULL;
 
+-- Ficha del colegio: vigencia del contrato con GADUAI.
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS fecha_inicio DATE;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS fecha_termino DATE;
+
 CREATE TABLE IF NOT EXISTS mensajes_contacto (
   id SERIAL PRIMARY KEY,
   nombre TEXT NOT NULL,
@@ -51,6 +55,34 @@ CREATE TABLE IF NOT EXISTS mensajes_contacto (
   leido BOOLEAN NOT NULL DEFAULT false,
   creado_en TIMESTAMP DEFAULT now()
 );
+
+-- CRM comercial: cada organización (colegio, sostenedor, municipio) es un solo registro que
+-- avanza por el embudo hasta ser cliente; así nada se escribe dos veces. Los colegios que ya
+-- existían quedan como clientes.
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS tipo TEXT NOT NULL DEFAULT 'colegio';
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS etapa TEXT NOT NULL DEFAULT 'cliente';
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS es_demo BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS contacto_nombre TEXT;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS contacto_cargo TEXT;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS contacto_correo TEXT;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS contacto_telefono TEXT;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS valor_mensual INTEGER;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS proximo_paso TEXT;
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS proximo_paso_fecha DATE;
+
+-- Historial de la relación: reuniones, llamadas, correos, demostraciones y notas.
+CREATE TABLE IF NOT EXISTS interacciones (
+  id SERIAL PRIMARY KEY,
+  colegio_id INTEGER NOT NULL REFERENCES colegios(id) ON DELETE CASCADE,
+  fecha DATE NOT NULL DEFAULT CURRENT_DATE,
+  tipo TEXT NOT NULL,
+  nota TEXT NOT NULL,
+  creado_en TIMESTAMP DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS interacciones_colegio_idx ON interacciones (colegio_id, fecha DESC);
+
+-- Mensaje de gaduai.cl convertido en prospecto: queda enlazado a su organización.
+ALTER TABLE mensajes_contacto ADD COLUMN IF NOT EXISTS colegio_id INTEGER REFERENCES colegios(id) ON DELETE SET NULL;
 """
 
 

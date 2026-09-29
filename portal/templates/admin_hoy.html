@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Hoy · Centro de control GADUAI{% endblock %}
+{% macro fila_paso(o) %}
+<li>
+  <div class="qué">
+    <a href="{{ url_for('admin_colegio', colegio_id=o.id) }}">{{ o.nombre }}</a>
+    <div>{{ o.proximo_paso }} · {{ ETAPA_NOMBRE.get(o.etapa, o.etapa) }}</div>
+  </div>
+  {% if o.paso %}<span class="chip {{ o.paso[1] }}">{{ o.paso[0] }}</span>{% endif %}
+  <form method="post" action="{{ url_for('admin_proximo_paso', colegio_id=o.id) }}">
+    <input type="hidden" name="accion" value="hecho"><input type="hidden" name="volver" value="{{ url_for('admin_hoy') }}">
+    <button class="btn btn-sec btn-chico" type="submit" title="Marcar como hecho">✓ Hecho</button>
+  </form>
+</li>
+{% endmacro %}
+{% block body %}
+<div class="wrap">
+  <div class="cabecera">
+    <div>
+      <h1>Hoy</h1>
+      <p class="sub">{{ hoy|fecha }} · Lo que tienes y lo que viene.</p>
+    </div>
+    <a class="btn" href="{{ url_for('admin_nuevo_colegio') }}">+ Nueva organización</a>
+  </div>
+
+  <div class="resumen">
+    <a class="tile" href="{{ url_for('admin_dashboard', filtro='clientes') }}"><div class="n">{{ r.n_clientes }}</div><div class="t">Clientes activos</div></a>
+    <div class="tile"><div class="n">{{ r.ingreso|clp }}</div><div class="t">Ingreso mensual</div></div>
+    <a class="tile" href="{{ url_for('admin_embudo') }}"><div class="n">{{ r.n_embudo }}</div><div class="t">En el embudo · {{ r.valor_embudo|clp }}/mes</div></a>
+  </div>
+
+  <div class="card">
+    <div class="card-cab"><div class="icono">✅</div><h2>Próximos pasos</h2></div>
+    {% if r.atrasados or r.de_hoy or r.semana %}
+      {% if r.atrasados %}<p class="grupo" style="color:var(--danger);">Atrasados</p><ul class="lista">{% for o in r.atrasados %}{{ fila_paso(o) }}{% endfor %}</ul>{% endif %}
+      {% if r.de_hoy %}<p class="grupo">Para hoy</p><ul class="lista">{% for o in r.de_hoy %}{{ fila_paso(o) }}{% endfor %}</ul>{% endif %}
+      {% if r.semana %}<p class="grupo">Esta semana</p><ul class="lista">{% for o in r.semana %}{{ fila_paso(o) }}{% endfor %}</ul>{% endif %}
+    {% else %}
+      <p class="ayuda" style="margin:0;">No tienes pasos pendientes para los próximos 7 días.</p>
+    {% endif %}
+    {% if r.sin_paso %}
+      <hr class="sep">
+      <p class="grupo" style="color:var(--warn);">En el embudo sin próximo paso</p>
+      <ul class="lista">
+      {% for o in r.sin_paso %}
+        <li><div class="qué"><a href="{{ url_for('admin_colegio', colegio_id=o.id) }}">{{ o.nombre }}</a><div>{{ ETAPA_NOMBRE.get(o.etapa, o.etapa) }} · define qué sigue para que no se enfríe</div></div>
+        <a class="btn btn-sec btn-chico" href="{{ url_for('admin_colegio', colegio_id=o.id) }}#proximo">Definir</a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-cab"><div class="icono">📅</div><h2>Renovaciones</h2></div>
+    {% if r.renovaciones %}
+    <ul class="lista">
+      {% for o in r.renovaciones %}
+      <li><div class="qué"><a href="{{ url_for('admin_colegio', colegio_id=o.id) }}">{{ o.nombre }}</a><div>Contrato hasta {{ o.fecha_termino|fecha }}{% if o.valor_mensual %} · {{ o.valor_mensual|clp }}/mes{% endif %}</div></div>
+      <span class="chip {{ o.contrato[1] }}">{{ o.contrato[0] }}</span></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="ayuda" style="margin:0;">Ningún contrato vence en los próximos 60 días.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <div class="card-cab"><div class="icono">✉️</div><h2>Mensajes nuevos de gaduai.cl</h2></div>
+    {% if r.mensajes %}
+    <ul class="lista">
+      {% for m in r.mensajes %}
+      <li>
+        <div class="qué"><b>{{ m.nombre }}</b><div>{{ m.correo }} · {{ m.creado_en|fecha }} — {{ m.mensaje[:110] }}{% if m.mensaje|length > 110 %}…{% endif %}</div></div>
+        <a class="btn btn-chico" href="{{ url_for('admin_convertir_mensaje', mensaje_id=m.id) }}">Convertir en prospecto</a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="ayuda" style="margin:0;">No hay mensajes sin responder.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

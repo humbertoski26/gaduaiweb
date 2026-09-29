@@ -1,35 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Colegios · Admin GADUAI{% endblock %}
+{% block title %}Organizaciones · Centro de control GADUAI{% endblock %}
 {% block body %}
-<div class="topbar">
-  <strong>Admin GADUAI</strong>
-  <div style="display:flex; gap:16px; align-items:center;">
-    <a href="{{ url_for('admin_mensajes') }}">Mensajes{% if mensajes_no_leidos %} <span class="badge badge-on">{{ mensajes_no_leidos }}</span>{% endif %}</a>
-    <a href="{{ url_for('admin_logout') }}">Cerrar sesión</a>
+<div class="wrap">
+  <div class="cabecera">
+    <div>
+      <h1>Organizaciones</h1>
+      <p class="sub">Clientes, prospectos y perdidas: cada una con su ficha, su historial y sus accesos.</p>
+    </div>
+    <a class="btn" href="{{ url_for('admin_nuevo_colegio') }}">+ Nueva organización</a>
   </div>
-</div>
-<div class="wrap" style="max-width:900px;">
-  <h1>Colegios</h1>
-  <p class="sub">Cree colegios y administre el acceso a cada producto.</p>
-  {% if error %}<div class="flash">{{ error }}</div>{% endif %}
-  <div class="card">
+  {% if error %}<div class="aviso aviso-warn">{{ error }}</div>{% endif %}
+
+  <div class="filtros">
+    {% for k, n in [('todas','Todas'),('clientes','Clientes'),('embudo','En el embudo'),('perdidas','Perdidas')] %}
+    <a href="{{ url_for('admin_dashboard', filtro=k) }}" class="{{ 'activo' if filtro == k }}">{{ n }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="tabla">
     <table>
-      <tr><th>Colegio</th><th>Comuna</th><th>Código</th><th>Relacionai</th><th>TRIAGE</th><th>GADUAI</th><th></th></tr>
+      <tr><th>Organización</th><th>Etapa</th><th>Contrato</th><th class="ocultar-movil">Plataforma</th><th class="ocultar-movil">Entrada</th><th></th></tr>
       {% for c in colegios %}
       <tr>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.comuna or '—' }}</td>
-        <td>{{ c.codigo_acceso or '—' }}</td>
-        <td><span class="badge {{ 'badge-on' if c.acc.relacionai else 'badge-off' }}">{{ 'Sí' if c.acc.relacionai else 'No' }}</span></td>
-        <td><span class="badge {{ 'badge-on' if c.acc.triage else 'badge-off' }}">{{ 'Sí' if c.acc.triage else 'No' }}</span></td>
-        <td><span class="badge {{ 'badge-on' if c.acc.gaduai else 'badge-off' }}">{{ 'Sí' if c.acc.gaduai else 'No' }}</span></td>
-        <td><a href="{{ url_for('admin_colegio', colegio_id=c.id) }}">Administrar</a></td>
+        <td><div class="nombre">{{ c.nombre }}</div><div class="comuna">{{ TIPO_NOMBRE.get(c.tipo, c.tipo) }} · {{ c.comuna or 'Sin comuna' }}{% if c.es_demo %} · demo{% endif %}</div></td>
+        <td><span class="chip {{ 'chip-ok' if c.etapa == 'cliente' else ('chip-peligro' if c.etapa == 'perdido' else 'chip-info') }}">{{ ETAPA_NOMBRE.get(c.etapa, c.etapa) }}</span></td>
+        <td>
+          {% if c.etapa == 'cliente' %}
+            <span class="chip {{ c.contrato[1] }}">{{ c.contrato[0] }}</span>
+            {% if c.fecha_termino %}<div class="comuna" style="margin-top:4px;">hasta {{ c.fecha_termino|fecha }}</div>{% endif %}
+          {% elif c.valor_mensual %}<span class="comuna">{{ c.valor_mensual|clp }}/mes estimado</span>
+          {% else %}<span class="comuna">—</span>{% endif %}
+        </td>
+        <td class="ocultar-movil">
+          {% if c.acc.gaduai %}<span class="chip chip-info">GADUAI propio</span>
+          {% elif c.acc.triage %}<span class="chip chip-info">GADUAI compartido</span>
+          {% else %}<span class="chip chip-off">Sin plataforma</span>{% endif %}
+        </td>
+        <td class="ocultar-movil">
+          {% if c.listo %}<span class="chip chip-ok">Código activo</span>
+          {% elif c.etapa != 'cliente' %}<span class="comuna">—</span>
+          {% elif c.codigo_acceso %}<span class="chip chip-warn">Falta plataforma</span>
+          {% else %}<span class="chip chip-warn">Falta código</span>{% endif %}
+        </td>
+        <td style="text-align:right;"><a class="btn btn-sec btn-chico" href="{{ url_for('admin_colegio', colegio_id=c.id) }}">Abrir →</a></td>
       </tr>
       {% else %}
-      <tr><td colspan="7" style="color:var(--muted);">Aún no hay colegios creados.</td></tr>
+      <tr><td colspan="6" class="vacio">{% if total %}No hay organizaciones en este filtro.{% else %}Aún no hay organizaciones. Crea la primera con “+ Nueva organización”.{% endif %}</td></tr>
       {% endfor %}
     </table>
   </div>
-  <a class="btn" href="{{ url_for('admin_nuevo_colegio') }}">+ Nuevo colegio</a>
 </div>
 {% endblock %}

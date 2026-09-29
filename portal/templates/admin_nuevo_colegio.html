@@ -1,19 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Nuevo colegio · Admin GADUAI{% endblock %}
+{% block title %}Nueva organización · Centro de control GADUAI{% endblock %}
 {% block body %}
-<div class="topbar">
-  <strong>Admin GADUAI</strong>
-  <a href="{{ url_for('admin_dashboard') }}">← Volver</a>
-</div>
-<div class="wrap">
-  <h1>Nuevo colegio</h1>
-  {% if error %}<div class="flash">{{ error }}</div>{% endif %}
-  <form method="post">
-    <label>Nombre del colegio</label>
-    <input name="nombre" required autofocus>
-    <label>Comuna (opcional)</label>
-    <input name="comuna">
-    <button class="btn" type="submit">Crear colegio</button>
-  </form>
+<div class="wrap angosto">
+  <a class="miga" href="{{ url_for('admin_dashboard') }}">← Organizaciones</a>
+  <div class="cabecera"><div>
+    <h1>Nueva organización</h1>
+    <p class="sub">Un colegio, sostenedor o municipio con el que conversas. Es la misma ficha desde el primer contacto hasta que es cliente.</p>
+  </div></div>
+  {% if error %}<div class="aviso aviso-warn">{{ error }}</div>{% endif %}
+  <div class="card">
+    <form method="post">
+      <div class="grilla">
+        <div style="grid-column:1/-1;"><label for="nombre">Nombre</label><input id="nombre" name="nombre" required autofocus placeholder="Ej: Corporación Educacional …"></div>
+        <div><label for="tipo">Tipo</label><select id="tipo" name="tipo">{% for k, n in TIPOS %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></div>
+        <div><label for="etapa">Etapa</label><select id="etapa" name="etapa">{% for k, n in ETAPAS if k != 'perdido' %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></div>
+        <div><label for="comuna">Comuna</label><input id="comuna" name="comuna"></div>
+        <div><label for="contacto_nombre">Contacto (nombre)</label><input id="contacto_nombre" name="contacto_nombre"></div>
+        <div><label for="contacto_correo">Contacto (correo)</label><input type="email" id="contacto_correo" name="contacto_correo"></div>
+      </div>
+      <button class="btn" type="submit">Crear organización</button>
+    </form>
+  </div>
 </div>
 {% endblock %}

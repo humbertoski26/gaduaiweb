@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Embudo · Centro de control GADUAI{% endblock %}
+{% set orden = ['contacto','reunion','demo','propuesta','cliente'] %}
+{% block body %}
+<div class="wrap" style="max-width:1280px;">
+  <div class="cabecera">
+    <div>
+      <h1>Embudo</h1>
+      <p class="sub">Cada organización avanza con un clic. Las flechas la mueven de etapa.</p>
+    </div>
+    <a class="btn" href="{{ url_for('admin_nuevo_colegio') }}">+ Nueva organización</a>
+  </div>
+
+  <div class="columnas">
+    {% for e in orden %}
+    {% set lista = columnas.get(e, []) %}
+    <div class="columna">
+      <h3>{{ ETAPA_NOMBRE[e] }} <small>{{ lista|length }}{% if totales.get(e) %} · {{ totales[e]|clp }}{% endif %}</small></h3>
+      {% for o in lista %}
+      <div class="tarjeta">
+        <a class="t" href="{{ url_for('admin_colegio', colegio_id=o.id) }}">{{ o.nombre }}</a>
+        <div class="m">{{ TIPO_NOMBRE.get(o.tipo, o.tipo) }}{% if o.valor_mensual %} · {{ o.valor_mensual|clp }}/mes{% endif %}{% if o.es_demo %} · demo{% endif %}</div>
+        {% if o.proximo_paso %}
+        <div class="paso">{{ o.proximo_paso }} {% if o.paso %}<span class="chip {{ o.paso[1] }}" style="margin-top:4px;">{{ o.paso[0] }}</span>{% endif %}</div>
+        {% elif e != 'cliente' %}
+        <div class="paso" style="color:var(--warn);">Sin próximo paso</div>
+        {% endif %}
+        {% set i = orden.index(e) %}
+        <div class="mover">
+          <form method="post" action="{{ url_for('admin_etapa', colegio_id=o.id) }}">
+            <input type="hidden" name="volver" value="{{ url_for('admin_embudo') }}">
+            {% if i > 0 %}<button name="etapa" value="{{ orden[i-1] }}" title="Volver a {{ ETAPA_NOMBRE[orden[i-1]] }}">←</button>{% endif %}
+          </form>
+          {% if e != 'cliente' %}
+          <form method="post" action="{{ url_for('admin_etapa', colegio_id=o.id) }}">
+            <input type="hidden" name="volver" value="{{ url_for('admin_embudo') }}">
+            <button name="etapa" value="perdido" title="Marcar como perdido" onclick="return confirm('¿Marcar esta organización como perdida?');">✕</button>
+          </form>
+          {% endif %}
+          <form method="post" action="{{ url_for('admin_etapa', colegio_id=o.id) }}">
+            <input type="hidden" name="volver" value="{{ url_for('admin_embudo') }}">
+            {% if i < orden|length - 1 %}<button name="etapa" value="{{ orden[i+1] }}" title="Avanzar a {{ ETAPA_NOMBRE[orden[i+1]] }}">{{ ETAPA_NOMBRE[orden[i+1]] }} →</button>{% endif %}
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <p class="m" style="margin:4px;color:var(--muted);font-size:13px;">Vacío</p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if columnas.get('perdido') %}
+  <details class="card" style="margin-top:16px;">
+    <summary style="cursor:pointer;font-weight:600;color:var(--muted);">Perdidas ({{ columnas['perdido']|length }})</summary>
+    <ul class="lista" style="margin-top:8px;">
+      {% for o in columnas['perdido'] %}
+      <li><div class="qué"><a href="{{ url_for('admin_colegio', colegio_id=o.id) }}">{{ o.nombre }}</a><div>{{ TIPO_NOMBRE.get(o.tipo, o.tipo) }}</div></div>
+        <form method="post" action="{{ url_for('admin_etapa', colegio_id=o.id) }}">
+          <input type="hidden" name="volver" value="{{ url_for('admin_embudo') }}">
+          <button class="btn btn-sec btn-chico" name="etapa" value="contacto">Reactivar</button>
+        </form></li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
+</div>
+{% endblock %}

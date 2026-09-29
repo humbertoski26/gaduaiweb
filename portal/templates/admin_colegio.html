@@ -1,88 +1,226 @@
 {% extends "base.html" %}
-{% block title %}{{ colegio.nombre }} · Admin GADUAI{% endblock %}
+{% block title %}{{ colegio.nombre }} · Centro de control GADUAI{% endblock %}
 {% block body %}
-<div class="topbar">
-  <strong>Admin GADUAI</strong>
-  <a href="{{ url_for('admin_dashboard') }}">← Volver</a>
-</div>
-<div class="wrap">
-  <h1>{{ colegio.nombre }}</h1>
-  <p class="sub">{{ colegio.comuna or 'Sin comuna' }}</p>
-  {% if msg %}<div class="flash">{{ msg }}</div>{% endif %}
+<div class="wrap angosto">
+  <a class="miga" href="{{ url_for('admin_dashboard') }}">← Organizaciones</a>
+  <div class="cabecera"><div>
+    <h1>{{ colegio.nombre }}</h1>
+    <p class="sub">{{ TIPO_NOMBRE.get(colegio.tipo, colegio.tipo) }} · {{ colegio.comuna or 'Sin comuna' }}{% if colegio.es_demo %} · <b>Organización de demostración</b>{% endif %}</p>
+  </div></div>
+  {% if msg %}<div class="aviso">{{ msg }}</div>{% endif %}
 
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong>Código de acceso</strong>
-      <span class="badge {{ 'badge-on' if colegio.codigo_acceso and destino else 'badge-off' }}">{{ 'Activo' if colegio.codigo_acceso and destino else 'Inactivo' }}</span>
+  {# Etapa en el embudo #}
+  <form method="post" action="{{ url_for('admin_etapa', colegio_id=colegio.id) }}" class="card" style="padding:16px 20px;">
+    <p class="subtitulo" style="margin-bottom:10px;">Etapa</p>
+    {% set orden = ['contacto','reunion','demo','propuesta','cliente'] %}
+    {% set pos = orden.index(colegio.etapa) if colegio.etapa in orden else -1 %}
+    <div class="etapas">
+      {% for e in orden %}
+      <button type="submit" name="etapa" value="{{ e }}" class="{{ 'actual' if e == colegio.etapa else ('hecha' if loop.index0 < pos else '') }}">{{ ETAPA_NOMBRE[e] }}</button>
+      {% endfor %}
+      <button type="submit" name="etapa" value="perdido" class="perdido {{ 'actual' if colegio.etapa == 'perdido' }}" style="margin-left:auto;" {% if colegio.etapa != 'perdido' %}onclick="return confirm('¿Marcar esta organización como perdida?');"{% endif %}>Perdido</button>
     </div>
-    <p style="font-size:0.85rem;color:var(--muted);">El personal del colegio escribe este código en <a href="https://www.gaduai.cl/entrar.html" target="_blank" rel="noopener">gaduai.cl/entrar.html</a> y llega al inicio de sesión de GADUAI de su colegio, donde cada persona entra con su propia cuenta. Si el código se filtra, cámbialo aquí: el anterior deja de funcionar de inmediato. Usa algo difícil de adivinar (por ejemplo NR-7K4P), de 4 a 24 letras, números o guiones.</p>
-    {% if destino %}
-    <p style="font-size:0.8rem;">Con el código se llega a: <a href="{{ destino }}" target="_blank" rel="noopener">{{ destino }}</a></p>
+  </form>
+
+  {# Comprometer: próximo paso #}
+  <div class="card" id="proximo">
+    <div class="card-cab">
+      <div class="icono">✅</div>
+      <h2>Próximo paso</h2>
+      {% if paso %}<span class="chip {{ paso[1] }}">{{ paso[0] }}</span>{% endif %}
+    </div>
+    {% if colegio.proximo_paso %}
+      <div class="dato"><b>{{ colegio.proximo_paso_fecha|fecha }}</b><span>{{ colegio.proximo_paso }}</span></div>
+      <form method="post" action="{{ url_for('admin_proximo_paso', colegio_id=colegio.id) }}" style="margin-bottom:16px;">
+        <input type="hidden" name="accion" value="hecho">
+        <button class="btn" type="submit">✓ Marcar como hecho</button>
+      </form>
+      <p class="ayuda" style="margin:0 0 8px;">¿Cambió el plan? Reprográmalo:</p>
+    {% elif colegio.etapa not in ('cliente', 'perdido') %}
+      <div class="aviso aviso-warn">Esta organización no tiene próximo paso: sin él, la relación se enfría sin que te des cuenta.</div>
     {% else %}
-    <p style="font-size:0.8rem;color:#b45309;">⚠ Este colegio aún no tiene GADUAI (ni TRIAGE) habilitado con su link: aunque tenga código, desde gaduai.cl no llevará a ningún lado. Habilítalo más abajo.</p>
+      <p class="ayuda">Sin pasos pendientes.</p>
+    {% endif %}
+    <form method="post" action="{{ url_for('admin_proximo_paso', colegio_id=colegio.id) }}">
+      <div class="fila">
+        <div class="crece"><label for="proximo_paso">Qué harás</label><input id="proximo_paso" name="proximo_paso" value="{{ colegio.proximo_paso or '' }}" placeholder="Ej: Enviar propuesta al sostenedor" maxlength="300"></div>
+        <div style="width:170px;"><label for="proximo_paso_fecha">Cuándo</label><input type="date" id="proximo_paso_fecha" name="proximo_paso_fecha" value="{{ (colegio.proximo_paso_fecha|string)[:10] if colegio.proximo_paso_fecha else '' }}"></div>
+        <button class="btn btn-sec" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+
+  {# Registrar y Consultar: historial #}
+  <div class="card">
+    <div class="card-cab"><div class="icono">🗂️</div><h2>Historial</h2></div>
+    <form method="post" action="{{ url_for('admin_interaccion', colegio_id=colegio.id) }}" style="margin-bottom:20px;">
+      <div class="grilla" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:10px;">
+        <div><label for="tipo-int">Qué fue</label>
+          <select id="tipo-int" name="tipo">{% for k, n in TIPOS_INTERACCION %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></div>
+        <div><label for="fecha-int">Fecha</label><input type="date" id="fecha-int" name="fecha" value="{{ hoy.isoformat() }}"></div>
+      </div>
+      <label for="nota">Qué pasó y qué se acordó</label>
+      <textarea id="nota" name="nota" maxlength="4000" placeholder="Ej: Reunión con la directora. Le interesa el módulo de convivencia; pidió la propuesta para el viernes."></textarea>
+      <button class="btn" type="submit" style="margin-top:10px;">Registrar</button>
+    </form>
+    {% if historial %}
+    <ul class="historial">
+      {% for h in historial %}
+      <li>
+        <div class="cab"><b>{{ TIPO_INTERACCION_NOMBRE.get(h.tipo, h.tipo) }}</b> · {{ h.fecha|fecha }}
+          <form method="post" action="{{ url_for('admin_eliminar_interaccion', interaccion_id=h.id) }}" onsubmit="return confirm('¿Eliminar este registro del historial?');" style="margin-left:auto;"><button type="submit" title="Eliminar">Eliminar</button></form>
+        </div>
+        <div class="txt">{{ h.nota }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+      <p class="ayuda" style="margin:0;">Aún no hay registros. Cada reunión, llamada o correo que registres queda aquí.</p>
+    {% endif %}
+  </div>
+
+  {# Ficha comercial #}
+  <div class="card">
+    <div class="card-cab">
+      <div class="icono">📋</div>
+      <h2>Ficha</h2>
+      {% if colegio.etapa == 'cliente' %}<span class="chip {{ contrato[1] }}">{{ contrato[0] }}</span>{% endif %}
+    </div>
+    <form method="post" action="{{ url_for('admin_ficha_colegio', colegio_id=colegio.id) }}">
+      <p class="subtitulo">Contacto principal</p>
+      <div class="grilla">
+        <div><label for="contacto_nombre">Nombre</label><input id="contacto_nombre" name="contacto_nombre" value="{{ colegio.contacto_nombre or '' }}"></div>
+        <div><label for="contacto_cargo">Cargo</label><input id="contacto_cargo" name="contacto_cargo" value="{{ colegio.contacto_cargo or '' }}" placeholder="Ej: Directora"></div>
+        <div><label for="contacto_correo">Correo</label><input type="email" id="contacto_correo" name="contacto_correo" value="{{ colegio.contacto_correo or '' }}"></div>
+        <div><label for="contacto_telefono">Teléfono</label><input id="contacto_telefono" name="contacto_telefono" value="{{ colegio.contacto_telefono or '' }}"></div>
+      </div>
+      <p class="subtitulo">Organización y contrato</p>
+      <div class="grilla">
+        <div><label for="tipo">Tipo</label><select id="tipo" name="tipo">{% for k, n in TIPOS %}<option value="{{ k }}" {{ 'selected' if colegio.tipo == k }}>{{ n }}</option>{% endfor %}</select></div>
+        <div><label for="comuna">Comuna</label><input id="comuna" name="comuna" value="{{ colegio.comuna or '' }}"></div>
+        <div><label for="valor_mensual">Valor mensual (CLP)</label><input id="valor_mensual" name="valor_mensual" inputmode="numeric" value="{{ colegio.valor_mensual or '' }}" placeholder="{{ 'Real' if colegio.etapa == 'cliente' else 'Estimado' }}"></div>
+        <div><label for="fecha_inicio">Inicio del contrato</label><input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ (colegio.fecha_inicio|string)[:10] if colegio.fecha_inicio else '' }}"></div>
+        <div><label for="fecha_termino">Término del contrato</label><input type="date" id="fecha_termino" name="fecha_termino" value="{{ (colegio.fecha_termino|string)[:10] if colegio.fecha_termino else '' }}"></div>
+      </div>
+      <label class="check" style="margin-bottom:16px;"><input type="checkbox" name="es_demo" value="1" {{ 'checked' if colegio.es_demo }}> Organización de demostración (no suma en clientes ni en ingresos)</label>
+      <button class="btn" type="submit">Guardar ficha</button>
+    </form>
+  </div>
+
+  <details class="accesos" {{ 'open' if colegio.etapa == 'cliente' }} style="margin-top:24px;">
+    <summary style="cursor:pointer;font-weight:700;color:var(--navy);font-size:17px;margin-bottom:14px;">Accesos del colegio{% if colegio.etapa != 'cliente' %} <span style="font-weight:500;font-size:14px;color:var(--muted);">— se usan al pasar a Cliente</span>{% endif %}</summary>
+
+  {# 1. Entrada del personal #}
+  <div class="card">
+    <div class="card-cab">
+      <div class="icono">🔑</div>
+      <h2>Entrada del personal</h2>
+      {% if colegio.codigo_acceso and destino %}<span class="chip chip-ok">Activa</span>
+      {% else %}<span class="chip chip-warn">Inactiva</span>{% endif %}
+    </div>
+    <p class="ayuda">El personal escribe este código en <a href="https://www.gaduai.cl/entrar.html" target="_blank" rel="noopener">gaduai.cl/entrar</a> y llega al inicio de sesión de su colegio, donde cada persona entra con su propia cuenta. Si el código se filtra, cámbialo: el anterior deja de servir al instante.</p>
+    {% if destino %}
+      <div class="dato"><b>Lleva a</b><a href="{{ destino }}" target="_blank" rel="noopener">{{ destino }}</a></div>
+    {% else %}
+      <div class="aviso aviso-warn">Este colegio aún no tiene plataforma GADUAI activa: aunque tenga código, desde gaduai.cl no llevará a ningún lado. Actívala en la sección de abajo.</div>
     {% endif %}
     <form method="post" action="{{ url_for('admin_codigo_acceso', colegio_id=colegio.id) }}">
-      <label>Código</label>
-      <input type="text" name="codigo" value="{{ colegio.codigo_acceso or '' }}" placeholder="Ej: NR-7K4P" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em;">
-      <button class="btn" type="submit">Guardar código</button>
+      <div class="fila">
+        <div class="crece">
+          <label for="codigo">Código del colegio</label>
+          <input type="password" id="codigo" name="codigo" value="{{ colegio.codigo_acceso or '' }}" placeholder="Ej: NR-7K4P" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em;">
+        </div>
+        <button class="btn btn-sec" type="button" onclick="var i=document.getElementById('codigo');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'Mostrar':'Ocultar';">Mostrar</button>
+        <button class="btn" type="submit">Guardar código</button>
+      </div>
+      <p class="ayuda" style="margin:8px 0 0;font-size:13px;">De 4 a 24 letras, números o guiones. Difícil de adivinar, por ejemplo mezclando letras y números.</p>
     </form>
   </div>
 
+  {# 2. Plataforma GADUAI #}
   <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong>Relacionai</strong>
-      <span class="badge {{ 'badge-on' if acc.relacionai else 'badge-off' }}">{{ 'Habilitado' if acc.relacionai else 'No habilitado' }}</span>
+    <div class="card-cab">
+      <div class="icono">🏫</div>
+      <h2>Plataforma GADUAI</h2>
+      {% if acc.gaduai %}<span class="chip chip-info">GADUAI propio</span>
+      {% elif acc.triage %}<span class="chip chip-info">GADUAI compartido</span>
+      {% else %}<span class="chip chip-off">Sin activar</span>{% endif %}
     </div>
-    <p style="font-size:0.85rem;color:var(--muted);">Cada colegio tiene su propio despliegue de Relacionai — pegue la URL específica de este colegio. Sin URL, el colegio no puede quedar habilitado.</p>
-    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='relacionai') }}">
-      <label>URL de Relacionai para este colegio</label>
-      <input type="url" name="url" placeholder="https://relacionai-nombre-colegio.onrender.com" value="{{ acc.relacionai_url or '' }}" required>
-      <button class="btn {{ 'btn-muted' if acc.relacionai else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.relacionai else 'Guardar y habilitar' }}</button>
-      <button class="btn {{ '' if acc.relacionai else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
-    </form>
-  </div>
+    <p class="ayuda">Un colegio usa <b>una</b> de las dos formas. Si tiene GADUAI propio activo, esa es la que usa su código.</p>
 
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong>TRIAGE GADUAI</strong>
-      <span class="badge {{ 'badge-on' if acc.triage else 'badge-off' }}">{{ 'Habilitado' if acc.triage else 'No habilitado' }}</span>
-    </div>
-    <p style="font-size:0.85rem;color:var(--muted);">TRIAGE es un solo despliegue compartido — al habilitarlo, este panel activa el colegio ahí y arma su link directo automáticamente (el encargado nunca ve la pantalla pública de TRIAGE).</p>
-    {% if acc.triage_url %}<p style="font-size:0.8rem;"><a href="{{ acc.triage_url }}" target="_blank" rel="noopener">{{ acc.triage_url }}</a></p>{% endif %}
-    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='triage') }}">
-      <button class="btn {{ 'btn-muted' if acc.triage else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.triage else 'Habilitar TRIAGE para este colegio' }}</button>
-      <button class="btn {{ '' if acc.triage else 'btn-muted' }}" type="submit" name="habilitado" value="0">Deshabilitar</button>
+    <p class="subtitulo">GADUAI compartido <span class="chip {{ 'chip-ok' if acc.triage else 'chip-off' }}" style="margin-left:6px;">{{ 'Activo' if acc.triage else 'No' }}</span></p>
+    <p class="ayuda" style="margin-top:0;">Recomendado para colegios nuevos: vive en el servicio común y se activa con un clic. Al activarlo por primera vez se muestra la clave del máster una sola vez.</p>
+    {% if acc.triage_url %}<div class="dato"><b>Link</b><a href="{{ acc.triage_url }}" target="_blank" rel="noopener">{{ acc.triage_url }}</a></div>{% endif %}
+    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='triage') }}" class="fila">
+      {% if acc.triage %}
+        <button class="btn btn-sec" type="submit" name="habilitado" value="0" onclick="return confirm('¿Desactivar GADUAI compartido para este colegio? Su código dejará de llevarlo ahí.');">Desactivar</button>
+      {% else %}
+        <button class="btn" type="submit" name="habilitado" value="1">Activar GADUAI compartido</button>
+      {% endif %}
     </form>
     {% if acc.triage %}
-    <form method="post" action="{{ url_for('admin_reset_master_triage', colegio_id=colegio.id) }}" style="margin-top:14px;border-top:1px solid var(--border,#e5e5e5);padding-top:14px;" onsubmit="return confirm('Esto genera una clave nueva para el usuario máster de este colegio en TRIAGE. La clave actual dejará de funcionar. ¿Continuar?');">
-      <label>¿Perdiste la clave del máster? Resetéala aquí (correo opcional, si quieres cambiarlo)</label>
-      <input type="email" name="correoNuevo" placeholder="correo@real-de-la-persona.cl (opcional)">
-      <button class="btn" type="submit">Resetear clave del máster en TRIAGE</button>
-    </form>
+    <details style="margin-top:14px;">
+      <summary style="cursor:pointer;font-size:14px;color:var(--accent);font-weight:600;">¿Se perdió la clave del máster?</summary>
+      <form method="post" action="{{ url_for('admin_reset_master_triage', colegio_id=colegio.id) }}" onsubmit="return confirm('Esto genera una clave nueva para el máster de este colegio. La actual dejará de funcionar. ¿Continuar?');" style="margin-top:12px;">
+        <div class="fila">
+          <div class="crece">
+            <label for="correoNuevo">Correo nuevo del máster (opcional)</label>
+            <input type="email" id="correoNuevo" name="correoNuevo" placeholder="Déjalo vacío para mantener el actual">
+          </div>
+          <button class="btn btn-peligro" type="submit">Generar clave nueva</button>
+        </div>
+      </form>
+    </details>
     {% endif %}
-  </div>
 
-  <div class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <strong>GADUAI</strong>
-      <span class="badge {{ 'badge-on' if acc.gaduai else 'badge-off' }}">{{ 'Habilitado' if acc.gaduai else 'No habilitado' }}</span>
-    </div>
-    <p style="font-size:0.85rem;color:var(--muted);">Igual que Relacionai, cada colegio tiene su propio despliegue de GADUAI — pegue la URL específica de este colegio. Sin URL, el colegio no puede quedar habilitado.</p>
+    <hr class="sep">
+
+    <p class="subtitulo">GADUAI propio <span class="chip {{ 'chip-ok' if acc.gaduai else 'chip-off' }}" style="margin-left:6px;">{{ 'Activo' if acc.gaduai else 'No' }}</span></p>
+    <p class="ayuda" style="margin-top:0;">Para colegios con su propio servicio y base de datos en Render (como Nuevo Rumbo). Pega el link de su servicio.</p>
     <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='gaduai') }}">
-      <label>URL de GADUAI para este colegio</label>
-      <input type="url" name="url" placeholder="https://gaduai-nombre-colegio.onrender.com" value="{{ acc.gaduai_url or '' }}" required>
-      <button class="btn {{ 'btn-muted' if acc.gaduai else '' }}" type="submit" name="habilitado" value="1">{{ 'Habilitado ✓' if acc.gaduai else 'Guardar y habilitar' }}</button>
-      <button class="btn {{ '' if acc.gaduai else 'btn-muted' }}" type="submit" name="habilitado" value="0" formnovalidate>Deshabilitar</button>
+      <div class="fila">
+        <div class="crece">
+          <label for="url-gaduai">Link del GADUAI propio</label>
+          <input type="url" id="url-gaduai" name="url" placeholder="https://gaduai-nombre-colegio.onrender.com" value="{{ acc.gaduai_url or '' }}" required>
+        </div>
+        <button class="btn" type="submit" name="habilitado" value="1">{{ 'Guardar' if acc.gaduai else 'Guardar y activar' }}</button>
+        {% if acc.gaduai %}<button class="btn btn-sec" type="submit" name="habilitado" value="0" formnovalidate onclick="return confirm('¿Desactivar el GADUAI propio de este colegio?');">Desactivar</button>{% endif %}
+      </div>
     </form>
     {% if acc.gaduai and acc.gaduai_url %}
-    <p style="font-size:0.8rem;margin-top:10px;">📲 Comparte este link con el colegio — al abrirlo, el navegador les ofrece "Instalar app" / "Agregar a pantalla de inicio", y les queda un ícono de GADUAI permanente en el celular o computador:<br>
-      <a href="{{ acc.gaduai_url }}" target="_blank" rel="noopener">{{ acc.gaduai_url }}</a>
-    </p>
+    <p class="ayuda" style="margin:12px 0 0;font-size:13px;">📲 Al abrir ese link, el navegador ofrece “Instalar app”: al personal le queda el ícono de GADUAI en el celular.</p>
     {% endif %}
   </div>
 
-  <form method="post" action="{{ url_for('admin_eliminar_colegio', colegio_id=colegio.id) }}" onsubmit="return confirm('¿Eliminar este colegio y todos sus accesos?');">
-    <button class="btn btn-danger" type="submit">Eliminar colegio</button>
-  </form>
+  {# 3. Relacionai #}
+  <div class="card">
+    <div class="card-cab">
+      <div class="icono">🤝</div>
+      <h2>Relacionai</h2>
+      <span class="chip {{ 'chip-ok' if acc.relacionai else 'chip-off' }}">{{ 'Activo' if acc.relacionai else 'No' }}</span>
+    </div>
+    <p class="ayuda">Cada colegio tiene su propio Relacionai. Guarda aquí su link como registro; el personal entra a Relacionai desde el botón dentro de GADUAI.</p>
+    <form method="post" action="{{ url_for('admin_toggle_acceso', colegio_id=colegio.id, producto='relacionai') }}">
+      <div class="fila">
+        <div class="crece">
+          <label for="url-relacionai">Link de Relacionai</label>
+          <input type="url" id="url-relacionai" name="url" placeholder="https://relacionai-nombre-colegio.onrender.com" value="{{ acc.relacionai_url or '' }}" required>
+        </div>
+        <button class="btn" type="submit" name="habilitado" value="1">{{ 'Guardar' if acc.relacionai else 'Guardar y activar' }}</button>
+        {% if acc.relacionai %}<button class="btn btn-sec" type="submit" name="habilitado" value="0" formnovalidate>Desactivar</button>{% endif %}
+      </div>
+    </form>
+  </div>
+
+  </details>
+
+  {# Zona de riesgo #}
+  <details class="riesgo">
+    <summary>Zona de riesgo</summary>
+    <p class="ayuda" style="margin-top:12px;">Eliminar la organización borra su ficha, su historial, su código y sus accesos en este panel. No borra sus datos en GADUAI ni en Relacionai.</p>
+    <form method="post" action="{{ url_for('admin_eliminar_colegio', colegio_id=colegio.id) }}" onsubmit="return prompt('Para confirmar, escribe ELIMINAR') === 'ELIMINAR';">
+      <button class="btn btn-peligro" type="submit">Eliminar del panel</button>
+    </form>
+  </details>
 </div>
 {% endblock %}

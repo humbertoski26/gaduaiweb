@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Convertir en prospecto · Centro de control GADUAI{% endblock %}
+{% block body %}
+<div class="wrap angosto">
+  <a class="miga" href="{{ url_for('admin_hoy') }}">← Hoy</a>
+  <div class="cabecera"><div>
+    <h1>Convertir en prospecto</h1>
+    <p class="sub">Se crea la organización con este contacto, el mensaje queda en su historial y se agenda responderlo hoy.</p>
+  </div></div>
+  {% if error %}<div class="aviso aviso-warn">{{ error }}</div>{% endif %}
+  <div class="card">
+    <p class="subtitulo">Mensaje recibido el {{ m.creado_en|fecha }}</p>
+    <div class="dato" style="display:block;"><b>{{ m.nombre }}</b> · <a href="mailto:{{ m.correo }}">{{ m.correo }}</a><div style="white-space:pre-wrap;margin-top:6px;">{{ m.mensaje }}</div></div>
+    <form method="post">
+      <div class="grilla">
+        <div style="grid-column:1/-1;"><label for="nombre">Nombre de la organización</label><input id="nombre" name="nombre" required autofocus placeholder="El colegio, sostenedor o municipio de esta persona"></div>
+        <div><label for="tipo">Tipo</label><select id="tipo" name="tipo">{% for k, n in TIPOS %}<option value="{{ k }}">{{ n }}</option>{% endfor %}</select></div>
+        <div><label for="comuna">Comuna</label><input id="comuna" name="comuna"></div>
+        <div><label for="cargo">Cargo de {{ m.nombre }}</label><input id="cargo" name="cargo" placeholder="Ej: Director"></div>
+      </div>
+      <button class="btn" type="submit">Crear prospecto</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

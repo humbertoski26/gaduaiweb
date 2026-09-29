@@ -1,16 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Admin · Portal GADUAI{% endblock %}
+{% block title %}Ingresar · Centro de control GADUAI{% endblock %}
 {% block body %}
-<div class="wrap">
-  <h1>Administrador GADUAI</h1>
-  <p class="sub">Acceso restringido.</p>
-  {% if error %}<div class="flash">{{ error }}</div>{% endif %}
-  <form method="post">
-    <label>Correo</label>
-    <input type="email" name="email" required autofocus>
-    <label>Clave</label>
-    <input type="password" name="password" required>
-    <button class="btn" type="submit">Ingresar</button>
-  </form>
+<div class="wrap" style="max-width:440px;padding-top:64px;">
+  <div style="text-align:center;margin-bottom:24px;">
+    <img src="https://www.gaduai.cl/gaduai-logo-v2.png" alt="GADUAI" style="height:48px;">
+  </div>
+  <div class="card" style="padding:32px;">
+    <div class="icono" style="width:48px;height:48px;border-radius:12px;margin-bottom:16px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    </div>
+    <h1 style="font-size:24px;">Centro de control</h1>
+    <p class="sub" style="margin-bottom:24px;">Acceso solo para el administrador de GADUAI.</p>
+    {% if error %}<div class="aviso aviso-warn">{{ error }}</div>{% endif %}
+    <form method="post">
+      <label for="email">Correo</label>
+      <input type="email" id="email" name="email" required autofocus autocomplete="username" style="margin-bottom:16px;">
+      <label for="password">Clave</label>
+      <input type="password" id="password" name="password" required autocomplete="current-password" style="margin-bottom:20px;">
+      <button class="btn" type="submit" style="width:100%;padding:13px;">Ingresar</button>
+    </form>
+  </div>
+  <p style="text-align:center;font-size:13px;color:var(--muted);">¿Eres parte de un colegio? Entra desde <a href="https://www.gaduai.cl/entrar.html">gaduai.cl/entrar</a>.</p>
 </div>
 {% endblock %}
