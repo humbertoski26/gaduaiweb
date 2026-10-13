@@ -7,18 +7,24 @@
 <meta name="description" content="La historia detrás de GADUAI: un profesor con más de 20 años en cargos directivos en educación que decidió resolver el problema que vivió en carne propia.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
-<meta name="theme-color" content="#0C0B70">
+<meta name="theme-color" content="#101A45">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
+    /* Paleta del logo GADUAI: azul #283A87, cian #11DFFE, fondo oscuro #101A45.
+       El cian no tiene contraste suficiente como texto sobre fondo claro, así que
+       en fondo claro se usa como detalle (líneas, puntos, hover) y como texto solo
+       sobre el fondo oscuro. El azul #283A87 hace de color de texto y de botón. */
     --bg:#FAFAF8;
     --ink:#171A2E;
-    --navy:#0C0B70;
-    --navy-soft:#EAF0FF;
-    --accent:#0034DA;
-    --spark:#20C9B5;
+    --navy:#283A87;
+    --dark:#101A45;
+    --navy-soft:#EDF0FA;
+    --accent:#283A87;
+    --cyan:#11DFFE;
+    --spark:#11DFFE;
     --line:#E2E1DA;
     --muted:#5B5D72;
   }
@@ -77,7 +83,7 @@
     border:1px solid var(--navy);
     transition:background .15s ease, color .15s ease;
   }
-  .btn:hover{background:var(--accent); border-color:var(--accent);}
+  .btn:hover{background:var(--cyan); border-color:var(--cyan); color:var(--dark);}
   .btn-outline{
     background:transparent; color:var(--navy); border:1px solid var(--navy);
   }
@@ -88,7 +94,7 @@
     font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
     color:var(--accent); margin:0 0 14px;
   }
-  .promise-block .eyebrow{color:#7FE5D4;}
+  .promise-block .eyebrow{color:var(--cyan);}
 
   /* ---------- ENCABEZADO DE PÁGINA ---------- */
   .page-header{padding:72px 0 56px; border-bottom:1px solid var(--line);}
@@ -102,7 +108,7 @@
   .section-head p{color:var(--muted); font-size:1.08rem; margin-top:16px; text-align:justify;}
 
   .insight-line{
-    border-left:3px solid var(--accent); padding-left:20px; margin:32px 0;
+    border-left:3px solid var(--cyan); padding-left:20px; margin:32px 0;
     font-size:1.1rem; color:var(--ink); max-width:70ch; text-align:justify;
   }
   .insight-line strong{color:var(--navy);}
@@ -119,7 +125,7 @@
 
   /* ---------- LA PROMESA (reutilizado para el cierre) ---------- */
   .promise-block{
-    background:var(--navy); color:#fff; border-radius:4px;
+    background:var(--dark); color:#fff; border-radius:4px;
     padding:48px;
   }
   .promise-block h2{color:#fff; font-size:clamp(1.7rem, 3vw, 2.2rem);}
@@ -127,7 +133,7 @@
 
   /* ---------- CTA / DEMO / CONTACTO ---------- */
   .cta-section{
-    background:var(--navy); color:#fff; border-bottom:none;
+    background:var(--dark); color:#fff; border-bottom:none;
   }
   .cta-section h2{color:#fff; font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
   .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch; text-align:justify;}
@@ -170,6 +176,7 @@
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
   }
   footer p{color:var(--muted); font-size:0.85rem; margin:0;}
+  footer a{color:var(--navy);}
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -182,10 +189,8 @@
   <div class="wrap">
     <a class="wordmark" href="index.html"><img src="gaduai-logo-v2.png" alt="GADUAI"></a>
     <div class="navlinks">
-      <a href="historia.html" class="active">Historia</a>
       <a href="index.html#problema">El problema</a>
       <a href="index.html#como-funciona">Cómo funciona</a>
-      <a href="index.html#red">La plataforma</a>
       <a href="index.html#privacidad">Privacidad</a>
       <a class="btn btn-outline" href="entrar.html">Entrar a GADUAI</a>
       <button class="btn" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
@@ -234,9 +239,9 @@
   <div class="wrap">
     <h2>Conozca la historia completa, hable con nosotros.</h2>
     <p>Si quiere conocer más sobre cómo nació GADUAI o ver la plataforma en funcionamiento, escríbanos.</p>
-    <p style="margin-top:8px;"><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a></p>
+    <p style="margin-top:8px;"><!--email_off--><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a><!--/email_off--></p>
     <div class="cta-row">
-      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
+      <button class="btn" style="background:var(--cyan); border-color:var(--cyan); color:var(--dark);" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
       <a class="btn btn-outline" href="index.html">Volver al inicio</a>
     </div>
   </div>
@@ -265,7 +270,7 @@
 <footer>
   <div class="wrap">
     <p>© 2026 GADUAI SpA · Santiago, Chile</p>
-    <p>Inteligencia organizacional para la educación.</p>
+    <p><!--email_off--><a href="mailto:info@gaduai.cl">info@gaduai.cl</a><!--/email_off--> · <a href="historia.html">Historia</a> · Inteligencia organizacional para la educación.</p>
   </div>
 </footer>
 

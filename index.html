@@ -7,7 +7,7 @@
 <meta name="description" content="GADUAI es una capa de inteligencia organizacional para la educación: anticipa problemas, prioriza lo importante y libera tiempo para liderar.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
-<meta name="theme-color" content="#0C0B70">
+<meta name="theme-color" content="#101A45">
 <link rel="canonical" href="https://www.gaduai.cl/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="GADUAI">
@@ -25,18 +25,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* Paleta Inteligencia Educativa (oficial GADUAI): azul marino #0C0B70,
-       azul intenso #0034DA, turquesa IA #20C9B5, violeta #8B5CF6. El naranjo
-       anterior se retira — sobre este fondo claro, el azul intenso rinde el
-       mismo rol de "acento" (texto y botones) con mejor contraste que la
-       turquesa IA, que aquí quedaría por debajo del 4.5:1 exigible como texto
-       chico o como relleno de botón con letra blanca. */
+    /* Paleta del logo GADUAI: azul #283A87, cian #11DFFE, fondo oscuro #101A45.
+       El cian no tiene contraste suficiente como texto sobre fondo claro, así que
+       en fondo claro se usa como detalle (líneas, puntos, hover) y como texto solo
+       sobre el fondo oscuro. El azul #283A87 hace de color de texto y de botón. */
     --bg:#FAFAF8;
     --ink:#171A2E;
-    --navy:#0C0B70;
-    --navy-soft:#EAF0FF;
-    --accent:#0034DA;
-    --spark:#20C9B5;
+    --navy:#283A87;
+    --dark:#101A45;
+    --navy-soft:#EDF0FA;
+    --accent:#283A87;
+    --cyan:#11DFFE;
+    --spark:#11DFFE;
     --line:#E2E1DA;
     --muted:#5B5D72;
   }
@@ -94,7 +94,7 @@
     border:1px solid var(--navy);
     transition:background .15s ease, color .15s ease;
   }
-  .btn:hover{background:var(--accent); border-color:var(--accent);}
+  .btn:hover{background:var(--cyan); border-color:var(--cyan); color:var(--dark);}
   .btn-outline{
     background:transparent; color:var(--navy); border:1px solid var(--navy);
   }
@@ -115,13 +115,13 @@
     font-size:0.82rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
     color:var(--accent); margin:0 0 14px;
   }
-  .promise-block .eyebrow{color:#7FE5D4;}
+  .promise-block .eyebrow{color:var(--cyan);}
 
   .gov-badge{
     display:inline-flex; align-items:center; gap:12px;
     color:var(--navy); font-size:clamp(1.05rem, 1.8vw, 1.25rem); font-weight:700;
     letter-spacing:0.01em; margin:0 0 32px; padding-bottom:16px;
-    border-bottom:2px solid var(--accent);
+    border-bottom:2px solid var(--cyan);
   }
   .gov-badge svg{flex:none; width:26px; height:26px; color:var(--accent);}
 
@@ -201,7 +201,7 @@
   .hero-stat-block .hero-source{display:block; margin-top:10px; font-size:0.8rem; color:var(--muted); text-align:justify;}
 
   .insight-line{
-    border-left:3px solid var(--accent); padding-left:20px; margin:32px 0;
+    border-left:3px solid var(--cyan); padding-left:20px; margin:32px 0;
     font-size:1.1rem; color:var(--ink); max-width:64ch; text-align:justify;
   }
   .insight-line strong{color:var(--navy);}
@@ -211,7 +211,7 @@
 
   /* ---------- LA PROMESA ---------- */
   .promise-block{
-    background:var(--navy); color:#fff; border-radius:4px;
+    background:var(--dark); color:#fff; border-radius:4px;
     padding:48px;
   }
   .promise-block h2{color:#fff; font-size:clamp(1.9rem, 3.4vw, 2.6rem);}
@@ -227,7 +227,7 @@
   .compliance-list li:first-child{border-top:none; padding-top:0;}
   .compliance-list .check{
     flex:none; width:22px; height:22px; margin-top:1px; border-radius:50%;
-    background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+    background:var(--cyan); color:var(--dark); display:flex; align-items:center; justify-content:center;
     font-size:0.75rem; font-weight:700;
   }
 
@@ -257,12 +257,12 @@
   }
   .sample-bar{
     display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    background:var(--navy); color:#fff; padding:14px 22px;
+    background:var(--dark); color:#fff; padding:14px 22px;
   }
   .sample-bar strong{font-family:'Lora',serif; font-size:1.05rem; font-weight:600;}
   .sample-chip{
     font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
-    background:rgba(32,201,181,0.16); color:#7FF0DF; border:1px solid rgba(32,201,181,0.6);
+    background:rgba(17,223,254,0.16); color:#11DFFE; border:1px solid rgba(17,223,254,0.6);
     padding:4px 10px; border-radius:999px;
   }
   .sample-item{display:flex; gap:16px; align-items:flex-start; padding:20px 22px; border-top:1px solid var(--line);}
@@ -272,6 +272,21 @@
   .sample-item strong{display:block; color:var(--navy); font-size:1.02rem;}
   .sample-item span{display:block; color:var(--muted); font-size:0.9rem; margin-top:3px;}
   .sample-foot{padding:14px 22px; background:var(--navy-soft); color:var(--muted); font-size:0.88rem;}
+
+  .sample-pair{display:grid; grid-template-columns:1fr 1fr; gap:20px; max-width:760px; margin-top:20px;}
+  @media (max-width:700px){ .sample-pair{grid-template-columns:1fr;} }
+  .sample-pair .sample-card{max-width:none; display:flex; flex-direction:column;}
+  .sample-pair .sample-foot{margin-top:auto;}
+  .sample-counters{display:grid; grid-template-columns:repeat(4,1fr);}
+  .sample-counter{padding:18px 6px; text-align:center; border-left:1px solid var(--line);}
+  .sample-counter:first-child{border-left:none;}
+  .sample-counter b{display:block; font-family:'Lora',serif; font-size:1.8rem; line-height:1; color:var(--navy);}
+  .sample-counter small{display:block; margin-top:6px; font-size:0.74rem; color:var(--muted);}
+  .sample-counter .sample-dot{display:inline-block; width:9px; height:9px; margin:0 0 6px;}
+  .sample-dot.gris{background:#9AA0B4;}
+  .sample-row{display:flex; justify-content:space-between; gap:12px; padding:12px 22px; border-top:1px solid var(--line); font-size:0.9rem;}
+  .sample-row span:first-child{color:var(--navy); font-weight:600;}
+  .sample-row span:last-child{color:var(--muted);}
 
   /* ---------- RED / ESCALABILIDAD ---------- */
   .role-ladder{border-top:1px solid var(--line); margin-top:8px;}
@@ -293,7 +308,7 @@
 
   /* ---------- CTA / DEMO / CONTACTO ---------- */
   .cta-section{
-    background:var(--navy); color:#fff; border-bottom:none;
+    background:var(--dark); color:#fff; border-bottom:none;
   }
   .cta-section h2{color:#fff;}
   .cta-section p{color:#C7CDEE; margin-top:16px; font-size:1.1rem; max-width:56ch; text-align:justify;}
@@ -336,6 +351,7 @@
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
   }
   footer p{color:var(--muted); font-size:0.85rem; margin:0;}
+  footer a{color:var(--navy);}
 
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
@@ -348,10 +364,8 @@
   <div class="wrap">
     <a class="wordmark" href="#top"><img src="gaduai-logo-v2.png" alt="GADUAI"></a>
     <div class="navlinks">
-      <a href="historia.html">Historia</a>
       <a href="#problema">El problema</a>
       <a href="#como-funciona">Cómo funciona</a>
-      <a href="#red">La plataforma</a>
       <a href="#privacidad">Privacidad</a>
       <a class="btn btn-outline" href="entrar.html">Entrar a GADUAI</a>
       <button class="btn" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
@@ -367,7 +381,7 @@
     </p>
     <div class="section-head">
       <p class="eyebrow">La evidencia</p>
-      <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
+      <h2>Los equipos directivos no necesitan más información. Necesitan saber qué importa.</h2>
       <p>Los directores de colegios en Chile destinan un tercio de su tiempo a tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — así lo muestra la encuesta nacional del propio Ministerio de Educación (2026).</p>
     </div>
 
@@ -414,19 +428,19 @@
     <div class="map-svg-col">
     <svg class="map-svg" viewBox="0 0 320 340" role="img" aria-label="El Círculo de Oro de GADUAI: por qué, cómo y qué">
       <a href="#producto">
-        <circle cx="160" cy="170" r="155" fill="#EEF0F8" stroke="#E2E1DA" stroke-width="1"></circle>
-        <text x="160" y="34" text-anchor="middle" class="ring-label" fill="#0C0B70">QUÉ</text>
+        <circle cx="160" cy="170" r="155" fill="#EDF0FA" stroke="#E2E1DA" stroke-width="1"></circle>
+        <text x="160" y="34" text-anchor="middle" class="ring-label" fill="#101A45">QUÉ</text>
         <text x="160" y="50" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="12">El segundo cerebro</text>
         <text x="160" y="64" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="12">del equipo directivo.</text>
       </a>
       <a href="#como-funciona">
-        <circle cx="160" cy="170" r="98" fill="#D7DBF0" stroke="#C7CDEE" stroke-width="1"></circle>
-        <text x="160" y="93" text-anchor="middle" class="ring-label" fill="#0C0B70">CÓMO</text>
+        <circle cx="160" cy="170" r="98" fill="#D3DAF0" stroke="#C7CDEE" stroke-width="1"></circle>
+        <text x="160" y="93" text-anchor="middle" class="ring-label" fill="#101A45">CÓMO</text>
         <text x="160" y="108" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="11">De la información</text>
         <text x="160" y="121" text-anchor="middle" class="ring-phrase" fill="#171A2E" font-size="11">a la decisión.</text>
       </a>
       <a href="#top">
-        <circle cx="160" cy="170" r="50" fill="#0034DA"></circle>
+        <circle cx="160" cy="170" r="50" fill="#283A87"></circle>
         <text x="160" y="159" text-anchor="middle" class="ring-label" fill="#fff">POR QUÉ</text>
         <text x="160" y="176" text-anchor="middle" class="ring-phrase" fill="#fff" font-size="12">Menos gestión.</text>
         <text x="160" y="190" text-anchor="middle" class="ring-phrase" fill="#fff" font-size="12">Más liderazgo.</text>
@@ -470,7 +484,7 @@
     <div class="section-head">
       <p class="circle-marker"><span class="num">2</span><span class="q">¿Cómo?</span></p>
       <p class="eyebrow">Cómo lo hacemos</p>
-      <h2>De la información a la decisión</h2>
+      <h2>Inteligencia organizacional: de la información a la decisión</h2>
       <p>GADUAI no reemplaza al director: le devuelve capacidad de decisión.</p>
     </div>
     <div class="flow-steps">
@@ -511,7 +525,7 @@
     <div class="section-head">
       <p class="circle-marker"><span class="num">3</span><span class="q">¿Qué?</span></p>
       <p class="eyebrow">Qué es GADUAI</p>
-      <h2>Los dolores que sanamos</h2>
+      <h2>Los dolores que sanamos en los colegios</h2>
       <p>GADUAI no se mide por sus funcionalidades, sino por lo que resuelve en el día a día de quien dirige un colegio.</p>
     </div>
     <div class="pain-list">
@@ -550,7 +564,7 @@
     <div class="section-head">
       <p class="eyebrow">Un lunes en GADUAI</p>
       <h2>Estas 3 cosas importan hoy en tu colegio.</h2>
-      <p>Así empieza la semana de un equipo directivo: lo urgente arriba, lo importante después, y lo demás ordenado para más tarde. Ejemplo ilustrativo.</p>
+      <p>Así empieza la semana de un equipo directivo: lo urgente arriba, lo importante después, y lo demás ordenado para más tarde. Tres vistas de ejemplo, con datos de muestra.</p>
     </div>
     <div class="sample-card" role="img" aria-label="Ejemplo ilustrativo con datos de muestra: tres prioridades del lunes en un colegio">
       <div class="sample-bar"><strong>Lunes · 08:15 — Prioridades de hoy</strong><span class="sample-chip">Ejemplo con datos de muestra</span></div>
@@ -558,6 +572,26 @@
       <div class="sample-item"><span class="sample-dot naranjo"></span><div><strong>Planificaciones de la unidad 3: faltan 2 de 9 docentes</strong><span>Importante · Vence el jueves · Responsable: Coordinación académica</span></div></div>
       <div class="sample-item"><span class="sample-dot azul"></span><div><strong>Citación de apoderados de 8.º aún sin enviar</strong><span>Para coordinar · Reunión el martes · Responsable: Inspectoría</span></div></div>
       <div class="sample-foot">Lo demás puede esperar: 14 tareas de menor prioridad quedan agendadas para esta semana.</div>
+    </div>
+    <div class="sample-pair">
+      <div class="sample-card" role="img" aria-label="Ejemplo ilustrativo con datos de muestra: vista del director, Monitor Vital">
+        <div class="sample-bar"><strong>Vista del director · Monitor Vital</strong><span class="sample-chip">Ejemplo con datos de muestra</span></div>
+        <div class="sample-counters">
+          <div class="sample-counter"><span class="sample-dot rojo"></span><b>1</b><small>Crítico</small></div>
+          <div class="sample-counter"><span class="sample-dot naranjo"></span><b>3</b><small>Por vencer</small></div>
+          <div class="sample-counter"><span class="sample-dot azul"></span><b>8</b><small>En curso</small></div>
+          <div class="sample-counter"><span class="sample-dot gris"></span><b>12</b><small>Al día</small></div>
+        </div>
+        <div class="sample-foot">El semáforo del colegio, de un vistazo: lo crítico primero.</div>
+      </div>
+      <div class="sample-card" role="img" aria-label="Ejemplo ilustrativo con datos de muestra: vista del sostenedor, red de colegios">
+        <div class="sample-bar"><strong>Vista del sostenedor · Red de colegios</strong><span class="sample-chip">Ejemplo con datos de muestra</span></div>
+        <div class="sample-row"><span>Colegio de ejemplo A</span><span>Sin casos críticos</span></div>
+        <div class="sample-row"><span>Colegio de ejemplo B</span><span>1 crítico</span></div>
+        <div class="sample-row"><span>Colegio de ejemplo C</span><span>Sin casos críticos</span></div>
+        <div class="sample-row"><span>Colegio de ejemplo D</span><span>2 críticos</span></div>
+        <div class="sample-foot">Toda la red en una sola pantalla.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -647,11 +681,11 @@
 
 <section class="cta-section" id="demo" style="border-bottom:none;">
   <div class="wrap">
-    <h2>Vea cómo funciona GADUAI en un colegio real.</h2>
+    <h2>Vea cómo funciona GADUAI.</h2>
     <p>Si dirige un colegio o una red de establecimientos y quiere ver GADUAI en funcionamiento, escríbanos.</p>
-    <p style="margin-top:8px;"><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a></p>
+    <p style="margin-top:8px;"><!--email_off--><a href="mailto:info@gaduai.cl" style="color:#fff; text-decoration:underline;">info@gaduai.cl</a><!--/email_off--></p>
     <div class="cta-row">
-      <button class="btn" style="background:var(--accent); border-color:var(--accent);" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
+      <button class="btn" style="background:var(--cyan); border-color:var(--cyan); color:var(--dark);" onclick="abrirContacto('demo')" type="button">Solicitar demostración</button>
       <a class="btn btn-outline" href="#top">Volver arriba</a>
     </div>
   </div>
@@ -680,7 +714,7 @@
 <footer>
   <div class="wrap">
     <p>© 2026 GADUAI SpA · Santiago, Chile</p>
-    <p>Inteligencia organizacional para la educación.</p>
+    <p><!--email_off--><a href="mailto:info@gaduai.cl">info@gaduai.cl</a><!--/email_off--> · <a href="historia.html">Historia</a> · Inteligencia organizacional para la educación.</p>
   </div>
 </footer>
 
