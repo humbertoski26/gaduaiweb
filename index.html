@@ -3,9 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GADUAI — El segundo cerebro del equipo directivo</title>
+<title>GADUAI — Inteligencia organizacional para equipos directivos y colegios</title>
 <meta name="description" content="GADUAI es una capa de inteligencia organizacional para la educación: anticipa problemas, prioriza lo importante y libera tiempo para liderar.">
 <link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="theme-color" content="#0C0B70">
+<link rel="canonical" href="https://www.gaduai.cl/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GADUAI">
+<meta property="og:locale" content="es_CL">
+<meta property="og:title" content="GADUAI — El segundo cerebro del equipo directivo">
+<meta property="og:description" content="Inteligencia organizacional para colegios: anticipa problemas, prioriza lo importante y libera tiempo para liderar.">
+<meta property="og:url" content="https://www.gaduai.cl/">
+<meta property="og:image" content="https://www.gaduai.cl/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.gaduai.cl/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -192,6 +206,7 @@
   }
   .insight-line strong{color:var(--navy);}
 
+  .sources-list a{color:var(--navy);}
   .sources-list{color:var(--muted); font-size:0.78rem; line-height:1.8; margin-top:32px; padding-top:20px; border-top:1px solid var(--line);}
 
   /* ---------- LA PROMESA ---------- */
@@ -233,6 +248,30 @@
   }
   .action-card p{color:var(--muted); font-size:1.05rem; max-width:68ch; text-align:justify;}
   .action-card .cta-row{margin-top:28px;}
+
+
+  /* ---------- EJEMPLO: UN LUNES EN GADUAI (datos de muestra) ---------- */
+  .sample-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px; max-width:760px;
+    box-shadow:0 18px 40px -24px rgba(23,26,46,0.35); overflow:hidden;
+  }
+  .sample-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--navy); color:#fff; padding:14px 22px;
+  }
+  .sample-bar strong{font-family:'Lora',serif; font-size:1.05rem; font-weight:600;}
+  .sample-chip{
+    font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    background:rgba(32,201,181,0.16); color:#7FF0DF; border:1px solid rgba(32,201,181,0.6);
+    padding:4px 10px; border-radius:999px;
+  }
+  .sample-item{display:flex; gap:16px; align-items:flex-start; padding:20px 22px; border-top:1px solid var(--line);}
+  .sample-item:first-of-type{border-top:none;}
+  .sample-dot{flex:none; width:12px; height:12px; border-radius:50%; margin-top:7px;}
+  .sample-dot.rojo{background:#D64545;} .sample-dot.naranjo{background:#E8722C;} .sample-dot.azul{background:var(--accent);}
+  .sample-item strong{display:block; color:var(--navy); font-size:1.02rem;}
+  .sample-item span{display:block; color:var(--muted); font-size:0.9rem; margin-top:3px;}
+  .sample-foot{padding:14px 22px; background:var(--navy-soft); color:var(--muted); font-size:0.88rem;}
 
   /* ---------- RED / ESCALABILIDAD ---------- */
   .role-ladder{border-top:1px solid var(--line); margin-top:8px;}
@@ -329,25 +368,24 @@
     <div class="section-head">
       <p class="eyebrow">La evidencia</p>
       <h2>Los directivos no necesitan más información. Necesitan saber qué importa.</h2>
-      <p>Los directores de colegios en Chile pierden entre un tercio y dos tercios de su tiempo en tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — y los estudios más recientes, incluida una encuesta nacional del propio Ministerio de Educación, lo confirman con cifras concretas.</p>
+      <p>Los directores de colegios en Chile destinan un tercio de su tiempo a tareas administrativas, en lugar de dedicarlo al liderazgo pedagógico — así lo muestra la encuesta nacional del propio Ministerio de Educación (2026).</p>
     </div>
 
     <div class="hero-stat-block">
       <div class="num">80<span style="font-size:0.6em;">,6</span><sup>%</sup></div>
       <div>
         <p>de los directores declara que los requerimientos administrativos interfieren "frecuente" o "muy frecuentemente" con sus labores pedagógicas.</p>
-        <span class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026).</span>
+        <span class="hero-source">Encuesta nacional a 5.734 directores — iniciativa "Directores por Chile", Ministerio de Educación (2026). Fuente: <a href="https://www.latercera.com/nacional/noticia/directores-de-colegios-identifican-la-sobrecarga-administrativa-y-la-convivencia-escolar-como-sus-principales-inquietudes/" target="_blank" rel="noopener">La Tercera, junio de 2026</a>.</span>
       </div>
     </div>
 
-    <p class="insight-line"><strong>El problema no es que los directivos no sepan gestionar.</strong> El problema es que gestionan con información fragmentada, sin trazabilidad ni gobernanza clara sobre quién accede a qué dato — y la causa que más mencionan los propios directores es, literalmente, la gestión de plataformas informáticas (62,5%, Mineduc 2026): el problema exacto que GADUAI resuelve al consolidar en un solo sistema, con reglas claras de acceso y uso ético de la IA, lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
+    <p class="insight-line"><strong>El problema no es que los directivos no sepan gestionar.</strong> El problema es que gestionan con información fragmentada, sin trazabilidad ni gobernanza clara sobre quién accede a qué dato — y entre las tres principales fuentes de carga administrativa que mencionan los propios directores está la gestión de plataformas informáticas (62,5%, encuesta Mineduc 2026): el problema exacto que GADUAI resuelve al consolidar en un solo sistema, con reglas claras de acceso y uso ético de la IA, lo que hoy vive fragmentado entre el SIGE, planillas Excel, WhatsApp y correos.</p>
 
     <p class="sources-list">
       <strong>Fuentes:</strong>
-      Weinstein, J. et al. (2016). Citado en investigación sobre gestión curricular en escuelas chilenas de bajo desempeño (Redalyc).
-      Educación 2020 (2018). "Menos carga administrativa, más calidad educativa."
-      Educarchile. "Gestión escolar: el rol de la IA en el liderazgo educativo."
-      Ministerio de Educación de Chile / La Tercera (2026). Iniciativa "Directores por Chile": 16 jornadas regionales con 1.800 directores y encuesta nacional con 5.734 respuestas.
+      Ministerio de Educación de Chile (septiembre de 2026). <a href="https://www.mineduc.cl/ministerio-de-educacion-presento-a-consejo-nacional-de-directores-la-hoja-de-ruta-mineduc-al-servicio-de-los-aprendizajes/" target="_blank" rel="noopener">"Ministerio de Educación presentó a Consejo Nacional de Directores la hoja de ruta Mineduc al servicio de los aprendizajes"</a> (un tercio del tiempo en tareas administrativas; 80,6 %).
+      La Tercera (junio de 2026). <a href="https://www.latercera.com/nacional/noticia/directores-de-colegios-identifican-la-sobrecarga-administrativa-y-la-convivencia-escolar-como-sus-principales-inquietudes/" target="_blank" rel="noopener">"Directores de colegios identifican la sobrecarga administrativa y la convivencia escolar como sus principales inquietudes"</a> (encuesta nacional a 5.734 directores; 80,6 %; 62,5 %).
+      CNN Chile (2026). <a href="https://www.cnnchile.com/pais/mineduc-presento-hoja-de-ruta-con-20-medidas-desde-reducir-la-carga-administrativa-a-promover-la-participacion-de-las-familias/" target="_blank" rel="noopener">"Mineduc presentó hoja de ruta con 20 medidas: desde reducir la carga administrativa a promover la participación de las familias"</a>.
     </p>
   </div>
 </section>
@@ -507,6 +545,23 @@
   </div>
 </section>
 
+<section id="ejemplo">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Un lunes en GADUAI</p>
+      <h2>Estas 3 cosas importan hoy en tu colegio.</h2>
+      <p>Así empieza la semana de un equipo directivo: lo urgente arriba, lo importante después, y lo demás ordenado para más tarde. Ejemplo ilustrativo.</p>
+    </div>
+    <div class="sample-card" role="img" aria-label="Ejemplo ilustrativo con datos de muestra: tres prioridades del lunes en un colegio">
+      <div class="sample-bar"><strong>Lunes · 08:15 — Prioridades de hoy</strong><span class="sample-chip">Ejemplo con datos de muestra</span></div>
+      <div class="sample-item"><span class="sample-dot rojo"></span><div><strong>Informe de avance del PME vence hoy a las 17:00</strong><span>Urgente e importante · Responsable: Jefatura de UTP</span></div></div>
+      <div class="sample-item"><span class="sample-dot naranjo"></span><div><strong>Planificaciones de la unidad 3: faltan 2 de 9 docentes</strong><span>Importante · Vence el jueves · Responsable: Coordinación académica</span></div></div>
+      <div class="sample-item"><span class="sample-dot azul"></span><div><strong>Citación de apoderados de 8.º aún sin enviar</strong><span>Para coordinar · Reunión el martes · Responsable: Inspectoría</span></div></div>
+      <div class="sample-foot">Lo demás puede esperar: 14 tareas de menor prioridad quedan agendadas para esta semana.</div>
+    </div>
+  </div>
+</section>
+
 <section id="terreno">
   <div class="wrap">
     <div class="section-head">
@@ -577,7 +632,7 @@
   <div class="wrap">
     <div class="section-head">
       <h2>Privacidad y cumplimiento</h2>
-      <p>GADUAI está construido para cumplir con la Ley 21.719 de Chile antes de que sea obligatorio (vigencia diciembre 2026).</p>
+      <p>GADUAI está diseñado para alinearse con la Ley 21.719 de protección de datos personales (vigencia plena desde diciembre de 2026).</p>
     </div>
     <div class="promise-block">
       <ul class="compliance-list">
@@ -607,7 +662,7 @@
     <button class="modal-close" onclick="cerrarContacto()" type="button" aria-label="Cerrar">&times;</button>
     <img src="gaduai-logo-v2.png" alt="GADUAI" class="modal-logo">
     <h3 id="contacto-titulo">Escríbanos su consulta</h3>
-    <p class="sub" style="margin-bottom:20px;">Le respondemos directamente a su correo.</p>
+    <p class="sub" style="margin-bottom:20px;">Le respondemos en 48 horas.</p>
     <form id="form-contacto" onsubmit="return enviarContacto(event)">
       <label>Nombre</label>
       <input type="text" name="nombre" required>
@@ -617,14 +672,15 @@
       <textarea name="mensaje" rows="4" required></textarea>
       <button class="btn" type="submit">Enviar</button>
       <p id="contacto-msg" style="margin-top:12px; font-size:0.85rem;"></p>
+      <p style="margin-top:8px; font-size:0.75rem; color:var(--muted);">Usaremos sus datos solo para responder a esta solicitud.</p>
     </form>
   </div>
 </div>
 
 <footer>
   <div class="wrap">
-    <p>© 2026 GADUAI. Inteligencia organizacional para la educación.</p>
-    <p>Santiago, Chile</p>
+    <p>© 2026 GADUAI SpA · Santiago, Chile</p>
+    <p>Inteligencia organizacional para la educación.</p>
   </div>
 </footer>
 
