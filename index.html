@@ -288,6 +288,20 @@
   .sample-row span:first-child{color:var(--navy); font-weight:600;}
   .sample-row span:last-child{color:var(--muted);}
 
+  /* ---------- PALABRAS DEL FUNDADOR ---------- */
+  .founder-grid{display:grid; grid-template-columns:0.7fr 1.3fr; gap:56px; align-items:center;}
+  @media (max-width:800px){ .founder-grid{grid-template-columns:1fr; gap:32px;} }
+  .founder-photo{width:100%; max-width:340px; aspect-ratio:1/1; object-fit:cover; border-radius:12px; border:1px solid var(--line); display:block;}
+  .founder-quote{
+    font-family:'Lora',serif; font-style:italic; font-weight:500; font-size:clamp(1.15rem, 2vw, 1.4rem);
+    color:var(--ink); line-height:1.5; margin:0; padding-left:22px; border-left:3px solid var(--cyan);
+  }
+  .founder-sign{margin-top:22px;}
+  .founder-sign strong{display:block; color:var(--navy); font-size:1.05rem;}
+  .founder-sign span{display:block; color:var(--muted); font-size:0.92rem; margin-top:3px;}
+  .founder-links{margin-top:18px; display:flex; gap:20px; flex-wrap:wrap; font-size:0.94rem; font-weight:600;}
+  .founder-links a{color:var(--navy);}
+
   /* ---------- RED / ESCALABILIDAD ---------- */
   .role-ladder{border-top:1px solid var(--line); margin-top:8px;}
   .role-step{display:flex; align-items:center; gap:22px; padding:22px 0; border-bottom:1px solid var(--line);}
@@ -422,6 +436,22 @@
     </div>
   </div>
 </header>
+
+<section id="fundador">
+  <div class="wrap founder-grid">
+    <img class="founder-photo" src="fundador.jpg" alt="Humberto Garrido San Martín, fundador de GADUAI">
+    <div>
+      <p class="eyebrow">Quién está detrás de GADUAI</p>
+      <h2 style="font-size:clamp(1.9rem, 3.4vw, 2.6rem); margin-bottom:24px;">Palabras del fundador</h2>
+      <blockquote class="founder-quote">“Llevo más de 15 años ejerciendo cargos directivos y más de 20 como docente, y en todos los colegios veía lo mismo: equipos directivos con más información de la que pueden procesar y menos tiempo del que necesitan para liderar. GADUAI nació para cambiar eso: que la tecnología ordene lo urgente para que el equipo se dedique a lo importante, las personas y los aprendizajes.”</blockquote>
+      <div class="founder-sign">
+        <strong>Humberto Garrido San Martín · Fundador de GADUAI</strong>
+        <span>Profesor, MBA Universidad de Chile, ex rector del Liceo de Aplicación.</span>
+      </div>
+      <p class="founder-links"><a href="historia.html">Leer la historia de GADUAI →</a><a href="https://humbertogarridosanmartin.cl" target="_blank" rel="noopener">Conocer su trayectoria →</a></p>
+    </div>
+  </div>
+</section>
 
 <section class="map-section" id="mapa">
   <div class="wrap map-grid">

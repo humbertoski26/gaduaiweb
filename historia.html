@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Historia — GADUAI</title>
-<meta name="description" content="La historia detrás de GADUAI: un profesor con más de 20 años en cargos directivos en educación que decidió resolver el problema que vivió en carne propia.">
+<meta name="description" content="La historia detrás de GADUAI: un profesor con más de 20 años en la docencia y más de 15 en cargos directivos, que decidió resolver el problema que vivió en carne propia.">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="favicon.png">
 <meta name="theme-color" content="#101A45">
@@ -123,6 +123,11 @@
   }
   .bio-fact p{margin:0; color:var(--ink); font-size:0.98rem; max-width:60ch;}
 
+  /* ---------- PALABRAS DEL FUNDADOR ---------- */
+  .founder-grid{display:grid; grid-template-columns:0.7fr 1.3fr; gap:56px; align-items:center;}
+  @media (max-width:800px){ .founder-grid{grid-template-columns:1fr; gap:32px;} }
+  .founder-photo{width:100%; max-width:340px; aspect-ratio:1/1; object-fit:cover; border-radius:12px; border:1px solid var(--line); display:block;}
+
   /* ---------- LA PROMESA (reutilizado para el cierre) ---------- */
   .promise-block{
     background:var(--dark); color:#fff; border-radius:4px;
@@ -201,25 +206,28 @@
 <header class="page-header">
   <div class="wrap">
     <p class="eyebrow">Nuestra historia</p>
-    <h1>Veinte años viendo el mismo problema desde adentro.</h1>
+    <h1>Veinte años de aula y quince de dirección, mirando el mismo problema.</h1>
     <p class="lead">GADUAI no nace en un laboratorio de tecnología. Nace en la oficina de dirección de un colegio, de la mano de alguien que vivió el problema antes de decidir resolverlo.</p>
   </div>
 </header>
 
 <section>
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">El fundador</p>
-      <h2>Un profesor que dirigió colegios antes de decidir construir un sistema.</h2>
-      <p>El fundador de GADUAI es profesor y trabaja en educación hace más de 20 años, la mayor parte de ese tiempo ocupando cargos directivos en distintos establecimientos. No conoce los dolores de una institución educativa por haberlos estudiado desde afuera: los conoce porque los vivió, día a día, desde dentro de la dirección.</p>
+    <div class="founder-grid">
+      <img class="founder-photo" src="fundador.jpg" alt="Humberto Garrido San Martín, fundador de GADUAI">
+      <div class="section-head" style="margin-bottom:0;">
+        <p class="eyebrow">El fundador</p>
+        <h2>Un profesor que dirigió colegios antes de construir un sistema.</h2>
+        <p>Humberto Garrido San Martín es profesor y lleva más de 20 años en la docencia. Más de 15 de ellos los ha ejercido en cargos directivos, entre ellos como rector del Liceo de Aplicación. No conoce los dolores de una institución educativa por haberlos estudiado desde afuera: los conoce porque los vivió, día a día, desde dentro de la dirección.</p>
+      </div>
     </div>
 
-    <p class="insight-line"><strong>El dolor que más marcó su experiencia fue el mismo que hoy resuelve GADUAI:</strong> la enorme cantidad de tiempo que la gestión administrativa le quita al liderazgo pedagógico. Información dispersa, plataformas que no conversan entre sí, y equipos directivos que terminan administrando papeles en lugar de liderar personas.</p>
+    <p class="insight-line"><strong>El dolor que más marcó su experiencia es el mismo que hoy resuelve GADUAI:</strong> la enorme cantidad de tiempo que la gestión administrativa le quita al liderazgo pedagógico. Información dispersa, plataformas que no conversan entre sí, y equipos directivos que terminan administrando papeles en lugar de liderar personas.</p>
 
     <div class="section-head" style="margin-top:16px;">
       <h2>De la sala de dirección al MBA, sin perder de vista la tecnología.</h2>
       <p>Con esa experiencia de terreno como base, realizó un MBA en la Universidad de Chile para adquirir las herramientas de gestión necesarias para abordar el problema a escala. A eso sumó algo que lo ha acompañado siempre: su interés por la informática y la tecnología como palanca real de cambio en educación.</p>
-      <p>Hoy, y en la misma casa de estudios, se encuentra cursando un Diplomado en Inteligencia Artificial — un paso natural para quien decidió que la tecnología debía estar al servicio de quienes lideran la educación, no al revés.</p>
+      <p>Hoy, en la misma casa de estudios, cursa un Diplomado en Inteligencia Artificial — un paso natural para quien decidió que la tecnología debía estar al servicio de quienes lideran la educación, no al revés.</p>
     </div>
   </div>
 </section>
