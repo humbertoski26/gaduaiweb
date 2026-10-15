@@ -83,6 +83,9 @@ CREATE INDEX IF NOT EXISTS interacciones_colegio_idx ON interacciones (colegio_i
 
 -- Mensaje de gaduai.cl convertido en prospecto: queda enlazado a su organización.
 ALTER TABLE mensajes_contacto ADD COLUMN IF NOT EXISTS colegio_id INTEGER REFERENCES colegios(id) ON DELETE SET NULL;
+
+-- Plan contratado: "completo" (todo GADUAI) o "peirie" (solo PEI/RIE). Se aplica en GADUAI.
+ALTER TABLE colegios ADD COLUMN IF NOT EXISTS plan TEXT NOT NULL DEFAULT 'completo';
 """
 
 

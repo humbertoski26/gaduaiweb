@@ -148,6 +148,15 @@
     </div>
     <p class="ayuda">Un colegio usa <b>una</b> de las dos formas. Si tiene GADUAI propio activo, esa es la que usa su código.</p>
 
+    <p class="subtitulo">Plan contratado <span class="chip {{ 'chip-info' if (colegio.plan or 'completo') == 'peirie' else 'chip-ok' }}" style="margin-left:6px;">{{ planes[colegio.plan or 'completo'] }}</span></p>
+    <form method="post" action="{{ url_for('admin_plan', colegio_id=colegio.id) }}" class="fila">
+      <label style="display:flex;gap:8px;align-items:center;font-weight:500;"><input type="radio" name="plan" value="completo" {{ 'checked' if (colegio.plan or 'completo') == 'completo' }}> GADUAI completo</label>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:500;"><input type="radio" name="plan" value="peirie" {{ 'checked' if colegio.plan == 'peirie' }}> 🧭 Solo PEI/RIE</label>
+      <button class="btn btn-sec" type="submit">Guardar plan</button>
+    </form>
+    <p class="ayuda" style="margin-top:6px;">Con <b>Solo PEI/RIE</b> el colegio ve únicamente PEI/RIE, sus tareas y avisos, y entra por <b>gaduai.cl/pei-rie</b> con su código. Elige el plan <b>antes</b> de activar el GADUAI compartido; si cambias el plan después, se aplica de inmediato sin perder datos.</p>
+    <hr class="sep">
+
     <p class="subtitulo">GADUAI compartido <span class="chip {{ 'chip-ok' if acc.triage else 'chip-off' }}" style="margin-left:6px;">{{ 'Activo' if acc.triage else 'No' }}</span></p>
     <p class="ayuda" style="margin-top:0;">Recomendado para colegios nuevos: vive en el servicio común y se activa con un clic. Al activarlo por primera vez se muestra la clave del máster una sola vez.</p>
     {% if acc.triage_url %}<div class="dato"><b>Link</b><a href="{{ acc.triage_url }}" target="_blank" rel="noopener">{{ acc.triage_url }}</a></div>{% endif %}

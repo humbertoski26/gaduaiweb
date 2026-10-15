@@ -66,13 +66,16 @@ class TriageError(Exception):
     pass
 
 
-def activar_colegio_en_triage(nombre, comuna):
+PLANES = {"completo": "GADUAI completo", "peirie": "Solo PEI/RIE"}
+
+
+def activar_colegio_en_triage(nombre, comuna, plan="completo"):
     """Crea (o reconoce, si ya existe) el colegio en TRIAGE GADUAI y devuelve el link directo
     a su login (?colegio=<id>) más las credenciales del usuario máster, si se acaban de crear.
     Lanza TriageError si TRIAGE no está configurado o no responde."""
     if not TRIAGE_ADMIN_KEY:
         raise TriageError("Falta configurar TRIAGE_ADMIN_KEY en este servicio.")
-    body = json.dumps({"nombre": nombre, "comuna": comuna}).encode("utf-8")
+    body = json.dumps({"nombre": nombre, "comuna": comuna, "plan": plan}).encode("utf-8")
     req = Request(
         f"{TRIAGE_BASE_URL}/api/colegios",
         data=body,
@@ -90,10 +93,38 @@ def activar_colegio_en_triage(nombre, comuna):
     except HTTPError as exc:
         if exc.code == 409:
             colegio_id = slug_colegio(nombre)
+            cambiar_plan_en_triage(colegio_id, plan)  # ya existía: se le aplica el plan elegido
             return {"id": colegio_id, "url": f"{TRIAGE_BASE_URL}/?colegio={colegio_id}", "master": None}
         raise TriageError(f"TRIAGE respondió con error ({exc.code}).") from exc
     except URLError as exc:
         raise TriageError("No se pudo conectar con TRIAGE.") from exc
+
+
+def cambiar_plan_en_triage(colegio_id_triage, plan):
+    """Aplica el plan (completo o solo PEI/RIE) a un colegio que ya existe en el GADUAI compartido."""
+    if not TRIAGE_ADMIN_KEY:
+        raise TriageError("Falta configurar TRIAGE_ADMIN_KEY en este servicio.")
+    req = Request(
+        f"{TRIAGE_BASE_URL}/api/colegios/{colegio_id_triage}/plan",
+        data=json.dumps({"plan": plan}).encode("utf-8"),
+        method="POST",
+        headers={"Content-Type": "application/json", "X-Admin-Key": TRIAGE_ADMIN_KEY},
+    )
+    try:
+        with urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except HTTPError as exc:
+        if exc.code == 404:
+            raise TriageError("Ese colegio todavía no está activado en GADUAI compartido.") from exc
+        raise TriageError(f"GADUAI respondió con error ({exc.code}).") from exc
+    except URLError as exc:
+        raise TriageError("No se pudo conectar con GADUAI.") from exc
+
+
+def id_triage_de(url, nombre):
+    """Id del colegio en el GADUAI compartido: el ?colegio= de su link, o el slug del nombre."""
+    m = re.search(r"[?&]colegio=([a-z0-9-]+)", url or "")
+    return m.group(1) if m else slug_colegio(nombre)
 
 
 def resetear_master_en_triage(colegio_id_triage, correo_nuevo=None):
@@ -595,7 +626,7 @@ def admin_colegio(colegio_id):
         acc[row["producto"]] = row["habilitado"]
         acc[f"{row['producto']}_url"] = row["url"]
 
-    return render_template("admin_colegio.html", colegio=colegio, acc=acc, destino=destino, historial=historial,
+    return render_template("admin_colegio.html", colegio=colegio, acc=acc, destino=destino, historial=historial, planes=PLANES,
                            paso=estado_paso(colegio.get("proximo_paso_fecha")),
                            contrato=estado_contrato(colegio.get("fecha_termino")), msg=request.args.get("msg"))
 
@@ -818,10 +849,10 @@ def admin_toggle_acceso(colegio_id, producto):
         # TRIAGE es un solo despliegue compartido: en vez de pedir una URL a mano, el propio
         # panel activa el colegio ahí (o reconoce el que ya existe) y arma el link directo a
         # su login — así el encargado nunca ve la pantalla pública de "crear colegio".
-        cur.execute("SELECT nombre, comuna FROM colegios WHERE id = %s", (colegio_id,))
+        cur.execute("SELECT nombre, comuna, plan FROM colegios WHERE id = %s", (colegio_id,))
         colegio = cur.fetchone()
         try:
-            activado = activar_colegio_en_triage(colegio["nombre"], colegio["comuna"])
+            activado = activar_colegio_en_triage(colegio["nombre"], colegio["comuna"], colegio.get("plan") or "completo")
         except TriageError as exc:
             cur.close()
             conn.close()
@@ -837,6 +868,36 @@ def admin_toggle_acceso(colegio_id, producto):
            ON CONFLICT (colegio_id, producto) DO UPDATE SET habilitado = EXCLUDED.habilitado, url = EXCLUDED.url""",
         (colegio_id, producto, habilitado, url),
     )
+    cur.close()
+    conn.close()
+    return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
+
+
+@app.route("/admin/colegios/<int:colegio_id>/plan", methods=["POST"])
+@admin_login_required
+def admin_plan(colegio_id):
+    """Plan contratado: GADUAI completo o solo PEI/RIE. Si el colegio ya está activo en el GADUAI
+    compartido, el cambio se aplica allá de inmediato (sin perder datos)."""
+    plan = request.form.get("plan")
+    if plan not in PLANES:
+        return redirect(url_for("admin_colegio", colegio_id=colegio_id))
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("SELECT nombre FROM colegios WHERE id = %s", (colegio_id,))
+    colegio = cur.fetchone()
+    cur.execute("SELECT url FROM accesos WHERE colegio_id = %s AND producto = 'triage' AND habilitado", (colegio_id,))
+    acceso = cur.fetchone()
+    msg = f"Plan guardado: {PLANES[plan]}."
+    if acceso:
+        try:
+            cambiar_plan_en_triage(id_triage_de(acceso["url"], colegio["nombre"]), plan)
+            msg += " Ya se aplicó en GADUAI."
+        except TriageError as exc:
+            cur.close()
+            conn.close()
+            return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=f"No se pudo cambiar el plan en GADUAI: {exc}"))
+    cur.execute("UPDATE colegios SET plan = %s WHERE id = %s", (plan, colegio_id))
+    registrar_interaccion(cur, colegio_id, "nota", f"Plan cambiado a {PLANES[plan]}.")
     cur.close()
     conn.close()
     return redirect(url_for("admin_colegio", colegio_id=colegio_id, msg=msg))
